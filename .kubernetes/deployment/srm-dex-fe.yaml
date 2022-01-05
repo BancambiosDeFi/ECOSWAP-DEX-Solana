@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: srm-dex-fe
-        image: 293990802426.dkr.ecr.eu-west-1.amazonaws.com/bancambios-develop-srm-dex-fe:2507-f1716511
+        image: "{{ image_name }}"
         ports:
         - protocol: TCP
           containerPort: 80

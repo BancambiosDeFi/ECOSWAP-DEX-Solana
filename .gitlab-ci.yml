@@ -67,4 +67,22 @@ deploy-develop:
     - develop
   tags:
     - bancambios-gitlab-runner-01-develop
+
+deploy-k8s-prod:
+  stage: deploy
+  image:
+    name: lachlanevenson/k8s-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl version --client
+    - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
+    - sed -i
+      "s/{{ image_name }}/$IMAGE_NAME/g;
+      s/{{ replicas_count }}/1/g"
+      .kubernetes/deployment/srm-dex-fe.yml
+    - kubectl apply -f .kubernetes/deployment/srm-dex-fe.yml
+  only:
+    - develop
+  tags:
+    - bancambios-gitlab-runner-01-develop
 # ---

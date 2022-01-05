@@ -80,7 +80,7 @@ deploy-k8s-prod:
     - sed -i
       "s|{{ image_name }}|$IMAGE_NAME|g;
       s|{{ replicas_count }}|1|g"
-      .kubernetes/deployment/srm-dex-fe.yml
+      .kubernetes/deployment/srm-dex-fe.yaml
     - kubectl apply -f .kubernetes/deployment/srm-dex-fe.yaml
     - kubectl apply -f .kubernetes/service/srm-dex-fe.yaml
     - kubectl apply -f .kubernetes/ingress/srm-dex-fe.yaml

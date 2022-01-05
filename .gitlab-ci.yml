@@ -81,9 +81,9 @@ deploy-k8s-prod:
     #   "s/{{ image_name }}/$IMAGE_NAME/g;
     #   s/{{ replicas_count }}/1/g"
     #   .kubernetes/deployment/srm-dex-fe.yml
-    - kubectl apply -f .kubernetes/deployment/srm-dex-fe.yml
-    - kubectl apply -f .kubernetes/service/srm-dex-fe.yml
-    - kubectl apply -f .kubernetes/ingress/srm-dex-fe.yml
+    - kubectl apply -f .kubernetes/deployment/srm-dex-fe.yaml
+    - kubectl apply -f .kubernetes/service/srm-dex-fe.yaml
+    - kubectl apply -f .kubernetes/ingress/srm-dex-fe.yaml
   only:
     - develop
   tags:

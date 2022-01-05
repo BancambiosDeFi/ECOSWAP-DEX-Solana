@@ -39,7 +39,7 @@ build-develop:
   tags:
     - bancambios-gitlab-runner-01-develop
 
-deploy-develop:
+stand-01-develop:
   stage: deploy
   image: williamyeh/ansible:ubuntu16.04
   script:
@@ -68,7 +68,7 @@ deploy-develop:
   tags:
     - bancambios-gitlab-runner-01-develop
 
-deploy-k8s-prod:
+k8s-prod:
   stage: deploy
   image:
     name: lachlanevenson/k8s-kubectl:latest

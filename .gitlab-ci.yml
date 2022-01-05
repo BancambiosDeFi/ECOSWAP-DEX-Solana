@@ -62,7 +62,7 @@ deploy-develop:
       -e aws_reg_url=$AWS_REG_URL
       -e image_name=$IMAGE_NAME
       -e server=develop
-      backend.yml
+      srm-dex-fe.yml
   only:
     - develop
   tags:

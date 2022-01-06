@@ -8,7 +8,7 @@ variables:
   AWS_ACCOUNT_ID: 293990802426
   AWS_REGION: eu-west-1
   AWS_REG_URL: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-  IMAGE_NAME: $AWS_REG_URL/bancambios-${CI_COMMIT_REF_SLUG}-srm-dex-fe:${CI_PIPELINE_ID}-${CI_COMMIT_SHORT_SHA}
+  IMAGE_NAME: $AWS_REG_URL/exchange-${CI_COMMIT_REF_SLUG}-srm-dex-fe:${CI_PIPELINE_ID}-${CI_COMMIT_SHORT_SHA}
   KIND: frontend
   HOST_URL: app1.mainproject-02.cf
 
@@ -39,7 +39,7 @@ build-develop:
     - docker push $IMAGE_NAME
     - docker rmi -f $IMAGE_NAME
   tags:
-    - bancambios-gitlab-runner-01-develop
+    - exchange-gitlab-runner-01-develop
 
 stand-01-develop:
   stage: deploy
@@ -55,7 +55,7 @@ stand-01-develop:
     - ssh-add ~/.ssh/id_rsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - chmod -R 755 .ansible && cd .ansible
-    - ansible -m ping bancambios-stand-01-develop
+    - ansible -m ping exchange-stand-01-develop
     - ansible-playbook
       -l develop
       -e aws_access_key_id=$AZ_AWS_ACCESS_KEY_ID
@@ -68,7 +68,7 @@ stand-01-develop:
   only:
     - develop
   tags:
-    - bancambios-gitlab-runner-01-develop
+    - exchange-gitlab-runner-01-develop
 
 # k8s-prod:
 #   stage: deploy
@@ -88,30 +88,30 @@ stand-01-develop:
 #   only:
 #     - develop
 #   tags:
-#     - bancambios-gitlab-runner-01-develop
+#     - exchange-gitlab-runner-01-develop
 
-k8s-prod:
-  stage: deploy
-  image:
-    name: dtzar/helm-kubectl:latest
-    entrypoint: [""]
-  script:
-    - kubectl version --client
-    - helm version
-    - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
-    - helm upgrade --install $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG ./.helm
-      --set project=$CI_PROJECT_NAME
-      --set kind=$KIND
-      --set app_env=$CI_COMMIT_REF_SLUG
-      --set environment=stage
-      --set container.image=$IMAGE_NAME
-      --set host=$HOST_URL
-      --namespace stage
-      --debug
-      --wait
-      --timeout 20m
-  only:
-    - develop
-  tags:
-    - bancambios-gitlab-runner-01-develop
+# k8s-prod:
+#   stage: deploy
+#   image:
+#     name: dtzar/helm-kubectl:latest
+#     entrypoint: [""]
+#   script:
+#     - kubectl version --client
+#     - helm version
+#     - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
+#     - helm upgrade --install $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG ./.helm
+#       --set project=$CI_PROJECT_NAME
+#       --set kind=$KIND
+#       --set app_env=$CI_COMMIT_REF_SLUG
+#       --set environment=stage
+#       --set container.image=$IMAGE_NAME
+#       --set host=$HOST_URL
+#       --namespace stage
+#       --debug
+#       --wait
+#       --timeout 20m
+#   only:
+#     - develop
+#   tags:
+#     - exchange-gitlab-runner-01-develop
 # ---

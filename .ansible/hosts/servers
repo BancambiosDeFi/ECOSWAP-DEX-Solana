@@ -1,9 +1,9 @@
 # ----------
 [all-servers]
-bancambios-stand-01-develop ansible_ssh_host=54.247.52.126 ansible_user=root
+exchange-stand-01-develop ansible_ssh_host=54.247.52.126 ansible_user=root
 
 [develop]
-bancambios-stand-01-develop
+exchange-stand-01-develop
 
 [stage]
 

@@ -69,7 +69,9 @@ stand-01-develop:
     - develop
   tags:
     - exchange-gitlab-runner-01-develop
+# ---
 
+# --- k8s
 # k8s-prod:
 #   stage: deploy
 #   image:
@@ -110,6 +112,26 @@ k8s-prod:
       --debug
       --wait
       --timeout 20m
+  only:
+    - develop
+  tags:
+    - exchange-gitlab-runner-01-develop
+
+rollback-prod:
+  stage: deploy
+  image:
+    name: dtzar/helm-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl version --client
+    - helm version
+    - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
+    - helm rollback $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG
+      --namespace stage
+      --debug
+      --wait
+      --timeout 20m
+  when: manual
   only:
     - develop
   tags:

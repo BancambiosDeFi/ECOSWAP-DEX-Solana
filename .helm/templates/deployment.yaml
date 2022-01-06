@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.environment }}
+  name: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}
+  labels:
+    project: {{ .Values.project }}
+    kind: {{ .Values.kind }}
+    app_env: {{ .Values.app_env }}
+    environment: {{ .Values.environment }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      project: {{ .Values.project }}
+      kind: {{ .Values.kind }}
+      app_env: {{ .Values.app_env }}
+      environment: {{ .Values.environment }}
+  template:
+    metadata:
+      labels:
+        project: {{ .Values.project }}
+        kind: {{ .Values.kind }}
+        app_env: {{ .Values.app_env }}
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+      - name: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}
+        image: {{ include "container-image" . }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: tcp
+          containerPort: 80
+        resources:
+          requests: 
+            memory: "1G"
+            cpu: "500m"
+          limits:
+            memory: "2G"

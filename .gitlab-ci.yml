@@ -90,28 +90,28 @@ stand-01-develop:
 #   tags:
 #     - exchange-gitlab-runner-01-develop
 
-# k8s-prod:
-#   stage: deploy
-#   image:
-#     name: dtzar/helm-kubectl:latest
-#     entrypoint: [""]
-#   script:
-#     - kubectl version --client
-#     - helm version
-#     - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
-#     - helm upgrade --install $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG ./.helm
-#       --set project=$CI_PROJECT_NAME
-#       --set kind=$KIND
-#       --set app_env=$CI_COMMIT_REF_SLUG
-#       --set environment=stage
-#       --set container.image=$IMAGE_NAME
-#       --set host=$HOST_URL
-#       --namespace stage
-#       --debug
-#       --wait
-#       --timeout 20m
-#   only:
-#     - develop
-#   tags:
-#     - exchange-gitlab-runner-01-develop
+k8s-prod:
+  stage: deploy
+  image:
+    name: dtzar/helm-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl version --client
+    - helm version
+    - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
+    - helm upgrade --install $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG ./.helm
+      --set project=$CI_PROJECT_NAME
+      --set kind=$KIND
+      --set app_env=$CI_COMMIT_REF_SLUG
+      --set environment=stage
+      --set container.image=$IMAGE_NAME
+      --set host=$HOST_URL
+      --namespace stage
+      --debug
+      --wait
+      --timeout 20m
+  only:
+    - develop
+  tags:
+    - exchange-gitlab-runner-01-develop
 # ---

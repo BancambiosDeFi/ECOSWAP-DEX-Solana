@@ -2,8 +2,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: srm-dex-fe
   namespace: stage
+  name: srm-dex-fe-frontend-stage
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -12,7 +12,7 @@ spec:
   tls:
   - hosts:
       - app1.mainproject-02.cf
-    secretName: srm-dex-fe-tls
+    secretName: srm-dex-fe-frontend-stage-tls
   rules:
     - host: app1.mainproject-02.cf
       http:
@@ -21,6 +21,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: srm-dex-fe
+              name: srm-dex-fe-frontend-stage
               port: 
                 number: 80

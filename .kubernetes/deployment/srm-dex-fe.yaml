@@ -2,23 +2,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: srm-dex-fe
   namespace: stage
+  name: srm-dex-fe-frontend-stage
   labels:
-    app: srm-dex-fe
+    project: srm-dex-fe
+    kind: frontend
+    app_env: stage
+    environment: stage
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
-      app: srm-dex-fe
+      project: srm-dex-fe
+      kind: frontend
+      app_env: stage
+      environment: stage
   template:
     metadata:
       labels:
-        app: srm-dex-fe
+        project: srm-dex-fe
+        kind: frontend
+        app_env: stage
+        environment: stage
     spec:
       containers:
-      - name: srm-dex-fe
+      - name: srm-dex-fe-frontend-stage
         image: "{{ image_name }}"
+        imagePullPolicy: IfNotPresent
         ports:
-        - protocol: TCP
+        - name: tcp
           containerPort: 80
+        resources:
+          requests: 
+            memory: "1G"
+            cpu: "500m"
+          limits:
+            memory: "2G"

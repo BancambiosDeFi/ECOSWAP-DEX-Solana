@@ -91,7 +91,8 @@ stages:
 k8s-prod:
   stage: deploy
   image:
-    name: lachlanevenson/k8s-kubectl:latest
+    # name: lachlanevenson/k8s-kubectl:latest
+    name: dtzar/helm-kubectl:3.7
     entrypoint: [""]
   script:
     - kubectl version --client

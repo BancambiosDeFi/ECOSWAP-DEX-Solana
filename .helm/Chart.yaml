@@ -1,6 +1,0 @@
-apiVersion: v2
-appVersion: "1.0"
-description: helm chart for kubernetes
-name: srm-vesting-fe
-type: application
-version: 1.0.0

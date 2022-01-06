@@ -1,5 +1,0 @@
----
-- name: setup role srm-dex-fe
-  hosts: all-servers
-  roles:
-    - { role: srm-dex-fe, tags: [ 'srm-dex-fe' ] }

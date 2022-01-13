@@ -1,0 +1,62 @@
+{
+  "private": true,
+  "keywords": [],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "build": "lerna run build",
+    "lint": "eslint 'packages/*/{src,test}/**/*.ts' && prettier -c 'packages/*/{src,test}/**/*.ts'",
+    "lint:fix": "eslint --fix 'packages/*/{src,test}/**/*.ts' && prettier --write 'packages/*/{src,test}/**/*.ts'",
+    "deploy": "run-s deploy:docs build deploy:apps && gh-pages -d docs",
+    "deploy:docs": "lerna run docs",
+    "deploy:apps": "lerna run deploy:app",
+    "test": "lerna run test --concurrency 1 --stream"
+  },
+  "lint-staged": {
+    "packages/*/{src,test}/**/*.ts": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@types/jest": "^26.0.15",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "gh-pages": "^3.1.0",
+    "husky": "^4.3.0",
+    "jest": "26.6.0",
+    "jest-config": "26.6.0",
+    "lerna": "3.22.1",
+    "lint-staged": "^10.5.0",
+    "prettier": "^2.1.2",
+    "ts-jest": "^26.4.3",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  }
+}

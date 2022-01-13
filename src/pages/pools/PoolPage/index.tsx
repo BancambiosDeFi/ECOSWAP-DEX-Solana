@@ -4,11 +4,7 @@ import { Col, PageHeader, Row, Spin, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
 import { useAccountInfo } from '../../../utils/connection';
 import FloatingElement from '../../../components/layout/FloatingElement';
-import {
-  decodePoolState,
-  isAdminControlledPool,
-  PoolInfo,
-} from '@project-serum/pool';
+import { decodePoolState, isAdminControlledPool, PoolInfo } from '@serum/pool';
 import PoolInfoPanel from './PoolInfoPanel';
 import { parseTokenMintData } from '../../../utils/tokens';
 import PoolCreateRedeemPanel from './PoolCreateRedeemPanel';

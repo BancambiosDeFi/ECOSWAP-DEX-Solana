@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Row, Select, Typography } from 'antd';
 import styled from 'styled-components';
-import { Orderbook } from '@project-serum/serum';
+import { Orderbook } from '@serum/serum';
 import {
   getExpectedFillPrice,
   getMarketDetails,

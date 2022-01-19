@@ -13,7 +13,18 @@ npm install -g yarn
 
 ### Running the UI
 
-Run `yarn` to install dependencies, then run `yarn start` to start a development server or `yarn build` to create a production build that can be served by a static file server. Note that prior to compiling you need to add charts yourself (see below).
+With Docker:
+
+Just run `docker-compose up` from the root directory.
+
+Without Docker:
+
+```
+npm install -g lerna
+yarn
+yarn build:serum
+yarn start
+```
 
 ### Collect referral fees
 

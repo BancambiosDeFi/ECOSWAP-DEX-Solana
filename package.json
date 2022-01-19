@@ -43,7 +43,6 @@
   "scripts": {
     "predeploy": "git pull --ff-only && yarn && yarn build",
     "deploy": "gh-pages -d build",
-    "prepare": "cd serum && yarn && yarn build",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",

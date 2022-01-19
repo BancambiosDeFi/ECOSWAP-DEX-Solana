@@ -1,4 +1,4 @@
-import { getPoolBasket, PoolInfo, PoolTransactions } from '@project-serum/pool';
+import { getPoolBasket, PoolInfo, PoolTransactions } from '@serum/pool';
 import React, { useMemo, useState } from 'react';
 import FloatingElement from '../../../components/layout/FloatingElement';
 import { Button, Input, Spin, Tabs, Typography } from 'antd';

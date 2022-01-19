@@ -3,7 +3,7 @@ import React, { ReactElement, useMemo, useState } from 'react';
 import { useAccountInfo } from '../utils/connection';
 import { isValidPublicKey } from '../utils/utils';
 import { ValidateStatus } from 'antd/lib/form/FormItem';
-import { TokenInstructions } from '@project-serum/serum';
+import { TokenInstructions } from '@serum/serum';
 import { parseTokenMintData, useMintToTickers } from '../utils/tokens';
 import { AutoComplete, Form, Tooltip } from 'antd';
 import Link from './Link';

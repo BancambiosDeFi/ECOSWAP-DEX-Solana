@@ -1,15 +1,15 @@
 import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
-import TradePage from './pages/TradePage';
-import OpenOrdersPage from './pages/OpenOrdersPage';
+import TradePage from './srm-pages/TradePage';
+import OpenOrdersPage from './srm-pages/OpenOrdersPage';
 import React from 'react';
-import BalancesPage from './pages/BalancesPage';
-import ConvertPage from './pages/ConvertPage';
-import BasicLayout from './components/BasicLayout';
-import ListNewMarketPage from './pages/ListNewMarketPage';
-import NewPoolPage from './pages/pools/NewPoolPage';
-import PoolPage from './pages/pools/PoolPage';
-import PoolListPage from './pages/pools/PoolListPage';
-import { getTradePageUrl } from './utils/markets';
+import BalancesPage from './srm-pages/BalancesPage';
+import ConvertPage from './srm-pages/ConvertPage';
+import BasicLayout from './srm-components/BasicLayout';
+import ListNewMarketPage from './srm-pages/ListNewMarketPage';
+import NewPoolPage from './srm-pages/pools/NewPoolPage';
+import PoolPage from './srm-pages/pools/PoolPage';
+import PoolListPage from './srm-pages/pools/PoolListPage';
+import { getTradePageUrl } from './srm-utils/markets';
 
 export function Routes() {
   return (

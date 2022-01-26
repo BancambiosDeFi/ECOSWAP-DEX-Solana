@@ -1,13 +1,13 @@
 import React, { Suspense } from 'react';
 import './App.less';
-import { ConnectionProvider } from './utils/connection';
-import { WalletProvider } from './utils/wallet';
+import { ConnectionProvider } from './srm-utils/connection';
+import { WalletProvider } from './srm-utils/wallet';
 import { GlobalStyle } from './global_style';
 import { Spin } from 'antd';
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './srm-components/ErrorBoundary';
 import { Routes } from './routes';
-import { PreferencesProvider } from './utils/preferences';
-import { ReferrerProvider } from './utils/referrer';
+import { PreferencesProvider } from './srm-utils/preferences';
+import { ReferrerProvider } from './srm-utils/referrer';
 
 export default function App() {
   return (

@@ -10,6 +10,7 @@ import NewPoolPage from './srm-pages/pools/NewPoolPage';
 import PoolPage from './srm-pages/pools/PoolPage';
 import PoolListPage from './srm-pages/pools/PoolListPage';
 import { getTradePageUrl } from './srm-utils/markets';
+import DesignSystemPage from './srm-pages/DesignSystemPage';
 
 export function Routes() {
   return (
@@ -39,6 +40,9 @@ export function Routes() {
             </Route>
             <Route exact path="/pools/:poolAddress">
               <PoolPage />
+            </Route>
+            <Route exact path="/design-system">
+              <DesignSystemPage/>
             </Route>
           </Switch>
         </BasicLayout>

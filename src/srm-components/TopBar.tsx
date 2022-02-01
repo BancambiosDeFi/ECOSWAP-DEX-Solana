@@ -6,7 +6,7 @@ import {
 import { Button, Col, Menu, Popover, Row, Select } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import logo from '../srm-assets/logo.svg';
+import logo from '../srm-assets/logo.png';
 import styled from 'styled-components';
 import { useWallet } from '../srm-utils/wallet';
 import { ENDPOINTS, useConnectionConfig } from '../srm-utils/connection';
@@ -16,7 +16,6 @@ import { EndpointInfo } from '../srm-utils/types';
 import { notify } from '../srm-utils/notifications';
 import { Connection } from '@solana/web3.js';
 import WalletConnect from './WalletConnect';
-import AppSearch from './AppSearch';
 import { getTradePageUrl } from '../srm-utils/markets';
 
 const Wrapper = styled.div`
@@ -63,7 +62,6 @@ export default function TopBar() {
   const [testingConnection, setTestingConnection] = useState(false);
   const location = useLocation();
   const history = useHistory();
-  const [searchFocussed, setSearchFocussed] = useState(false);
 
   const handleClick = useCallback(
     (e) => {
@@ -159,7 +157,7 @@ export default function TopBar() {
           <Menu.Item key={tradePageUrl} style={{ margin: '0 10px 0 20px' }}>
             TRADE
           </Menu.Item>
-          {!searchFocussed && (
+          {(
             <Menu.Item key="/swap" style={{ margin: '0 10px' }}>
               <a
                 href={EXTERNAL_LINKS['/swap']}
@@ -170,27 +168,27 @@ export default function TopBar() {
               </a>
             </Menu.Item>
           )}
-          {connected && (!searchFocussed || location.pathname === '/balances') && (
+          {connected && location.pathname === '/balances' && (
             <Menu.Item key="/balances" style={{ margin: '0 10px' }}>
               BALANCES
             </Menu.Item>
           )}
-          {connected && (!searchFocussed || location.pathname === '/orders') && (
+          {connected && location.pathname === '/orders' && (
             <Menu.Item key="/orders" style={{ margin: '0 10px' }}>
               ORDERS
             </Menu.Item>
           )}
-          {connected && (!searchFocussed || location.pathname === '/convert') && (
+          {connected && location.pathname === '/convert' && (
             <Menu.Item key="/convert" style={{ margin: '0 10px' }}>
               CONVERT
             </Menu.Item>
           )}
-          {(!searchFocussed || location.pathname === '/list-new-market') && (
+          {location.pathname === '/list-new-market' && (
             <Menu.Item key="/list-new-market" style={{ margin: '0 10px' }}>
               ADD MARKET
             </Menu.Item>
           )}
-          {!searchFocussed && (
+          {(
             <Menu.SubMenu
               title="LEARN"
               onTitleClick={() =>
@@ -262,12 +260,6 @@ export default function TopBar() {
             paddingRight: 5,
           }}
         >
-          <AppSearch
-            onFocus={() => setSearchFocussed(true)}
-            onBlur={() => setSearchFocussed(false)}
-            focussed={searchFocussed}
-            width={searchFocussed ? '350px' : '35px'}
-          />
         </div>
         <div>
           <Row

@@ -13,15 +13,28 @@ import {
   SwapContextProvider,
   useSwapContext,
   useSwapFair,
+  useOnSwap,
 } from './context/Swap';
 import {
   DexContextProvider,
   useBbo,
   useFairRoute,
   useMarketName,
+  useRoute,
+  useMarket,
+  useOpenOrders,
+  useDexContext,
 } from './context/Dex';
-import { TokenListContextProvider, useTokenMap } from './context/TokenList';
-import { TokenContextProvider, useMint } from './context/Token';
+import {
+  TokenListContextProvider,
+  useTokenMap,
+  useSwappableTokens,
+} from './context/TokenList';
+import {
+  TokenContextProvider,
+  useMint,
+  useOwnedTokenAccount,
+} from './context/Token';
 import SwapCard, {
   ArrowButton,
   SwapButton,
@@ -29,7 +42,7 @@ import SwapCard, {
   SwapTokenForm,
 } from './components/Swap';
 import TokenDialog from './components/TokenDialog';
-
+import { DEX_PID } from './utils/pubkeys';
 /**
  * A`Swap` component that can be embedded into applications. To use,
  * one can, minimally, provide a provider and token list to the component.
@@ -47,9 +60,9 @@ import TokenDialog from './components/TokenDialog';
  */
 export default function Swap(props: SwapProps): ReactElement {
   const {
-    containerStyle,
-    contentStyle,
-    swapTokenContainerStyle,
+    // containerStyle,
+    // contentStyle,
+    // swapTokenContainerStyle,
     materialTheme,
     provider,
     tokenList,
@@ -58,6 +71,7 @@ export default function Swap(props: SwapProps): ReactElement {
     fromAmount,
     toAmount,
     referral,
+    children,
   } = props;
 
   // @ts-ignore
@@ -91,11 +105,12 @@ export default function Swap(props: SwapProps): ReactElement {
               toAmount={toAmount}
               referral={referral}
             >
-              <SwapCard
+              {children}
+              {/* <SwapCard
                 containerStyle={containerStyle}
                 contentStyle={contentStyle}
                 swapTokenContainerStyle={swapTokenContainerStyle}
-              />
+              /> */}
             </SwapContextProvider>
           </DexContextProvider>
         </TokenContextProvider>
@@ -168,6 +183,11 @@ export type SwapProps = {
    * Styling properties for the from and to token containers.
    */
   swapTokenContainerStyle?: any;
+
+  /**
+   * Swap render component
+   */
+  children: JSX.Element | Element;
 };
 
 export {
@@ -184,15 +204,24 @@ export {
   SwapContextProvider,
   useSwapContext,
   useSwapFair,
+  useOnSwap,
   // TokenList.
   TokenListContextProvider,
   useTokenMap,
   // Token.
   TokenContextProvider,
   useMint,
+  useOwnedTokenAccount,
+  useSwappableTokens,
   // Dex.
   DexContextProvider,
   useFairRoute,
   useMarketName,
   useBbo,
+  useRoute,
+  useMarket,
+  useOpenOrders,
+  useDexContext,
+  // Pubkeys
+  DEX_PID,
 };

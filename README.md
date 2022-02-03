@@ -26,6 +26,12 @@ yarn build:serum
 yarn start
 ```
 
+or
+
+```
+yarn install & yarn run build:serum &  yarn start
+```
+
 ### Collect referral fees
 
 If you are hosting a public UI using this codebase, you can collect referral fees when your users trade through your site.

@@ -8,14 +8,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import logo from '../srm-assets/logo.png';
 import styled from 'styled-components';
-import { useWallet } from '../srm-utils/wallet';
+import { useWallet } from '../components/wallet/wallet';
 import { ENDPOINTS, useConnectionConfig } from '../srm-utils/connection';
 import Settings from './Settings';
 import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
 import { EndpointInfo } from '../srm-utils/types';
 import { notify } from '../srm-utils/notifications';
 import { Connection } from '@solana/web3.js';
-import WalletConnect from './WalletConnect';
+import WalletConnect from '../components/wallet/WalletConnect';
 import { getTradePageUrl } from '../srm-utils/markets';
 
 const Wrapper = styled.div`

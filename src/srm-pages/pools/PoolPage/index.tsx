@@ -11,7 +11,7 @@ import PoolCreateRedeemPanel from './PoolCreateRedeemPanel';
 import PoolBalancesPanel from './PoolBalancesPanel';
 import { useHistory } from 'react-router-dom';
 import { PoolAdminPanel } from './PoolAdminPanel';
-import { useWallet } from '../../../srm-utils/wallet';
+import { useWallet } from '../../../components/wallet/wallet';
 
 const { Text } = Typography;
 

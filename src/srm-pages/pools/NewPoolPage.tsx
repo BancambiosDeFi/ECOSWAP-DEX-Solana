@@ -12,7 +12,7 @@ import { PublicKey } from '@solana/web3.js';
 import { useConnection } from '../../srm-utils/connection';
 import FloatingElement from '../../srm-components/layout/FloatingElement';
 import styled from 'styled-components';
-import { useWallet } from '../../srm-utils/wallet';
+import { useWallet } from '../../components/wallet/wallet';
 import { sendSignedTransaction, signTransactions } from '../../srm-utils/send';
 import { useMintInput } from '../../srm-components/useMintInput';
 import { PoolTransactions } from '@serum/pool';

@@ -4,7 +4,7 @@ import DataTable from '../layout/DataTable';
 import styled from 'styled-components';
 import { Button, Col, Row, Tag } from 'antd';
 import { cancelOrder } from '../../srm-utils/send';
-import { useWallet } from '../../srm-utils/wallet';
+import { useWallet } from '../../components/wallet/wallet';
 import { useSendConnection } from '../../srm-utils/connection';
 import { notify } from '../../srm-utils/notifications';
 import { DeleteOutlined } from '@ant-design/icons';

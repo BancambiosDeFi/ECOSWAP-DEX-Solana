@@ -10,7 +10,7 @@ import tuple from 'immutable-tuple';
 import PoolBasketDisplay from './PoolBasketDisplay';
 import BN from 'bn.js';
 import { notify } from '../../../srm-utils/notifications';
-import { useWallet } from '../../../srm-utils/wallet';
+import { useWallet } from '../../../components/wallet/wallet';
 import { useTokenAccounts } from '../../../srm-utils/markets';
 import { sendTransaction } from '../../../srm-utils/send';
 

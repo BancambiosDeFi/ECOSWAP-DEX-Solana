@@ -5,7 +5,7 @@ import { MARKETS } from '@serum/serum';
 import { useConnection } from '../srm-utils/connection';
 import FloatingElement from '../srm-components/layout/FloatingElement';
 import styled from 'styled-components';
-import { useWallet } from '../srm-utils/wallet';
+import { useWallet } from '../components/wallet/wallet';
 import { listMarket } from '../srm-utils/send';
 import { useMintInput } from '../srm-components/useMintInput';
 

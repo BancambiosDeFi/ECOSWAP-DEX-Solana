@@ -11,7 +11,7 @@ import {
   useTokenAccounts,
 } from '../srm-utils/markets';
 import DepositDialog from './DepositDialog';
-import { useWallet } from '../srm-utils/wallet';
+import { useWallet } from '../components/wallet/wallet';
 import Link from './Link';
 import { settleFunds } from '../srm-utils/send';
 import { useSendConnection } from '../srm-utils/connection';

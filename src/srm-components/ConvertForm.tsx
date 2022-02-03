@@ -16,15 +16,15 @@ import {
   useTokenAccounts,
 } from '../srm-utils/markets';
 import { notify } from '../srm-utils/notifications';
-import { useWallet } from '../srm-utils/wallet';
+import { useWallet } from '../components/wallet/wallet';
 import { useConnection, useSendConnection } from '../srm-utils/connection';
 import { placeOrder } from '../srm-utils/send';
 import { floorToDecimal, getDecimalCount } from '../srm-utils/utils';
 import FloatingElement from './layout/FloatingElement';
-import WalletConnect from './WalletConnect';
+import WalletConnect from '../components/wallet/WalletConnect';
 import { SwapOutlined } from '@ant-design/icons';
 import { CustomMarketInfo } from '../srm-utils/types';
-import { WalletAdapter } from '../srm-wallet-adapters';
+import { WalletAdapter } from '../components/wallet/types';
 
 const { Option } = Select;
 const { Title } = Typography;

@@ -6,7 +6,7 @@ import {
 } from '../../srm-utils/markets';
 import DataTable from '../layout/DataTable';
 import { useSendConnection } from '../../srm-utils/connection';
-import { useWallet } from '../../srm-utils/wallet';
+import { useWallet } from '../../components/wallet/wallet';
 import { settleFunds } from '../../srm-utils/send';
 import { notify } from '../../srm-utils/notifications';
 import { useReferrer } from '../../srm-utils/referrer';

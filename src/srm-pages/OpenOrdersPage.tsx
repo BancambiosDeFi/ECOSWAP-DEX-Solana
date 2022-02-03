@@ -8,8 +8,8 @@ import {
 import OpenOrderTable from '../srm-components/UserInfoTable/OpenOrderTable';
 import { Button, Row } from 'antd';
 import { OrderWithMarketAndMarketName } from '../srm-utils/types';
-import { useWallet } from '../srm-utils/wallet';
-import WalletConnect from '../srm-components/WalletConnect';
+import { useWallet } from '../components/wallet/wallet';
+import WalletConnect from '../components/wallet/WalletConnect';
 
 export default function OpenOrdersPage() {
   const { connected } = useWallet();

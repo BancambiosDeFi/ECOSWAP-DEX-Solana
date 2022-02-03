@@ -1,17 +1,16 @@
 import React, { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Col, PageHeader, Row, Spin, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
+import { decodePoolState, isAdminControlledPool, PoolInfo } from '@serum/pool';
 import { useAccountInfo } from '../../../srm-utils/connection';
 import FloatingElement from '../../../srm-components/layout/FloatingElement';
-import { decodePoolState, isAdminControlledPool, PoolInfo } from '@serum/pool';
-import PoolInfoPanel from './PoolInfoPanel';
 import { parseTokenMintData } from '../../../srm-utils/tokens';
+import { useWallet } from '../../../components/wallet/wallet';
+import PoolInfoPanel from './PoolInfoPanel';
 import PoolCreateRedeemPanel from './PoolCreateRedeemPanel';
 import PoolBalancesPanel from './PoolBalancesPanel';
-import { useHistory } from 'react-router-dom';
 import { PoolAdminPanel } from './PoolAdminPanel';
-import { useWallet } from '../../../components/wallet/wallet';
 
 const { Text } = Typography;
 
@@ -36,9 +35,7 @@ export default function PoolPage() {
       return null;
     }
   }, [poolAddress, poolAccountInfo]);
-  const [mintAccountInfo, mintAccountInfoLoaded] = useAccountInfo(
-    poolInfo?.state.poolTokenMint,
-  );
+  const [mintAccountInfo, mintAccountInfoLoaded] = useAccountInfo(poolInfo?.state.poolTokenMint);
   const mintInfo = useMemo(
     () => (mintAccountInfo ? parseTokenMintData(mintAccountInfo.data) : null),
     [mintAccountInfo],
@@ -77,16 +74,9 @@ export default function PoolPage() {
 
   return (
     <>
-      <PageHeader
-        title={<>Pool {poolAddress}</>}
-        onBack={() => history.push('/pools')}
-      />
+      <PageHeader title={<>Pool {poolAddress}</>} onBack={() => history.push('/pools')} />
       <FloatingElement>
-        {!poolAccountLoaded || !mintAccountInfoLoaded ? (
-          <Spin />
-        ) : (
-          <Text>Invalid pool</Text>
-        )}
+        {!poolAccountLoaded || !mintAccountInfoLoaded ? <Spin /> : <Text>Invalid pool</Text>}
       </FloatingElement>
     </>
   );
@@ -95,6 +85,7 @@ export default function PoolPage() {
 function isPublicKey(address) {
   try {
     new PublicKey(address);
+
     return true;
   } catch (e) {
     return false;

@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import {
-  AutoComplete,
-  Button,
-  Form,
-  Input,
-  Switch,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { AutoComplete, Button, Form, Input, Switch, Tooltip, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
+import styled from 'styled-components';
+import { PoolTransactions } from '@serum/pool';
+import BN from 'bn.js';
 import { useConnection } from '../../srm-utils/connection';
 import FloatingElement from '../../srm-components/layout/FloatingElement';
-import styled from 'styled-components';
 import { useWallet } from '../../components/wallet/wallet';
 import { sendSignedTransaction, signTransactions } from '../../srm-utils/send';
 import { useMintInput } from '../../srm-components/useMintInput';
-import { PoolTransactions } from '@serum/pool';
 import { useTokenAccounts } from '../../srm-utils/markets';
-import BN from 'bn.js';
 import { notify } from '../../srm-utils/notifications';
 import Link from '../../srm-components/Link';
 
@@ -37,8 +29,7 @@ const AddRemoveTokenButtons = styled.div`
 `;
 
 const SIMPLE_POOL_PROGRAM_ID = '71JS8f7y7ASMbuuSMCVG7a3qDdcVco2qYD6bMJeZqUCm';
-const ADMIN_CONTROLLED_POOL_PROGRAM_ID =
-  'WvmTNLpGMVbwJVYztYL4Hnsy82cJhQorxjnnXcRm3b6';
+const ADMIN_CONTROLLED_POOL_PROGRAM_ID = 'WvmTNLpGMVbwJVYztYL4Hnsy82cJhQorxjnnXcRm3b6';
 const DEFAULT_PROGRAM_ID = ADMIN_CONTROLLED_POOL_PROGRAM_ID;
 const PROGRAM_ID_OPTIONS = [
   {
@@ -86,7 +77,7 @@ export default function NewPoolPage() {
     poolName.trim() &&
     programId &&
     parseFloat(initialSupply) > 0 &&
-    initialAssets.every((asset) => asset.valid) &&
+    initialAssets.every(asset => asset.valid) &&
     tokenAccounts &&
     (adminAddress || !adminControlled);
 
@@ -97,28 +88,24 @@ export default function NewPoolPage() {
     setSubmitting(true);
     try {
       const assets = initialAssets as ValidInitialAsset[];
-      const [
-        poolAddress,
-        transactionsAndSigners,
-      ] = await PoolTransactions.initializeSimplePool({
+      const [poolAddress, transactionsAndSigners] = await PoolTransactions.initializeSimplePool({
         connection,
         programId: new PublicKey(programId),
         poolName,
         poolStateSpace: 1024,
         poolMintDecimals: 6,
-        initialPoolMintSupply: new BN(
-          Math.round(10 ** 6 * parseFloat(initialSupply)),
-        ),
-        assetMints: assets.map((asset) => asset.mint),
-        initialAssetQuantities: assets.map((asset) => new BN(asset.quantity)),
+        initialPoolMintSupply: new BN(Math.round(10 ** 6 * parseFloat(initialSupply))),
+        assetMints: assets.map(asset => asset.mint),
+        initialAssetQuantities: assets.map(asset => new BN(asset.quantity)),
         creator: wallet.publicKey,
-        creatorAssets: assets.map((asset) => {
-          const found = tokenAccounts?.find((tokenAccount) =>
+        creatorAssets: assets.map(asset => {
+          const found = tokenAccounts?.find(tokenAccount =>
             tokenAccount.effectiveMint.equals(asset.mint),
           );
           if (!found) {
             throw new Error('No token account for ' + asset.mint.toBase58());
           }
+
           return found.pubkey;
         }),
         additionalAccounts: adminControlled
@@ -136,7 +123,7 @@ export default function NewPoolPage() {
         wallet,
         connection,
       });
-      for (let signedTransaction of signed) {
+      for (const signedTransaction of signed) {
         await sendSignedTransaction({ signedTransaction, connection });
       }
       setNewPoolAddress(poolAddress);
@@ -158,21 +145,15 @@ export default function NewPoolPage() {
         <Title level={4}>Create new pool</Title>
         <Form layout="vertical" onFinish={onSubmit}>
           <Form.Item
-            label={
-              <Tooltip title="Public name of the pool.">Pool Name</Tooltip>
-            }
+            label={<Tooltip title="Public name of the pool.">Pool Name</Tooltip>}
             name="name"
           >
-            <Input
-              value={poolName}
-              onChange={(e) => setPoolName(e.target.value)}
-            />
+            <Input value={poolName} onChange={e => setPoolName(e.target.value)} />
           </Form.Item>
           <Form.Item
             label={
               <Tooltip title="Address of the pool program.">
-                Program ID{' '}
-                <Text type="secondary">(e.g. {DEFAULT_PROGRAM_ID})</Text>
+                Program ID <Text type="secondary">(e.g. {DEFAULT_PROGRAM_ID})</Text>
               </Tooltip>
             }
             name="programId"
@@ -180,7 +161,7 @@ export default function NewPoolPage() {
           >
             <AutoComplete
               value={programId}
-              onChange={(value) => setProgramId(value)}
+              onChange={value => setProgramId(value)}
               options={PROGRAM_ID_OPTIONS}
             />
           </Form.Item>
@@ -195,24 +176,18 @@ export default function NewPoolPage() {
           >
             <Input
               value={initialSupply}
-              onChange={(e) => setInitialSupply(e.target.value.trim())}
+              onChange={e => setInitialSupply(e.target.value.trim())}
               type="number"
               min="0"
               step="any"
             />
           </Form.Item>
           <AddRemoveTokenButtons>
-            <Button
-              onClick={() =>
-                setInitialAssets((assets) => assets.concat({ valid: false }))
-              }
-            >
+            <Button onClick={() => setInitialAssets(assets => assets.concat({ valid: false }))}>
               Add token
             </Button>{' '}
             <Button
-              onClick={() =>
-                setInitialAssets((assets) => assets.slice(0, assets.length - 1))
-              }
+              onClick={() => setInitialAssets(assets => assets.slice(0, assets.length - 1))}
               disabled={initialAssets.length <= 1}
             >
               Remove token
@@ -231,7 +206,7 @@ export default function NewPoolPage() {
           >
             <Switch
               checked={adminControlled}
-              onChange={(checked) => setAdminControlled(checked)}
+              onChange={checked => setAdminControlled(checked)}
               disabled={
                 programId === SIMPLE_POOL_PROGRAM_ID ||
                 programId === ADMIN_CONTROLLED_POOL_PROGRAM_ID
@@ -240,25 +215,13 @@ export default function NewPoolPage() {
           </Form.Item>
           {adminControlled ? (
             <Form.Item
-              label={
-                <Tooltip title="Address of the pool admin account.">
-                  Admin Address
-                </Tooltip>
-              }
+              label={<Tooltip title="Address of the pool admin account.">Admin Address</Tooltip>}
             >
-              <Input
-                value={adminAddress}
-                onChange={(e) => setAdminAddress(e.target.value.trim())}
-              />
+              <Input value={adminAddress} onChange={e => setAdminAddress(e.target.value.trim())} />
             </Form.Item>
           ) : null}
           <Form.Item label=" " colon={false}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={!canSubmit}
-              loading={submitting}
-            >
+            <Button type="primary" htmlType="submit" disabled={!canSubmit} loading={submitting}>
               {connected ? 'Submit' : 'Not connected to wallet'}
             </Button>
           </Form.Item>
@@ -268,9 +231,7 @@ export default function NewPoolPage() {
         <FloatingElement>
           <Text>
             New pool address:{' '}
-            <Link to={`/pools/${newPoolAddress.toBase58()}`}>
-              {newPoolAddress.toBase58()}
-            </Link>
+            <Link to={`/pools/${newPoolAddress.toBase58()}`}>{newPoolAddress.toBase58()}</Link>
           </Text>
         </FloatingElement>
       ) : null}
@@ -296,9 +257,7 @@ function AssetInput({ setInitialAssets, index }) {
   useEffect(() => {
     let change: InitialAsset;
     if (mintInfo && parseFloat(quantity) >= 0) {
-      let parsedQuantity = Math.round(
-        10 ** mintInfo.decimals * parseFloat(quantity),
-      );
+      const parsedQuantity = Math.round(10 ** mintInfo.decimals * parseFloat(quantity));
       change = {
         mint: mintInfo.address,
         quantity: parsedQuantity,
@@ -317,13 +276,7 @@ function AssetInput({ setInitialAssets, index }) {
       {mintInput}
       <Form.Item
         label={
-          <Tooltip
-            title={
-              <>
-                Initial quantity of token {index + 1} to deposit into the pool.
-              </>
-            }
-          >
+          <Tooltip title={<>Initial quantity of token {index + 1} to deposit into the pool.</>}>
             Token {index + 1} Initial Quantity
           </Tooltip>
         }
@@ -332,7 +285,7 @@ function AssetInput({ setInitialAssets, index }) {
       >
         <Input
           value={quantity}
-          onChange={(e) => setQuantity(e.target.value.trim())}
+          onChange={e => setQuantity(e.target.value.trim())}
           type="number"
           min="0"
           step="any"

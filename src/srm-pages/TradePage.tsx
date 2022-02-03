@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Col, Popover, Row, Select, Typography } from 'antd';
 import styled from 'styled-components';
+import { DeleteOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { useHistory, useParams } from 'react-router-dom';
+import { nanoid } from 'nanoid';
 import Orderbook from '../srm-components/Orderbook';
 import UserInfoTable from '../srm-components/UserInfoTable';
 import StandaloneBalancesDisplay from '../srm-components/StandaloneBalancesDisplay';
@@ -16,15 +19,8 @@ import TradeForm from '../srm-components/TradeForm';
 import TradesTable from '../srm-components/TradesTable';
 import LinkAddress from '../srm-components/LinkAddress';
 import DeprecatedMarketsInstructions from '../srm-components/DeprecatedMarketsInstructions';
-import {
-  DeleteOutlined,
-  InfoCircleOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
 import CustomMarketDialog from '../srm-components/CustomMarketDialog';
 import { notify } from '../srm-utils/notifications';
-import { useHistory, useParams } from 'react-router-dom';
-import { nanoid } from 'nanoid';
 
 // import { TVChartContainer } from '../srm-components/TradingView';
 // Use following stub for quick setup without the TradingView private dependency
@@ -57,23 +53,14 @@ export default function TradePage() {
   }
 
   return (
-    <MarketProvider
-      marketAddress={marketAddress}
-      setMarketAddress={setMarketAddress}
-    >
+    <MarketProvider marketAddress={marketAddress} setMarketAddress={setMarketAddress}>
       <TradePageInner />
     </MarketProvider>
   );
 }
 
 function TradePageInner() {
-  const {
-    market,
-    marketName,
-    customMarkets,
-    setCustomMarkets,
-    setMarketAddress,
-  } = useMarket();
+  const { market, marketName, customMarkets, setCustomMarkets, setMarketAddress } = useMarket();
   const markets = useMarketsList();
   const [handleDeprecated, setHandleDeprecated] = useState(false);
   const [addMarketVisible, setAddMarketVisible] = useState(false);
@@ -87,9 +74,7 @@ function TradePageInner() {
     document.title = marketName ? `${marketName} — Serum` : 'Serum';
   }, [marketName]);
 
-  const changeOrderRef = useRef<
-    ({ size, price }: { size?: number; price?: number }) => void
-  >();
+  const changeOrderRef = useRef<({ size, price }: { size?: number; price?: number }) => void>();
 
   useEffect(() => {
     const handleResize = () => {
@@ -100,28 +85,19 @@ function TradePageInner() {
     };
 
     window.addEventListener('resize', handleResize);
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const width = dimensions?.width;
   const componentProps = {
-    onChangeOrderRef: (ref) => (changeOrderRef.current = ref),
-    onPrice: useCallback(
-      (price) => changeOrderRef.current && changeOrderRef.current({ price }),
-      [],
-    ),
-    onSize: useCallback(
-      (size) => changeOrderRef.current && changeOrderRef.current({ size }),
-      [],
-    ),
+    onChangeOrderRef: ref => (changeOrderRef.current = ref),
+    onPrice: useCallback(price => changeOrderRef.current && changeOrderRef.current({ price }), []),
+    onSize: useCallback(size => changeOrderRef.current && changeOrderRef.current({ size }), []),
   };
   const component = (() => {
     if (handleDeprecated) {
-      return (
-        <DeprecatedMarketsPage
-          switchToLiveMarkets={() => setHandleDeprecated(false)}
-        />
-      );
+      return <DeprecatedMarketsPage switchToLiveMarkets={() => setHandleDeprecated(false)} />;
     } else if (width < 1000) {
       return <RenderSmaller {...componentProps} />;
     } else if (width < 1450) {
@@ -131,15 +107,16 @@ function TradePageInner() {
     }
   })();
 
-  const onAddCustomMarket = (customMarket) => {
+  const onAddCustomMarket = customMarket => {
     const marketInfo = getMarketInfos(customMarkets).some(
-      (m) => m.address.toBase58() === customMarket.address,
+      m => m.address.toBase58() === customMarket.address,
     );
     if (marketInfo) {
       notify({
         message: `A market with the given ID already exists`,
         type: 'error',
       });
+
       return;
     }
     const newCustomMarkets = [...customMarkets, customMarket];
@@ -147,8 +124,8 @@ function TradePageInner() {
     setMarketAddress(customMarket.address);
   };
 
-  const onDeleteCustomMarket = (address) => {
-    const newCustomMarkets = customMarkets.filter((m) => m.address !== address);
+  const onDeleteCustomMarket = address => {
+    const newCustomMarkets = customMarkets.filter(m => m.address !== address);
     setCustomMarkets(newCustomMarkets);
   };
 
@@ -160,11 +137,7 @@ function TradePageInner() {
         onAddCustomMarket={onAddCustomMarket}
       />
       <Wrapper>
-        <Row
-          align="middle"
-          style={{ paddingLeft: 5, paddingRight: 5 }}
-          gutter={16}
-        >
+        <Row align="middle" style={{ paddingLeft: 5, paddingRight: 5 }} gutter={16}>
           <Col>
             <MarketSelector
               markets={markets}
@@ -196,8 +169,8 @@ function TradePageInner() {
             <React.Fragment>
               <Col>
                 <Typography>
-                  You have unsettled funds on old markets! Please go through
-                  them to claim your funds.
+                  You have unsettled funds on old markets! Please go through them to claim your
+                  funds.
                 </Typography>
               </Col>
               <Col>
@@ -223,19 +196,16 @@ function MarketSelector({
 }) {
   const { market, setMarketAddress } = useMarket();
 
-  const onSetMarketAddress = (marketAddress) => {
+  const onSetMarketAddress = marketAddress => {
     setHandleDeprecated(false);
     setMarketAddress(marketAddress);
   };
 
-  const extractBase = (a) => a.split('/')[0];
-  const extractQuote = (a) => a.split('/')[1];
+  const extractBase = a => a.split('/')[0];
+  const extractQuote = a => a.split('/')[1];
 
   const selectedMarket = getMarketInfos(customMarkets)
-    .find(
-      (proposedMarket) =>
-        market?.address && proposedMarket.address.equals(market.address),
-    )
+    .find(proposedMarket => market?.address && proposedMarket.address.equals(market.address))
     ?.address?.toBase58();
 
   return (
@@ -270,7 +240,7 @@ function MarketSelector({
                 {selectedMarket !== address && (
                   <Col>
                     <DeleteOutlined
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         e.nativeEvent.stopImmediatePropagation();
                         onDeleteCustomMarket && onDeleteCustomMarket(address);
@@ -288,8 +258,7 @@ function MarketSelector({
           .sort((a, b) =>
             extractQuote(a.name) === 'USDT' && extractQuote(b.name) !== 'USDT'
               ? -1
-              : extractQuote(a.name) !== 'USDT' &&
-                extractQuote(b.name) === 'USDT'
+              : extractQuote(a.name) !== 'USDT' && extractQuote(b.name) === 'USDT'
               ? 1
               : 0,
           )
@@ -324,9 +293,7 @@ const DeprecatedMarketsPage = ({ switchToLiveMarkets }) => {
     <>
       <Row>
         <Col flex="auto">
-          <DeprecatedMarketsInstructions
-            switchToLiveMarkets={switchToLiveMarkets}
-          />
+          <DeprecatedMarketsInstructions switchToLiveMarkets={switchToLiveMarkets} />
         </Col>
       </Row>
     </>
@@ -351,10 +318,7 @@ const RenderNormal = ({ onChangeOrderRef, onPrice, onSize }) => {
         <Orderbook smallScreen={false} onPrice={onPrice} onSize={onSize} />
         <TradesTable smallScreen={false} />
       </Col>
-      <Col
-        flex="400px"
-        style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-      >
+      <Col flex="400px" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <TradeForm setChangeOrderRef={onChangeOrderRef} />
         <StandaloneBalancesDisplay />
       </Col>
@@ -372,20 +336,12 @@ const RenderSmall = ({ onChangeOrderRef, onPrice, onSize }) => {
         }}
       >
         <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
-          <Orderbook
-            smallScreen={true}
-            depth={13}
-            onPrice={onPrice}
-            onSize={onSize}
-          />
+          <Orderbook smallScreen={true} depth={13} onPrice={onPrice} onSize={onSize} />
         </Col>
         <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
           <TradesTable smallScreen={true} />
         </Col>
-        <Col
-          flex="400px"
-          style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-        >
+        <Col flex="400px" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
           <TradeForm setChangeOrderRef={onChangeOrderRef} />
           <StandaloneBalancesDisplay />
         </Col>

@@ -1,10 +1,10 @@
 import React from 'react';
 import { PublicKey } from '@solana/web3.js';
+import { Popover } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { abbreviateAddress } from '../srm-utils/utils';
 import { useMintToTickers } from '../srm-utils/tokens';
-import { Popover } from 'antd';
 import LinkAddress from './LinkAddress';
-import { InfoCircleOutlined } from '@ant-design/icons';
 
 export function MintName({
   mint,

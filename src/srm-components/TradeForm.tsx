@@ -1,6 +1,8 @@
-import {Button, Input, Radio, Slider, Switch} from 'antd';
-import React, {useEffect, useState} from 'react';
+import { Button, Input, Radio, Slider, Switch } from 'antd';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { SwitchChangeEventHandler } from 'antd/es/switch';
+import tuple from 'immutable-tuple';
 import {
   useFeeDiscountKeys,
   useLocallyStoredFeeDiscountKey,
@@ -12,15 +14,13 @@ import {
   useSelectedQuoteCurrencyAccount,
   useSelectedQuoteCurrencyBalances,
 } from '../srm-utils/markets';
-import {useWallet} from '../components/wallet/wallet';
-import {notify} from '../srm-utils/notifications';
-import {floorToDecimal, getDecimalCount, roundToDecimal,} from '../srm-utils/utils';
-import {useSendConnection} from '../srm-utils/connection';
+import { useWallet } from '../components/wallet/wallet';
+import { notify } from '../srm-utils/notifications';
+import { floorToDecimal, getDecimalCount, roundToDecimal } from '../srm-utils/utils';
+import { useSendConnection } from '../srm-utils/connection';
+import { getUnixTs, placeOrder } from '../srm-utils/send';
+import { refreshCache } from '../srm-utils/fetch-loop';
 import FloatingElement from './layout/FloatingElement';
-import {getUnixTs, placeOrder} from '../srm-utils/send';
-import {SwitchChangeEventHandler} from 'antd/es/switch';
-import {refreshCache} from '../srm-utils/fetch-loop';
-import tuple from 'immutable-tuple';
 
 const SellButton = styled(Button)`
   margin: 20px 0px 0px 0px;
@@ -47,9 +47,7 @@ export default function TradeForm({
   setChangeOrderRef,
 }: {
   style?: any;
-  setChangeOrderRef?: (
-    ref: ({ size, price }: { size?: number; price?: number }) => void,
-  ) => void;
+  setChangeOrderRef?: (ref: ({ size, price }: { size?: number; price?: number }) => void) => void;
 }) {
   const [side, setSide] = useState<'buy' | 'sell'>('buy');
   const { baseCurrency, quoteCurrency, market } = useMarket();
@@ -62,9 +60,7 @@ export default function TradeForm({
   const sendConnection = useSendConnection();
   const markPrice = useMarkPrice();
   useFeeDiscountKeys();
-  const {
-    storedFeeDiscountKey: feeDiscountKey,
-  } = useLocallyStoredFeeDiscountKey();
+  const { storedFeeDiscountKey: feeDiscountKey } = useLocallyStoredFeeDiscountKey();
 
   const [postOnly, setPostOnly] = useState(false);
   const [ioc, setIoc] = useState(false);
@@ -75,15 +71,12 @@ export default function TradeForm({
   const [sizeFraction, setSizeFraction] = useState(0);
 
   const availableQuote =
-    openOrdersAccount && market
-      ? market.quoteSplSizeToNumber(openOrdersAccount.quoteTokenFree)
-      : 0;
+    openOrdersAccount && market ? market.quoteSplSizeToNumber(openOrdersAccount.quoteTokenFree) : 0;
 
-  let quoteBalance = (quoteCurrencyBalances || 0) + (availableQuote || 0);
-  let baseBalance = baseCurrencyBalances || 0;
-  let sizeDecimalCount =
-    market?.minOrderSize && getDecimalCount(market.minOrderSize);
-  let priceDecimalCount = market?.tickSize && getDecimalCount(market.tickSize);
+  const quoteBalance = (quoteCurrencyBalances || 0) + (availableQuote || 0);
+  const baseBalance = baseCurrencyBalances || 0;
+  const sizeDecimalCount = market?.minOrderSize && getDecimalCount(market.minOrderSize);
+  const priceDecimalCount = market?.tickSize && getDecimalCount(market.tickSize);
 
   const publicKey = wallet?.publicKey;
 
@@ -107,6 +100,7 @@ export default function TradeForm({
       try {
         if (!wallet || !publicKey || !market) {
           console.log(`Skipping refreshing accounts`);
+
           return;
         }
         const startTime = getUnixTs();
@@ -115,9 +109,7 @@ export default function TradeForm({
         await market?.findBestFeeDiscountKey(sendConnection, publicKey);
         const endTime = getUnixTs();
         console.log(
-          `Finished refreshing accounts for ${market.address} after ${
-            endTime - startTime
-          }`,
+          `Finished refreshing accounts for ${market.address} after ${endTime - startTime}`,
         );
       } catch (e) {
         console.log(`Encountered error when refreshing trading accounts: ${e}`);
@@ -125,6 +117,7 @@ export default function TradeForm({
     };
     warmUpCache();
     const id = setInterval(warmUpCache, 30_000);
+
     return () => clearInterval(id);
   }, [market, sendConnection, wallet, publicKey]);
 
@@ -132,16 +125,17 @@ export default function TradeForm({
     setBaseSize(baseSize);
     if (!baseSize) {
       setQuoteSize(undefined);
+
       return;
     }
-    let usePrice = price || markPrice;
+    const usePrice = price || markPrice;
     if (!usePrice) {
       setQuoteSize(undefined);
+
       return;
     }
     const rawQuoteSize = baseSize * usePrice;
-    const quoteSize =
-      baseSize && roundToDecimal(rawQuoteSize, sizeDecimalCount);
+    const quoteSize = baseSize && roundToDecimal(rawQuoteSize, sizeDecimalCount);
     setQuoteSize(quoteSize);
   };
 
@@ -149,11 +143,13 @@ export default function TradeForm({
     setQuoteSize(quoteSize);
     if (!quoteSize) {
       setBaseSize(undefined);
+
       return;
     }
-    let usePrice = price || markPrice;
+    const usePrice = price || markPrice;
     if (!usePrice) {
       setBaseSize(undefined);
+
       return;
     }
     const rawBaseSize = quoteSize / usePrice;
@@ -161,13 +157,7 @@ export default function TradeForm({
     setBaseSize(baseSize);
   };
 
-  const doChangeOrder = ({
-    size,
-    price,
-  }: {
-    size?: number;
-    price?: number;
-  }) => {
+  const doChangeOrder = ({ size, price }: { size?: number; price?: number }) => {
     const formattedSize = size && roundToDecimal(size, sizeDecimalCount);
     const formattedPrice = price && roundToDecimal(price, priceDecimalCount);
     formattedSize && onSetBaseSize(formattedSize);
@@ -175,16 +165,15 @@ export default function TradeForm({
   };
 
   const updateSizeFraction = () => {
-    const rawMaxSize =
-      side === 'buy' ? quoteBalance / (price || markPrice || 1) : baseBalance;
+    const rawMaxSize = side === 'buy' ? quoteBalance / (price || markPrice || 1) : baseBalance;
     const maxSize = floorToDecimal(rawMaxSize, sizeDecimalCount);
     const sizeFraction = Math.min(((baseSize || 0) / maxSize) * 100, 100);
     setSizeFraction(sizeFraction);
   };
 
-  const onSliderChange = (value) => {
+  const onSliderChange = value => {
     if (!price && markPrice) {
-      let formattedMarkPrice: number | string = priceDecimalCount
+      const formattedMarkPrice: number | string = priceDecimalCount
         ? markPrice.toFixed(priceDecimalCount)
         : markPrice;
       setPrice(
@@ -204,18 +193,18 @@ export default function TradeForm({
     }
 
     // round down to minOrderSize increment
-    let formatted = floorToDecimal(newSize, sizeDecimalCount);
+    const formatted = floorToDecimal(newSize, sizeDecimalCount);
 
     onSetBaseSize(formatted);
   };
 
-  const postOnChange: SwitchChangeEventHandler = (checked) => {
+  const postOnChange: SwitchChangeEventHandler = checked => {
     if (checked) {
       setIoc(false);
     }
     setPostOnly(checked);
   };
-  const iocOnChange: SwitchChangeEventHandler = (checked) => {
+  const iocOnChange: SwitchChangeEventHandler = checked => {
     if (checked) {
       setPostOnly(false);
     }
@@ -229,6 +218,7 @@ export default function TradeForm({
         message: 'Missing price',
         type: 'error',
       });
+
       return;
     } else if (!baseSize) {
       console.warn('Missing size');
@@ -236,6 +226,7 @@ export default function TradeForm({
         message: 'Missing size',
         type: 'error',
       });
+
       return;
     }
 
@@ -273,12 +264,10 @@ export default function TradeForm({
   }
 
   return (
-    <FloatingElement
-      style={{ display: 'flex', flexDirection: 'column', ...style }}
-    >
+    <FloatingElement style={{ display: 'flex', flexDirection: 'column', ...style }}>
       <div style={{ flex: 1 }}>
         <Radio.Group
-          onChange={(e) => setSide(e.target.value)}
+          onChange={e => setSide(e.target.value)}
           value={side}
           buttonStyle="solid"
           style={{
@@ -312,52 +301,40 @@ export default function TradeForm({
         <Input
           style={{ textAlign: 'right', paddingBottom: 8 }}
           addonBefore={<div style={{ width: '30px' }}>Price</div>}
-          suffix={
-            <span style={{ fontSize: 10, opacity: 0.5 }}>{quoteCurrency}</span>
-          }
+          suffix={<span style={{ fontSize: 10, opacity: 0.5 }}>{quoteCurrency}</span>}
           value={price}
           type="number"
           step={market?.tickSize || 1}
-          onChange={(e) => setPrice(parseFloat(e.target.value))}
+          onChange={e => setPrice(parseFloat(e.target.value))}
         />
         <Input.Group compact style={{ paddingBottom: 8 }}>
           <Input
             style={{ width: 'calc(50% + 30px)', textAlign: 'right' }}
             addonBefore={<div style={{ width: '30px' }}>Size</div>}
-            suffix={
-              <span style={{ fontSize: 10, opacity: 0.5 }}>{baseCurrency}</span>
-            }
+            suffix={<span style={{ fontSize: 10, opacity: 0.5 }}>{baseCurrency}</span>}
             value={baseSize}
             type="number"
             step={market?.minOrderSize || 1}
-            onChange={(e) => onSetBaseSize(parseFloat(e.target.value))}
+            onChange={e => onSetBaseSize(parseFloat(e.target.value))}
           />
           <Input
             style={{ width: 'calc(50% - 30px)', textAlign: 'right' }}
-            suffix={
-              <span style={{ fontSize: 10, opacity: 0.5 }}>
-                {quoteCurrency}
-              </span>
-            }
+            suffix={<span style={{ fontSize: 10, opacity: 0.5 }}>{quoteCurrency}</span>}
             value={quoteSize}
             type="number"
             step={market?.minOrderSize || 1}
-            onChange={(e) => onSetQuoteSize(parseFloat(e.target.value))}
+            onChange={e => onSetQuoteSize(parseFloat(e.target.value))}
           />
         </Input.Group>
         <Slider
           value={sizeFraction}
-          tipFormatter={(value) => `${value}%`}
+          tipFormatter={value => `${value}%`}
           marks={sliderMarks}
           onChange={onSliderChange}
         />
         <div style={{ paddingTop: 18 }}>
           {'POST '}
-          <Switch
-            checked={postOnly}
-            onChange={postOnChange}
-            style={{ marginRight: 40 }}
-          />
+          <Switch checked={postOnly} onChange={postOnChange} style={{ marginRight: 40 }} />
           {'IOC '}
           <Switch checked={ioc} onChange={iocOnChange} />
         </div>

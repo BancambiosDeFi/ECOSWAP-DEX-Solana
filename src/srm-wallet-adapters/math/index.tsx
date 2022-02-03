@@ -22,9 +22,7 @@ export class MathWalletAdapter extends EventEmitter implements WalletAdapter {
     return false;
   }
 
-  public async signAllTransactions(
-    transactions: Transaction[],
-  ): Promise<Transaction[]> {
+  public async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     if (!this._provider) {
       return transactions;
     }
@@ -36,6 +34,7 @@ export class MathWalletAdapter extends EventEmitter implements WalletAdapter {
     if ((window as any)?.solana?.isMathWallet) {
       return (window as any).solana;
     }
+
     return undefined;
   }
 
@@ -62,6 +61,7 @@ export class MathWalletAdapter extends EventEmitter implements WalletAdapter {
         message: 'Math Wallet Error',
         description: 'Please install mathwallet',
       });
+
       return;
     }
 

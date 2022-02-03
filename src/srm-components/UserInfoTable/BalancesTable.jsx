@@ -1,9 +1,6 @@
 import { Button } from 'antd';
 import React from 'react';
-import {
-  useTokenAccounts,
-  getSelectedTokenAccountForMint,
-} from '../../srm-utils/markets';
+import { useTokenAccounts, getSelectedTokenAccountForMint } from '../../srm-utils/markets';
 import DataTable from '../layout/DataTable';
 import { useSendConnection } from '../../srm-utils/connection';
 import { useWallet } from '../../components/wallet/wallet';
@@ -29,14 +26,8 @@ export default function BalancesTable({
         openOrders,
         connection,
         wallet,
-        baseCurrencyAccount: getSelectedTokenAccountForMint(
-          accounts,
-          market?.baseMintAddress,
-        ),
-        quoteCurrencyAccount: getSelectedTokenAccountForMint(
-          accounts,
-          market?.quoteMintAddress,
-        ),
+        baseCurrencyAccount: getSelectedTokenAccountForMint(accounts, market?.baseMintAddress),
+        quoteCurrencyAccount: getSelectedTokenAccountForMint(accounts, market?.quoteMintAddress),
         usdcRef,
         usdtRef,
       });
@@ -95,7 +86,7 @@ export default function BalancesTable({
         </div>
       ),
     },
-  ].filter((x) => x);
+  ].filter(x => x);
   return (
     <DataTable
       emptyLabel="No balances"

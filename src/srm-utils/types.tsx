@@ -96,14 +96,8 @@ export interface Balances extends BalancesBase {
 
 export interface OpenOrdersBalances extends BalancesBase {
   market?: string | null | undefined;
-  baseCurrencyAccount:
-    | { pubkey: PublicKey; account: AccountInfo<Buffer> }
-    | null
-    | undefined;
-  quoteCurrencyAccount:
-    | { pubkey: PublicKey; account: AccountInfo<Buffer> }
-    | null
-    | undefined;
+  baseCurrencyAccount: { pubkey: PublicKey; account: AccountInfo<Buffer> } | null | undefined;
+  quoteCurrencyAccount: { pubkey: PublicKey; account: AccountInfo<Buffer> } | null | undefined;
 }
 
 export interface DeprecatedOpenOrdersBalances extends BalancesBase {

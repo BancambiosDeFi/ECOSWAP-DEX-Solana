@@ -47,7 +47,7 @@ export default function CustomClusterEndpointDialog({
           <Input
             placeholder="Cluster Name"
             value={customEndpointName}
-            onChange={(e) => setCustomEndpointName(e.target.value)}
+            onChange={e => setCustomEndpointName(e.target.value)}
           />
         </Col>
       </Row>
@@ -57,7 +57,7 @@ export default function CustomClusterEndpointDialog({
             placeholder="Cluster Endpoint"
             value={customEndpoint}
             addonBefore={'https://'}
-            onChange={(e) => setCustomEndpoint(e.target.value)}
+            onChange={e => setCustomEndpoint(e.target.value)}
           />
         </Col>
       </Row>

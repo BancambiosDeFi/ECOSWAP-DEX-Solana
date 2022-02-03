@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Button } from '@mui/material';
 
@@ -13,10 +7,10 @@ import Wallet from '@project-serum/sol-wallet-adapter';
 import { useConnectionConfig } from '../../srm-utils/connection';
 import { useLocalStorageState } from '../../srm-utils/utils';
 import { WalletContextValues } from '../../srm-utils/types';
+import { notify } from '../../srm-utils/notifications';
 import { WalletAdapter } from './types';
 import { PhantomWalletAdapter } from './phantom';
 // import { SolflareExtensionWalletAdapter } from './solflare-extension';
-import { notify } from '../../srm-utils/notifications';
 
 export const WALLET_PROVIDERS = [
   {
@@ -47,10 +41,9 @@ export function WalletProvider({ children }) {
   const [autoConnect, setAutoConnect] = useState(false);
   const [providerUrl, setProviderUrl] = useLocalStorageState('walletProvider');
 
-  const provider = useMemo(
-    () => WALLET_PROVIDERS.find(({ url }) => url === providerUrl),
-    [providerUrl],
-  );
+  const provider = useMemo(() => WALLET_PROVIDERS.find(({ url }) => url === providerUrl), [
+    providerUrl,
+  ]);
 
   let [wallet, setWallet] = useState<WalletAdapter | undefined>(undefined);
 
@@ -59,10 +52,7 @@ export function WalletProvider({ children }) {
       const updateWallet = () => {
         // hack to also update wallet synchronously in case it disconnects
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        wallet = new (provider.adapter || Wallet)(
-          providerUrl,
-          endpoint,
-        ) as WalletAdapter;
+        wallet = new (provider.adapter || Wallet)(providerUrl, endpoint) as WalletAdapter;
         setWallet(wallet);
       };
 
@@ -73,6 +63,7 @@ export function WalletProvider({ children }) {
           window.removeEventListener('load', listener);
         };
         window.addEventListener('load', listener);
+
         return () => window.removeEventListener('load', listener);
       } else {
         updateWallet();
@@ -93,10 +84,7 @@ export function WalletProvider({ children }) {
           const walletPublicKey = wallet.publicKey.toBase58();
           const keyToDisplay =
             walletPublicKey.length > 20
-              ? `${walletPublicKey.substring(
-                  0,
-                  7,
-                )}.....${walletPublicKey.substring(
+              ? `${walletPublicKey.substring(0, 7)}.....${walletPublicKey.substring(
                   walletPublicKey.length - 7,
                   walletPublicKey.length,
                 )}`
@@ -150,9 +138,7 @@ export function WalletProvider({ children }) {
         select,
         providerUrl,
         setProviderUrl,
-        providerName:
-          WALLET_PROVIDERS.find(({ url }) => url === providerUrl)?.name ??
-          providerUrl,
+        providerName: WALLET_PROVIDERS.find(({ url }) => url === providerUrl)?.name ?? providerUrl,
       }}
     >
       {children}
@@ -176,7 +162,7 @@ export function WalletProvider({ children }) {
             padding: '16px',
           }}
         >
-          {WALLET_PROVIDERS.map((provider) => {
+          {WALLET_PROVIDERS.map(provider => {
             const onClick = function () {
               setProviderUrl(provider.url);
               setAutoConnect(true);

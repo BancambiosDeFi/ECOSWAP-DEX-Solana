@@ -9,11 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
-export default function CustomMarketDialog({
-  visible,
-  onAddCustomMarket,
-  onClose,
-}) {
+export default function CustomMarketDialog({ visible, onAddCustomMarket, onClose }) {
   const connection = useConnection();
 
   const [marketId, setMarketId] = useState('');
@@ -27,9 +23,7 @@ export default function CustomMarketDialog({
 
   const wellFormedMarketId = isValidPublicKey(marketId);
 
-  const [marketAccountInfo] = useAccountInfo(
-    wellFormedMarketId ? new PublicKey(marketId) : null,
-  );
+  const [marketAccountInfo] = useAccountInfo(wellFormedMarketId ? new PublicKey(marketId) : null);
   const programId = marketAccountInfo
     ? marketAccountInfo.owner.toBase58()
     : MARKETS.find(({ deprecated }) => !deprecated).programId.toBase58();
@@ -40,13 +34,8 @@ export default function CustomMarketDialog({
       return;
     }
     setLoadingMarket(true);
-    Market.load(
-      connection,
-      new PublicKey(marketId),
-      {},
-      new PublicKey(programId),
-    )
-      .then((market) => {
+    Market.load(connection, new PublicKey(marketId), {}, new PublicKey(programId))
+      .then(market => {
         setMarket(market);
       })
       .catch(() => {
@@ -64,21 +53,16 @@ export default function CustomMarketDialog({
   };
 
   const knownMarket = MARKETS.find(
-    (m) =>
-      m.address.toBase58() === marketId && m.programId.toBase58() === programId,
+    m => m.address.toBase58() === marketId && m.programId.toBase58() === programId,
   );
-  const knownProgram = MARKETS.find(
-    (m) => m.programId.toBase58() === programId,
-  );
+  const knownProgram = MARKETS.find(m => m.programId.toBase58() === programId);
   const knownBaseCurrency =
     market?.baseMintAddress &&
-    TOKEN_MINTS.find((token) => token.address.equals(market.baseMintAddress))
-      ?.name;
+    TOKEN_MINTS.find(token => token.address.equals(market.baseMintAddress))?.name;
 
   const knownQuoteCurrency =
     market?.quoteMintAddress &&
-    TOKEN_MINTS.find((token) => token.address.equals(market.quoteMintAddress))
-      ?.name;
+    TOKEN_MINTS.find(token => token.address.equals(market.quoteMintAddress))?.name;
 
   const canSubmit =
     !loadingMarket &&
@@ -169,7 +153,7 @@ export default function CustomMarketDialog({
             <Input
               placeholder="Market Id"
               value={marketId}
-              onChange={(e) => setMarketId(e.target.value)}
+              onChange={e => setMarketId(e.target.value)}
               suffix={loadingMarket ? <LoadingOutlined /> : null}
             />
           </Col>
@@ -181,7 +165,7 @@ export default function CustomMarketDialog({
               placeholder="Market Label"
               disabled={!market}
               value={marketLabel}
-              onChange={(e) => setMarketLabel(e.target.value)}
+              onChange={e => setMarketLabel(e.target.value)}
             />
           </Col>
         </Row>
@@ -191,7 +175,7 @@ export default function CustomMarketDialog({
               placeholder="Base label"
               disabled={!market || knownBaseCurrency}
               value={knownBaseCurrency || baseLabel}
-              onChange={(e) => setBaseLabel(e.target.value)}
+              onChange={e => setBaseLabel(e.target.value)}
             />
             {market && !knownBaseCurrency && (
               <div style={{ marginTop: 8 }}>
@@ -204,7 +188,7 @@ export default function CustomMarketDialog({
               placeholder="Quote label"
               disabled={!market || knownQuoteCurrency}
               value={knownQuoteCurrency || quoteLabel}
-              onChange={(e) => setQuoteLabel(e.target.value)}
+              onChange={e => setQuoteLabel(e.target.value)}
             />
             {market && !knownQuoteCurrency && (
               <div style={{ marginTop: 8 }}>

@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import { PublicKey, Transaction } from '@solana/web3.js';
-import { DEFAULT_PUBLIC_KEY, WalletAdapter } from './types';
 import { notify } from '../../srm-utils/notifications';
+import { DEFAULT_PUBLIC_KEY, WalletAdapter } from './types';
 
 type SolflareExtensionEvent = 'disconnect' | 'connect';
 type SolflareExtensionRequestMethod =
@@ -20,15 +20,10 @@ interface SolflareExtensionProvider {
   disconnect: () => Promise<void>;
   on: (event: SolflareExtensionEvent, handler: (args: any) => void) => void;
   off: (event: SolflareExtensionEvent, handler: (args: any) => void) => void;
-  request: (
-    method: SolflareExtensionRequestMethod,
-    params: any,
-  ) => Promise<any>;
+  request: (method: SolflareExtensionRequestMethod, params: any) => Promise<any>;
 }
 
-export class SolflareExtensionWalletAdapter
-  extends EventEmitter
-  implements WalletAdapter {
+export class SolflareExtensionWalletAdapter extends EventEmitter implements WalletAdapter {
   constructor() {
     super();
     this.connect = this.connect.bind(this);
@@ -38,6 +33,7 @@ export class SolflareExtensionWalletAdapter
     if ((window as any)?.solflare?.isSolflare) {
       return (window as any).solflare;
     }
+
     return undefined;
   }
 
@@ -59,9 +55,7 @@ export class SolflareExtensionWalletAdapter
     return this._provider?.autoApprove || false;
   }
 
-  async signAllTransactions(
-    transactions: Transaction[],
-  ): Promise<Transaction[]> {
+  async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     if (!this._provider) {
       return transactions;
     }
@@ -88,10 +82,12 @@ export class SolflareExtensionWalletAdapter
         message: 'Connection Error',
         description: 'Please install Solflare extension',
       });
+
       return;
     }
     this._provider?.on('connect', this._handleConnect);
     this._provider?.on('disconnect', this._handleDisconnect);
+
     return this._provider?.connect();
   }
 

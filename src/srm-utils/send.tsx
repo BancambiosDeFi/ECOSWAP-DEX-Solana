@@ -1,6 +1,5 @@
-import { notify } from './notifications';
-import { getDecimalCount, sleep } from './utils';
-import { getSelectedTokenAccountForMint } from './markets';
+import { Buffer } from 'buffer';
+import assert from 'assert';
 import {
   Account,
   AccountInfo,
@@ -13,11 +12,7 @@ import {
   Transaction,
   TransactionSignature,
 } from '@solana/web3.js';
-import {
-  Token,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
+import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import BN from 'bn.js';
 import {
   DexInstructions,
@@ -27,12 +22,13 @@ import {
   TOKEN_MINTS,
   TokenInstructions,
 } from '@serum/serum';
-import { SelectedTokenAccounts, TokenAccount } from './types';
 import { Order } from '@serum/serum/lib/market';
-import { Buffer } from 'buffer';
-import assert from 'assert';
 import { struct } from 'superstruct';
 import { WalletAdapter } from '../components/wallet/types';
+import { SelectedTokenAccounts, TokenAccount } from './types';
+import { getSelectedTokenAccountForMint } from './markets';
+import { getDecimalCount, sleep } from './utils';
+import { notify } from './notifications';
 
 export async function createTokenAccountTransaction({
   connection,
@@ -63,6 +59,7 @@ export async function createTokenAccountTransaction({
       wallet.publicKey,
     ),
   );
+
   return {
     transaction,
     newAccountPubkey: ata,
@@ -100,6 +97,7 @@ export async function settleFunds({
     if (sendNotification) {
       notify({ message: 'Not connected' });
     }
+
     return;
   }
 
@@ -131,11 +129,7 @@ export async function settleFunds({
     const usdc = TOKEN_MINTS.find(({ name }) => name === 'USDC');
     if (usdtRef && usdt && market.quoteMintAddress.equals(usdt.address)) {
       referrerQuoteWallet = usdtRef;
-    } else if (
-      usdcRef &&
-      usdc &&
-      market.quoteMintAddress.equals(usdc.address)
-    ) {
+    } else if (usdcRef && usdc && market.quoteMintAddress.equals(usdc.address)) {
       referrerQuoteWallet = usdcRef;
     }
   }
@@ -150,10 +144,7 @@ export async function settleFunds({
     referrerQuoteWallet,
   );
 
-  let transaction = mergeTransactions([
-    createAccountTransaction,
-    settleFundsTransaction,
-  ]);
+  const transaction = mergeTransactions([createAccountTransaction, settleFundsTransaction]);
 
   return await sendTransaction({
     transaction,
@@ -187,29 +178,29 @@ export async function settleAllFunds({
     .reduce((cumulative, m) => {
       // @ts-ignore
       cumulative.push(m._programId);
+
       return cumulative;
     }, [])
-    .forEach((programId) => {
-      if (!programIds.find((p) => p.equals(programId))) {
+    .forEach(programId => {
+      if (!programIds.find(p => p.equals(programId))) {
         programIds.push(programId);
       }
     });
 
-  const getOpenOrdersAccountsForProgramId = async (programId) => {
+  const getOpenOrdersAccountsForProgramId = async programId => {
     const openOrdersAccounts = await OpenOrders.findForOwner(
       connection,
       wallet.publicKey,
       programId,
     );
+
     return openOrdersAccounts.filter(
-      (openOrders) =>
-        openOrders.baseTokenFree.toNumber() ||
-        openOrders.quoteTokenFree.toNumber(),
+      openOrders => openOrders.baseTokenFree.toNumber() || openOrders.quoteTokenFree.toNumber(),
     );
   };
 
   const openOrdersAccountsForProgramIds = await Promise.all(
-    programIds.map((programId) => getOpenOrdersAccountsForProgramId(programId)),
+    programIds.map(programId => getOpenOrdersAccountsForProgramId(programId)),
   );
   const openOrdersAccounts = openOrdersAccountsForProgramIds.reduce(
     (accounts, current) => accounts.concat(current),
@@ -218,15 +209,12 @@ export async function settleAllFunds({
 
   const settleTransactions = (
     await Promise.all(
-      openOrdersAccounts.map((openOrdersAccount) => {
-        const market = markets.find((m) =>
+      openOrdersAccounts.map(openOrdersAccount => {
+        const market = markets.find(m =>
           // @ts-ignore
           m._decoded?.ownAddress?.equals(openOrdersAccount.market),
         );
-        if (
-          openOrdersAccount.baseTokenFree.isZero() &&
-          openOrdersAccount.quoteTokenFree.isZero()
-        ) {
+        if (openOrdersAccount.baseTokenFree.isZero() && openOrdersAccount.quoteTokenFree.isZero()) {
           // nothing to settle for this market.
           return null;
         }
@@ -236,20 +224,17 @@ export async function settleAllFunds({
         const selectedBaseTokenAccount = getSelectedTokenAccountForMint(
           tokenAccounts,
           baseMint,
-          baseMint &&
-            selectedTokenAccounts &&
-            selectedTokenAccounts[baseMint.toBase58()],
+          baseMint && selectedTokenAccounts && selectedTokenAccounts[baseMint.toBase58()],
         )?.pubkey;
         const selectedQuoteTokenAccount = getSelectedTokenAccountForMint(
           tokenAccounts,
           quoteMint,
-          quoteMint &&
-            selectedTokenAccounts &&
-            selectedTokenAccounts[quoteMint.toBase58()],
+          quoteMint && selectedTokenAccounts && selectedTokenAccounts[quoteMint.toBase58()],
         )?.pubkey;
         if (!selectedBaseTokenAccount || !selectedQuoteTokenAccount) {
           return null;
         }
+
         return (
           market &&
           market.makeSettleFundsTransaction(
@@ -272,12 +257,12 @@ export async function settleAllFunds({
   );
   if (!settleTransactions || settleTransactions.length === 0) return;
 
-  const transactions = settleTransactions.slice(0, 4).map((t) => t.transaction);
+  const transactions = settleTransactions.slice(0, 4).map(t => t.transaction);
   const signers: Array<Account> = [];
   settleTransactions
     .reduce((cumulative: Array<Account>, t) => cumulative.concat(t.signers), [])
-    .forEach((signer) => {
-      if (!signers.find((s) => s.publicKey.equals(signer.publicKey))) {
+    .forEach(signer => {
+      if (!signers.find(s => s.publicKey.equals(signer.publicKey))) {
         signers.push(signer);
       }
     });
@@ -313,12 +298,11 @@ export async function cancelOrders({
   orders: Order[];
 }) {
   const transaction = market.makeMatchOrdersTransaction(5);
-  orders.forEach((order) => {
-    transaction.add(
-      market.makeCancelOrderInstruction(connection, wallet.publicKey, order),
-    );
+  orders.forEach(order => {
+    transaction.add(market.makeCancelOrderInstruction(connection, wallet.publicKey, order));
   });
   transaction.add(market.makeMatchOrdersTransaction(5));
+
   return await sendTransaction({
     transaction,
     wallet,
@@ -350,29 +334,30 @@ export async function placeOrder({
   quoteCurrencyAccount: PublicKey | undefined;
   feeDiscountPubkey: PublicKey | undefined;
 }) {
-  let formattedMinOrderSize =
-    market?.minOrderSize?.toFixed(getDecimalCount(market.minOrderSize)) ||
-    market?.minOrderSize;
-  let formattedTickSize =
-    market?.tickSize?.toFixed(getDecimalCount(market.tickSize)) ||
-    market?.tickSize;
+  const formattedMinOrderSize =
+    market?.minOrderSize?.toFixed(getDecimalCount(market.minOrderSize)) || market?.minOrderSize;
+  const formattedTickSize =
+    market?.tickSize?.toFixed(getDecimalCount(market.tickSize)) || market?.tickSize;
   const isIncrement = (num, step) =>
-    Math.abs((num / step) % 1) < 1e-5 ||
-    Math.abs(((num / step) % 1) - 1) < 1e-5;
+    Math.abs((num / step) % 1) < 1e-5 || Math.abs(((num / step) % 1) - 1) < 1e-5;
   if (isNaN(price)) {
     notify({ message: 'Invalid price', type: 'error' });
+
     return;
   }
   if (isNaN(size)) {
     notify({ message: 'Invalid size', type: 'error' });
+
     return;
   }
   if (!wallet || !wallet.publicKey) {
     notify({ message: 'Connect wallet', type: 'error' });
+
     return;
   }
   if (!market) {
     notify({ message: 'Invalid  market', type: 'error' });
+
     return;
   }
   if (!isIncrement(size, market.minOrderSize)) {
@@ -380,10 +365,12 @@ export async function placeOrder({
       message: `Size must be an increment of ${formattedMinOrderSize}`,
       type: 'error',
     });
+
     return;
   }
   if (size < market.minOrderSize) {
     notify({ message: 'Size too small', type: 'error' });
+
     return;
   }
   if (!isIncrement(price, market.tickSize)) {
@@ -391,10 +378,12 @@ export async function placeOrder({
       message: `Price must be an increment of ${formattedTickSize}`,
       type: 'error',
     });
+
     return;
   }
   if (price < market.tickSize) {
     notify({ message: 'Price under tick size', type: 'error' });
+
     return;
   }
   const owner = wallet.publicKey;
@@ -432,6 +421,7 @@ export async function placeOrder({
       message: 'Need an SPL token account for cost currency',
       type: 'error',
     });
+
     return;
   }
   const params = {
@@ -448,15 +438,10 @@ export async function placeOrder({
   const matchOrderstransaction = market.makeMatchOrdersTransaction(5);
   transaction.add(matchOrderstransaction);
   const startTime = getUnixTs();
-  let {
+  const {
     transaction: placeOrderTx,
     signers: placeOrderSigners,
-  } = await market.makePlaceOrderTransaction(
-    connection,
-    params,
-    120_000,
-    120_000,
-  );
+  } = await market.makePlaceOrderTransaction(connection, params, 120_000, 120_000);
   const endTime = getUnixTs();
   console.log(`Creating order transaction took ${endTime - startTime}`);
   transaction.add(placeOrderTx);
@@ -507,6 +492,7 @@ export async function listMarket({
           [market.publicKey.toBuffer(), nonce.toArrayLike(Buffer, 'le', 8)],
           dexProgramId,
         );
+
         return [vaultOwner, nonce];
       } catch (e) {
         nonce.iaddn(1);
@@ -613,7 +599,7 @@ export async function listMarket({
     wallet,
     connection,
   });
-  for (let signedTransaction of signedTransactions) {
+  for (const signedTransaction of signedTransactions) {
     await sendSignedTransaction({
       signedTransaction,
       connection,
@@ -656,6 +642,7 @@ export async function sendTransaction({
     signers,
     connection,
   });
+
   return await sendSignedTransaction({
     signedTransaction,
     connection,
@@ -678,13 +665,12 @@ export async function signTransaction({
   signers?: Array<Account>;
   connection: Connection;
 }) {
-  transaction.recentBlockhash = (
-    await connection.getRecentBlockhash('max')
-  ).blockhash;
-  transaction.setSigners(wallet.publicKey, ...signers.map((s) => s.publicKey));
+  transaction.recentBlockhash = (await connection.getRecentBlockhash('max')).blockhash;
+  transaction.setSigners(wallet.publicKey, ...signers.map(s => s.publicKey));
   if (signers.length > 0) {
     transaction.partialSign(...signers);
   }
+
   return await wallet.signTransaction(transaction);
 }
 
@@ -703,14 +689,12 @@ export async function signTransactions({
   const blockhash = (await connection.getRecentBlockhash('max')).blockhash;
   transactionsAndSigners.forEach(({ transaction, signers = [] }) => {
     transaction.recentBlockhash = blockhash;
-    transaction.setSigners(
-      wallet.publicKey,
-      ...signers.map((s) => s.publicKey),
-    );
+    transaction.setSigners(wallet.publicKey, ...signers.map(s => s.publicKey));
     if (signers?.length > 0) {
       transaction.partialSign(...signers);
     }
   });
+
   return await wallet.signAllTransactions(
     transactionsAndSigners.map(({ transaction }) => transaction),
   );
@@ -738,12 +722,9 @@ export async function sendSignedTransaction({
   if (sendNotification) {
     notify({ message: sendingMessage });
   }
-  const txid: TransactionSignature = await connection.sendRawTransaction(
-    rawTransaction,
-    {
-      skipPreflight: true,
-    },
-  );
+  const txid: TransactionSignature = await connection.sendRawTransaction(rawTransaction, {
+    skipPreflight: true,
+  });
   if (sendNotification) {
     notify({ message: sentMessage, type: 'success', txid });
   }
@@ -767,26 +748,19 @@ export async function sendSignedTransaction({
     }
     let simulateResult: SimulatedTransactionResponse | null = null;
     try {
-      simulateResult = (
-        await simulateTransaction(connection, signedTransaction, 'single')
-      ).value;
+      simulateResult = (await simulateTransaction(connection, signedTransaction, 'single')).value;
     } catch (e) {}
     if (simulateResult && simulateResult.err) {
       if (simulateResult.logs) {
         for (let i = simulateResult.logs.length - 1; i >= 0; --i) {
           const line = simulateResult.logs[i];
           if (line.startsWith('Program log: ')) {
-            throw new Error(
-              'Transaction failed: ' + line.slice('Program log: '.length),
-            );
+            throw new Error('Transaction failed: ' + line.slice('Program log: '.length));
           }
         }
       }
       let parsedError;
-      if (
-        typeof simulateResult.err == 'object' &&
-        'InstructionError' in simulateResult.err
-      ) {
+      if (typeof simulateResult.err === 'object' && 'InstructionError' in simulateResult.err) {
         const parsedErrorInfo = parseInstructionErrorResponse(
           signedTransaction,
           simulateResult.err['InstructionError'],
@@ -806,6 +780,7 @@ export async function sendSignedTransaction({
   }
 
   console.log('Latency', txid, getUnixTs() - startTime);
+
   return txid;
 }
 
@@ -828,7 +803,7 @@ async function awaitTransactionSignatureConfirmation(
       try {
         connection.onSignature(
           txid,
-          (result) => {
+          result => {
             console.log('WS confirmed', txid, result);
             done = true;
             if (result.err) {
@@ -848,9 +823,7 @@ async function awaitTransactionSignatureConfirmation(
         // eslint-disable-next-line no-loop-func
         (async () => {
           try {
-            const signatureStatuses = await connection.getSignatureStatuses([
-              txid,
-            ]);
+            const signatureStatuses = await connection.getSignatureStatuses([txid]);
             const result = signatureStatuses && signatureStatuses.value[0];
             if (!done) {
               if (!result) {
@@ -878,6 +851,7 @@ async function awaitTransactionSignatureConfirmation(
     })();
   });
   done = true;
+
   return result;
 }
 
@@ -885,14 +859,16 @@ function mergeTransactions(transactions: (Transaction | undefined)[]) {
   const transaction = new Transaction();
   transactions
     .filter((t): t is Transaction => t !== undefined)
-    .forEach((t) => {
+    .forEach(t => {
       transaction.add(t);
     });
+
   return transaction;
 }
 
 function jsonRpcResult(resultDescription: any) {
   const jsonRpcVersion = struct.literal('2.0');
+
   return struct.union([
     struct({
       jsonrpc: jsonRpcVersion,
@@ -932,17 +908,15 @@ export const GetMultipleAccountsAndContextRpcResult = jsonRpcResultAndContext(
 export async function getMultipleSolanaAccounts(
   connection: Connection,
   publicKeys: PublicKey[],
-): Promise<
-  RpcResponseAndContext<{ [key: string]: AccountInfo<Buffer> | null }>
-> {
-  const args = [publicKeys.map((k) => k.toBase58()), { commitment: 'recent' }];
+): Promise<RpcResponseAndContext<{ [key: string]: AccountInfo<Buffer> | null }>> {
+  const args = [publicKeys.map(k => k.toBase58()), { commitment: 'recent' }];
   // @ts-ignore
   const unsafeRes = await connection._rpcRequest('getMultipleAccounts', args);
   const res = GetMultipleAccountsAndContextRpcResult(unsafeRes);
   if (res.error) {
     throw new Error(
       'failed to get info about accounts ' +
-        publicKeys.map((k) => k.toBase58()).join(', ') +
+        publicKeys.map(k => k.toBase58()).join(', ') +
         ': ' +
         res.error.message,
     );
@@ -973,13 +947,12 @@ export async function getMultipleSolanaAccounts(
     }
     accounts.push(value);
   }
+
   return {
     context: {
       slot: res.result.context.slot,
     },
-    value: Object.fromEntries(
-      accounts.map((account, i) => [publicKeys[i].toBase58(), account]),
-    ),
+    value: Object.fromEntries(accounts.map((account, i) => [publicKeys[i].toBase58(), account])),
   };
 }
 
@@ -1007,5 +980,6 @@ async function simulateTransaction(
   if (res.error) {
     throw new Error('failed to simulate transaction: ' + res.error.message);
   }
+
   return res.result;
 }

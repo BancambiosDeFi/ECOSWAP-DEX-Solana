@@ -14,6 +14,6 @@ export function SolletExtensionAdapter(_, network) {
         message: 'Sollet Extension Error',
         description: 'Please install the Sollet Extension for Chrome',
       });
-    }
-  }
+    },
+  };
 }

@@ -19,12 +19,7 @@ const LEDGER_CLA = 0xe0;
 /*
  * Helper for chunked send of large payloads
  */
-async function ledgerSend(
-  transport: Transport,
-  instruction: number,
-  p1: number,
-  payload: Buffer,
-) {
+async function ledgerSend(transport: Transport, instruction: number, p1: number, payload: Buffer) {
   let p2 = 0;
   let payloadOffset = 0;
 
@@ -32,19 +27,8 @@ async function ledgerSend(
     while (payload.length - payloadOffset > MAX_PAYLOAD) {
       const chunk = payload.slice(payloadOffset, payloadOffset + MAX_PAYLOAD);
       payloadOffset += MAX_PAYLOAD;
-      console.log(
-        'send',
-        (p2 | P2_MORE).toString(16),
-        chunk.length.toString(16),
-        chunk,
-      );
-      const reply = await transport.send(
-        LEDGER_CLA,
-        instruction,
-        p1,
-        p2 | P2_MORE,
-        chunk,
-      );
+      console.log('send', (p2 | P2_MORE).toString(16), chunk.length.toString(16), chunk);
+      const reply = await transport.send(LEDGER_CLA, instruction, p1, p2 | P2_MORE, chunk);
       if (reply.length !== 2) {
         throw new Error('Received unexpected reply payload');
       }
@@ -60,12 +44,12 @@ async function ledgerSend(
 }
 
 const BIP32_HARDENED_BIT = (1 << 31) >>> 0;
-function harden(n: number = 0) {
+function harden(n = 0) {
   return (n | BIP32_HARDENED_BIT) >>> 0;
 }
 
 export function getSolanaDerivationPath(account?: number, change?: number) {
-  var length;
+  let length;
   if (account !== undefined) {
     if (change !== undefined) {
       length = 4;
@@ -76,7 +60,7 @@ export function getSolanaDerivationPath(account?: number, change?: number) {
     length = 2;
   }
 
-  var derivationPath = Buffer.alloc(1 + length * 4);
+  const derivationPath = Buffer.alloc(1 + length * 4);
   // eslint-disable-next-line
   var offset = 0;
   offset = derivationPath.writeUInt8(length, offset);
@@ -100,6 +84,7 @@ export async function signTransaction(
   derivationPath: Buffer = getSolanaDerivationPath(),
 ) {
   const messageBytes = transaction.serializeMessage();
+
   return signBytes(transport, messageBytes, derivationPath);
 }
 

@@ -10,6 +10,7 @@ export default function Link({ external = false, ...props }) {
       </a>
     );
   }
+
   return (
     <RouterLink to={to} {...rest}>
       {children}

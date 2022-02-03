@@ -1,42 +1,37 @@
 import { Button, Divider, Spin, Typography } from 'antd';
 import React from 'react';
+import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
+import SyncOutlined from '@ant-design/icons/lib/icons/SyncOutlined';
 import {
   useGetOpenOrdersForDeprecatedMarkets,
   useBalancesForDeprecatedMarkets,
   useUnmigratedOpenOrdersAccounts,
 } from '../srm-utils/markets';
 import FloatingElement from './layout/FloatingElement';
-import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
 import BalancesTable from './UserInfoTable/BalancesTable';
 import OpenOrderTable from './UserInfoTable/OpenOrderTable';
-import SyncOutlined from '@ant-design/icons/lib/icons/SyncOutlined';
 
 const { Title } = Typography;
 
 export default function DeprecatedMarketsInstructions({ switchToLiveMarkets }) {
   const balances = useBalancesForDeprecatedMarkets();
-  const {
-    openOrders,
-    loaded,
-    refreshOpenOrders,
-  } = useGetOpenOrdersForDeprecatedMarkets();
+  const { openOrders, loaded, refreshOpenOrders } = useGetOpenOrdersForDeprecatedMarkets();
 
   const { refresh } = useUnmigratedOpenOrdersAccounts();
   const needToCancelOrders = !openOrders || openOrders.length > 0;
   const filteredBalances =
-    balances &&
-    balances.filter(({ orders, unsettled }) => orders > 0 || unsettled > 0);
+    balances && balances.filter(({ orders, unsettled }) => orders > 0 || unsettled > 0);
   const needToSettleFunds = filteredBalances && filteredBalances.length > 0;
+
   return (
     <FloatingElement>
       <Title level={4} style={{ color: 'rgba(255, 255, 255, 1)' }}>
         Migrate new markets
       </Title>
       <Typography>
-        Markets on older versions of the DEX or using Wrapped USDT are now
-        deprecated. To migrate over to the new markets, please cancel your
-        orders and settle your funds on old markets. To convert from Wrapped
-        USDT to Native USDT use sollet.io.
+        Markets on older versions of the DEX or using Wrapped USDT are now deprecated. To migrate
+        over to the new markets, please cancel your orders and settle your funds on old markets. To
+        convert from Wrapped USDT to Native USDT use sollet.io.
       </Typography>
       <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}>
         <Button onClick={() => refresh(true)}>
@@ -47,9 +42,7 @@ export default function DeprecatedMarketsInstructions({ switchToLiveMarkets }) {
         <Spin size="large" />
       ) : (
         <>
-          <Divider>
-            {!needToCancelOrders && <CheckOutlined />} Cancel your orders
-          </Divider>
+          <Divider>{!needToCancelOrders && <CheckOutlined />} Cancel your orders</Divider>
           {needToCancelOrders ? (
             loaded ? (
               <OpenOrderTable
@@ -65,9 +58,7 @@ export default function DeprecatedMarketsInstructions({ switchToLiveMarkets }) {
               <Spin size="large" />
             )
           ) : null}
-          <Divider>
-            {!needToSettleFunds && <CheckOutlined />} Settle your funds
-          </Divider>
+          <Divider>{!needToSettleFunds && <CheckOutlined />} Settle your funds</Divider>
           {needToSettleFunds && (
             <BalancesTable
               balances={filteredBalances}

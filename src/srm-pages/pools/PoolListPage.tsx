@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import FloatingElement from '../../srm-components/layout/FloatingElement';
 import React, { useState } from 'react';
 import { Button, Input, Typography } from 'antd';
 import { useHistory } from 'react-router-dom';
+import FloatingElement from '../../srm-components/layout/FloatingElement';
 import Link from '../../srm-components/Link';
 
 const { Title } = Typography;
@@ -29,6 +29,7 @@ export default function PoolListPage() {
     e.preventDefault();
     history.push(`/pools/${poolAddress}`);
   }
+
   return (
     <Wrapper>
       <FloatingElement>
@@ -36,7 +37,7 @@ export default function PoolListPage() {
         <Form onSubmit={onSubmit}>
           <Input
             value={poolAddress}
-            onChange={(e) => setPoolAddress(e.target.value.trim())}
+            onChange={e => setPoolAddress(e.target.value.trim())}
             placeholder="Pool address"
           />
           <Button type="primary" htmlType="submit">

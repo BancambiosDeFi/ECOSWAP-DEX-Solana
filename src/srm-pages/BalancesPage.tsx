@@ -1,9 +1,6 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import {
-  useAllOpenOrdersBalances,
-  useWalletBalancesForAllMarkets,
-} from '../srm-utils/markets';
+import { useAllOpenOrdersBalances, useWalletBalancesForAllMarkets } from '../srm-utils/markets';
 import FloatingElement from '../srm-components/layout/FloatingElement';
 import WalletBalancesTable from '../srm-components/UserInfoTable/WalletBalancesTable';
 import { useMintToTickers } from '../srm-utils/tokens';
@@ -15,7 +12,7 @@ export default function BalancesPage() {
   const mintToTickers = useMintToTickers();
   const openOrdersBalances = useAllOpenOrdersBalances();
 
-  const data = (walletBalances || []).map((balance) => {
+  const data = (walletBalances || []).map(balance => {
     const balances = {
       coin: mintToTickers[balance.mint],
       mint: balance.mint,
@@ -23,10 +20,11 @@ export default function BalancesPage() {
       openOrdersFree: 0,
       openOrdersTotal: 0,
     };
-    for (let openOrdersAccount of openOrdersBalances[balance.mint] || []) {
+    for (const openOrdersAccount of openOrdersBalances[balance.mint] || []) {
       balances['openOrdersFree'] += openOrdersAccount.free;
       balances['openOrdersTotal'] += openOrdersAccount.total;
     }
+
     return balances;
   });
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { TokenAccount } from '../srm-utils/types';
-import { useSelectedTokenAccounts } from '../srm-utils/markets';
 import { Button, Col, Select, Typography } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
+import { TokenAccount } from '../srm-utils/types';
+import { useSelectedTokenAccounts } from '../srm-utils/markets';
 import { abbreviateAddress } from '../srm-utils/utils';
 import { notify } from '../srm-utils/notifications';
 
@@ -15,10 +15,7 @@ export default function StandaloneTokenAccountsSelect({
   mint: string | undefined;
   label?: boolean;
 }) {
-  const [
-    selectedTokenAccounts,
-    setSelectedTokenAccounts,
-  ] = useSelectedTokenAccounts();
+  const [selectedTokenAccounts, setSelectedTokenAccounts] = useSelectedTokenAccounts();
 
   let selectedValue: string | undefined;
   if (mint && mint in selectedTokenAccounts) {
@@ -29,13 +26,14 @@ export default function StandaloneTokenAccountsSelect({
     selectedValue = undefined;
   }
 
-  const setTokenAccountForCoin = (value) => {
+  const setTokenAccountForCoin = value => {
     if (!mint) {
       notify({
         message: 'Error selecting token account',
         description: 'Mint is undefined',
         type: 'error',
       });
+
       return;
     }
     const newSelectedTokenAccounts = { ...selectedTokenAccounts };
@@ -47,20 +45,11 @@ export default function StandaloneTokenAccountsSelect({
     <React.Fragment>
       {label && <Col span={8}>Token account:</Col>}
       <Col span={label ? 13 : 21}>
-        <Select
-          style={{ width: '100%' }}
-          value={selectedValue}
-          onSelect={setTokenAccountForCoin}
-        >
-          {accounts?.map((account) => (
-            <Select.Option
-              key={account.pubkey.toBase58()}
-              value={account.pubkey.toBase58()}
-            >
+        <Select style={{ width: '100%' }} value={selectedValue} onSelect={setTokenAccountForCoin}>
+          {accounts?.map(account => (
+            <Select.Option key={account.pubkey.toBase58()} value={account.pubkey.toBase58()}>
               <Typography.Text code>
-                {label
-                  ? abbreviateAddress(account.pubkey, 8)
-                  : account.pubkey.toBase58()}
+                {label ? abbreviateAddress(account.pubkey, 8) : account.pubkey.toBase58()}
               </Typography.Text>
             </Select.Option>
           ))}
@@ -71,9 +60,7 @@ export default function StandaloneTokenAccountsSelect({
           shape="round"
           icon={<CopyOutlined />}
           size={'small'}
-          onClick={() =>
-            selectedValue && navigator.clipboard.writeText(selectedValue)
-          }
+          onClick={() => selectedValue && navigator.clipboard.writeText(selectedValue)}
         />
       </Col>
     </React.Fragment>

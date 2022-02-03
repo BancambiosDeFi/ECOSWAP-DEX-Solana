@@ -1,22 +1,18 @@
-import {
-  InfoCircleOutlined,
-  PlusCircleOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { InfoCircleOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Col, Menu, Popover, Row, Select } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import logo from '../srm-assets/logo.png';
 import styled from 'styled-components';
+import { Connection } from '@solana/web3.js';
+import logo from '../srm-assets/logo.png';
 import { useWallet } from '../components/wallet/wallet';
 import { ENDPOINTS, useConnectionConfig } from '../srm-utils/connection';
-import Settings from './Settings';
-import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
 import { EndpointInfo } from '../srm-utils/types';
 import { notify } from '../srm-utils/notifications';
-import { Connection } from '@solana/web3.js';
 import WalletConnect from '../components/wallet/WalletConnect';
 import { getTradePageUrl } from '../srm-utils/markets';
+import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
+import Settings from './Settings';
 
 const Wrapper = styled.div`
   background-color: #0d1017;
@@ -64,7 +60,7 @@ export default function TopBar() {
   const history = useHistory();
 
   const handleClick = useCallback(
-    (e) => {
+    e => {
       if (!(e.key in EXTERNAL_LINKS)) {
         history.push(e.key);
       }
@@ -73,18 +69,17 @@ export default function TopBar() {
   );
 
   const onAddCustomEndpoint = (info: EndpointInfo) => {
-    const existingEndpoint = availableEndpoints.some(
-      (e) => e.endpoint === info.endpoint,
-    );
+    const existingEndpoint = availableEndpoints.some(e => e.endpoint === info.endpoint);
     if (existingEndpoint) {
       notify({
         message: `An endpoint with the given url already exists`,
         type: 'error',
       });
+
       return;
     }
 
-    const handleError = (e) => {
+    const handleError = e => {
       console.log(`Connection to ${info.endpoint} failed: ${e}`);
       notify({
         message: `Failed to connect to ${info.endpoint}`,
@@ -99,10 +94,7 @@ export default function TopBar() {
         .then(() => {
           setTestingConnection(true);
           console.log(`testing connection to ${info.endpoint}`);
-          const newCustomEndpoints = [
-            ...availableEndpoints.filter((e) => e.custom),
-            info,
-          ];
+          const newCustomEndpoints = [...availableEndpoints.filter(e => e.custom), info];
           setEndpoint(info.endpoint);
           setCustomEndpoints(newCustomEndpoints);
         })
@@ -122,6 +114,7 @@ export default function TopBar() {
       }
     };
     window.addEventListener('beforeunload', handler);
+
     return () => window.removeEventListener('beforeunload', handler);
   }, [endpointInfoCustom, setEndpoint]);
 
@@ -157,17 +150,13 @@ export default function TopBar() {
           <Menu.Item key={tradePageUrl} style={{ margin: '0 10px 0 20px' }}>
             TRADE
           </Menu.Item>
-          {(
+          {
             <Menu.Item key="/swap" style={{ margin: '0 10px' }}>
-              <a
-                href={EXTERNAL_LINKS['/swap']}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={EXTERNAL_LINKS['/swap']} target="_blank" rel="noopener noreferrer">
                 SWAP
               </a>
             </Menu.Item>
-          )}
+          }
           {connected && location.pathname === '/balances' && (
             <Menu.Item key="/balances" style={{ margin: '0 10px' }}>
               BALANCES
@@ -188,20 +177,14 @@ export default function TopBar() {
               ADD MARKET
             </Menu.Item>
           )}
-          {(
+          {
             <Menu.SubMenu
               title="LEARN"
-              onTitleClick={() =>
-                window.open(EXTERNAL_LINKS['/learn'], '_blank')
-              }
+              onTitleClick={() => window.open(EXTERNAL_LINKS['/learn'], '_blank')}
               style={{ margin: '0 0px 0 10px' }}
             >
               <Menu.Item key="/add-market">
-                <a
-                  href={EXTERNAL_LINKS['/add-market']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={EXTERNAL_LINKS['/add-market']} target="_blank" rel="noopener noreferrer">
                   Adding a market
                 </a>
               </Menu.Item>
@@ -215,11 +198,7 @@ export default function TopBar() {
                 </a>
               </Menu.Item>
               <Menu.Item key="/dex-list">
-                <a
-                  href={EXTERNAL_LINKS['/dex-list']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={EXTERNAL_LINKS['/dex-list']} target="_blank" rel="noopener noreferrer">
                   DEX list
                 </a>
               </Menu.Item>
@@ -233,25 +212,17 @@ export default function TopBar() {
                 </a>
               </Menu.Item>
               <Menu.Item key="/explorer">
-                <a
-                  href={EXTERNAL_LINKS['/explorer']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={EXTERNAL_LINKS['/explorer']} target="_blank" rel="noopener noreferrer">
                   Solana block explorer
                 </a>
               </Menu.Item>
               <Menu.Item key="/srm-faq">
-                <a
-                  href={EXTERNAL_LINKS['/srm-faq']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={EXTERNAL_LINKS['/srm-faq']} target="_blank" rel="noopener noreferrer">
                   SRM FAQ
                 </a>
               </Menu.Item>
             </Menu.SubMenu>
-          )}
+          }
         </Menu>
         <div
           style={{
@@ -259,14 +230,9 @@ export default function TopBar() {
             alignItems: 'center',
             paddingRight: 5,
           }}
-        >
-        </div>
+        ></div>
         <div>
-          <Row
-            align="middle"
-            style={{ paddingLeft: 5, paddingRight: 5 }}
-            gutter={16}
-          >
+          <Row align="middle" style={{ paddingLeft: 5, paddingRight: 5 }} gutter={16}>
             <Col>
               <PlusCircleOutlined
                 style={{ color: '#2abdd2' }}
@@ -274,12 +240,7 @@ export default function TopBar() {
               />
             </Col>
             <Col>
-              <Popover
-                content={endpoint}
-                placement="bottomRight"
-                title="URL"
-                trigger="hover"
-              >
+              <Popover content={endpoint} placement="bottomRight" title="URL" trigger="hover">
                 <InfoCircleOutlined style={{ color: '#2abdd2' }} />
               </Popover>
             </Col>

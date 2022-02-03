@@ -32,12 +32,7 @@ export default function DepositDialog({ onClose, baseOrQuote }) {
     return null;
   }
   return (
-    <Modal
-      title={depositCoin}
-      visible={!!coinMint}
-      onOk={onClose}
-      onCancel={onClose}
-    >
+    <Modal title={depositCoin} visible={!!coinMint} onOk={onClose} onCancel={onClose}>
       <div style={{ paddingTop: '20px' }}>
         <p style={{ color: 'white' }}>Mint address:</p>
         <p style={{ color: 'rgba(255,255,255,0.5)' }}>{coinMint.toBase58()}</p>

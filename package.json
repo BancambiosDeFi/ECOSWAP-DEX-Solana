@@ -51,7 +51,8 @@
     "build:serum": "cd serum && yarn && yarn build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write src"
+    "format": "prettier --write src",
+    "lint": "eslint --fix src/"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -73,11 +74,6 @@
       "last 1 safari version"
     ]
   },
-  "prettier": {
-    "singleQuote": true,
-    "arrowParens": "always",
-    "trailingComma": "all"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -91,7 +87,13 @@
     "git-format-staged": "^2.1.0",
     "husky": "^4.2.5",
     "lint-staged": ">=10",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0"
   },
   "lint-staged": {
     "*.{js,jsx,css,md}": "prettier --write"

@@ -1,8 +1,8 @@
-import { useLocalStorageState } from './utils';
 import { Account, AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import React, { useContext, useEffect, useMemo, useRef } from 'react';
-import { setCache, useAsyncData } from './fetch-loop';
 import tuple from 'immutable-tuple';
+import { setCache, useAsyncData } from './fetch-loop';
+import { useLocalStorageState } from './utils';
 import { ConnectionContextValues, EndpointInfo } from './types';
 
 export const ENDPOINTS: EndpointInfo[] = [
@@ -25,23 +25,21 @@ export function ConnectionProvider({ children }) {
     'connectionEndpts',
     ENDPOINTS[0].endpoint,
   );
-  const [customEndpoints, setCustomEndpoints] = useLocalStorageState<
-    EndpointInfo[]
-  >('customConnectionEndpoints', []);
+  const [customEndpoints, setCustomEndpoints] = useLocalStorageState<EndpointInfo[]>(
+    'customConnectionEndpoints',
+    [],
+  );
   const availableEndpoints = ENDPOINTS.concat(customEndpoints);
 
-  const connection = useMemo(() => new Connection(endpoint, 'recent'), [
-    endpoint,
-  ]);
-  const sendConnection = useMemo(() => new Connection(endpoint, 'recent'), [
-    endpoint,
-  ]);
+  const connection = useMemo(() => new Connection(endpoint, 'recent'), [endpoint]);
+  const sendConnection = useMemo(() => new Connection(endpoint, 'recent'), [endpoint]);
 
   // The websocket library solana/web3.js uses closes its websocket connection when the subscription list
   // is empty after opening its first time, preventing subsequent subscriptions from receiving responses.
   // This is a hack to prevent the list from every getting empty
   useEffect(() => {
     const id = connection.onAccountChange(new Account().publicKey, () => {});
+
     return () => {
       connection.removeAccountChangeListener(id);
     };
@@ -49,16 +47,15 @@ export function ConnectionProvider({ children }) {
 
   useEffect(() => {
     const id = connection.onSlotChange(() => null);
+
     return () => {
       connection.removeSlotChangeListener(id);
     };
   }, [connection]);
 
   useEffect(() => {
-    const id = sendConnection.onAccountChange(
-      new Account().publicKey,
-      () => {},
-    );
+    const id = sendConnection.onAccountChange(new Account().publicKey, () => {});
+
     return () => {
       sendConnection.removeAccountChangeListener(id);
     };
@@ -66,6 +63,7 @@ export function ConnectionProvider({ children }) {
 
   useEffect(() => {
     const id = sendConnection.onSlotChange(() => null);
+
     return () => {
       sendConnection.removeSlotChangeListener(id);
     };
@@ -92,6 +90,7 @@ export function useConnection() {
   if (!context) {
     throw new Error('Missing connection context');
   }
+
   return context.connection;
 }
 
@@ -100,6 +99,7 @@ export function useSendConnection() {
   if (!context) {
     throw new Error('Missing connection context');
   }
+
   return context.sendConnection;
 }
 
@@ -108,11 +108,10 @@ export function useConnectionConfig() {
   if (!context) {
     throw new Error('Missing connection context');
   }
+
   return {
     endpoint: context.endpoint,
-    endpointInfo: context.availableEndpoints.find(
-      (info) => info.endpoint === context.endpoint,
-    ),
+    endpointInfo: context.availableEndpoints.find(info => info.endpoint === context.endpoint),
     setEndpoint: context.setEndpoint,
     availableEndpoints: context.availableEndpoints,
     setCustomEndpoints: context.setCustomEndpoints,
@@ -134,11 +133,11 @@ export function useAccountInfo(
       return;
     }
     if (accountListenerCount.has(cacheKey)) {
-      let currentItem = accountListenerCount.get(cacheKey);
+      const currentItem = accountListenerCount.get(cacheKey);
       ++currentItem.count;
     } else {
       let previousInfo: AccountInfo<Buffer> | null = null;
-      const subscriptionId = connection.onAccountChange(publicKey, (info) => {
+      const subscriptionId = connection.onAccountChange(publicKey, info => {
         if (
           !previousInfo ||
           !previousInfo.data.equals(info.data) ||
@@ -150,9 +149,10 @@ export function useAccountInfo(
       });
       accountListenerCount.set(cacheKey, { count: 1, subscriptionId });
     }
+
     return () => {
-      let currentItem = accountListenerCount.get(cacheKey);
-      let nextCount = currentItem.count - 1;
+      const currentItem = accountListenerCount.get(cacheKey);
+      const nextCount = currentItem.count - 1;
       if (nextCount <= 0) {
         connection.removeAccountChangeListener(currentItem.subscriptionId);
         accountListenerCount.delete(cacheKey);
@@ -171,10 +171,12 @@ export function useAccountInfo(
   ) {
     previousInfoRef.current = accountInfo;
   }
+
   return [previousInfoRef.current, loaded];
 }
 
 export function useAccountData(publicKey) {
   const [accountInfo] = useAccountInfo(publicKey);
+
   return accountInfo && accountInfo.data;
 }

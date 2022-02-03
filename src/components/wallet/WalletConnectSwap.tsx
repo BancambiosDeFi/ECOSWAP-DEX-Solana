@@ -1,6 +1,6 @@
 import React from 'react';
-import { useWallet } from './wallet';
 import ButtonComponent from '../../srm-components/Button/Button';
+import { useWallet } from './wallet';
 
 export default function WalletConnectSwap() {
   const { connected, connect, disconnect } = useWallet();

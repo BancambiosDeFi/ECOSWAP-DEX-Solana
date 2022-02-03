@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Col, Typography, Tag } from 'antd';
+import { TokenInstructions, getFeeRates } from '@serum/serum';
 import { useFeeDiscountKeys } from '../../srm-utils/markets';
 import DataTable from '../layout/DataTable';
-import { TokenInstructions, getFeeRates } from '@serum/serum';
 import { percentFormat } from '../../srm-utils/utils';
 
 export default function FeesTable() {
@@ -30,21 +30,19 @@ export default function FeesTable() {
       title: 'Taker',
       dataIndex: 'taker',
       key: 'taker',
-      render: (feeTier, row) =>
-        percentFormat.format(getFeeRates(row.feeTier).taker),
+      render: (feeTier, row) => percentFormat.format(getFeeRates(row.feeTier).taker),
     },
     {
       title: 'Maker',
       dataIndex: 'maker',
       key: 'maker',
-      render: (feeTier, row) =>
-        percentFormat.format(getFeeRates(row.feeTier).maker),
+      render: (feeTier, row) => percentFormat.format(getFeeRates(row.feeTier).maker),
     },
     {
       title: `Public Key`,
       dataIndex: 'pubkey',
       key: 'pubkey',
-      render: (pubkey) => pubkey.toBase58(),
+      render: pubkey => pubkey.toBase58(),
     },
     {
       title: `Balance`,
@@ -85,9 +83,7 @@ export default function FeesTable() {
       </Row>
       <Row style={{ marginTop: 8 }}>
         <Col>
-          <Typography>
-            Holding SRM or MSRM makes you eligible for fee discounts:
-          </Typography>
+          <Typography>Holding SRM or MSRM makes you eligible for fee discounts:</Typography>
           <FeeScheduleTable />
         </Col>
       </Row>
@@ -128,30 +124,27 @@ function FeeScheduleTable() {
       title: 'Taker',
       dataIndex: 'taker',
       key: 'taker',
-      render: (feeTier, row) =>
-        percentFormat.format(getFeeRates(row.feeTier).taker),
+      render: (feeTier, row) => percentFormat.format(getFeeRates(row.feeTier).taker),
     },
     {
       title: 'Maker',
       dataIndex: 'maker',
       key: 'maker',
-      render: (feeTier, row) =>
-        percentFormat.format(getFeeRates(row.feeTier).maker),
+      render: (feeTier, row) => percentFormat.format(getFeeRates(row.feeTier).maker),
     },
     {
       title: 'Requirements',
       dataIndex: 'requirements',
       key: 'requirements',
       render: (_, row) => (
-        <Typography>
-          {!row.balance ? 'None' : `≥ ${row.balance} ${row.token}`}
-        </Typography>
+        <Typography>{!row.balance ? 'None' : `≥ ${row.balance} ${row.token}`}</Typography>
       ),
     },
   ];
+
   return (
     <DataTable
-      dataSource={dataSource.map((info) => ({ ...info, key: info.feeTier }))}
+      dataSource={dataSource.map(info => ({ ...info, key: info.feeTier }))}
       columns={columns}
     />
   );

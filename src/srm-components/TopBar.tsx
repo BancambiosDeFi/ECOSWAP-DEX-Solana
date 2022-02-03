@@ -47,13 +47,8 @@ const EXTERNAL_LINKS = {
 
 export default function TopBar() {
   const { connected, wallet } = useWallet();
-  const {
-    endpoint,
-    endpointInfo,
-    setEndpoint,
-    availableEndpoints,
-    setCustomEndpoints,
-  } = useConnectionConfig();
+  const { endpoint, endpointInfo, setEndpoint, availableEndpoints, setCustomEndpoints } =
+    useConnectionConfig();
   const [addEndpointVisible, setAddEndpointVisible] = useState(false);
   const [testingConnection, setTestingConnection] = useState(false);
   const location = useLocation();
@@ -152,7 +147,7 @@ export default function TopBar() {
           </Menu.Item>
           {
             <Menu.Item key="/swap" style={{ margin: '0 10px' }}>
-              <a href={EXTERNAL_LINKS['/swap']} target="_blank" rel="noopener noreferrer">
+              <a href="/#/swap" rel="noopener noreferrer">
                 SWAP
               </a>
             </Menu.Item>

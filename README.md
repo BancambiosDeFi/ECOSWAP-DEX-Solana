@@ -15,7 +15,7 @@ npm install -g yarn
 
 With Docker:
 
-Just run `docker-compose up` from the root directory.
+Just run `docker-compose up` from the root directory to launch the app and `docker-compose up -d --build` for the first time build or when something was changed
 
 Without Docker:
 

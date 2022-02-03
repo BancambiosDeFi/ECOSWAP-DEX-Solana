@@ -1,11 +1,11 @@
 import { PublicKey } from '@solana/web3.js';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { useAccountInfo } from '../srm-utils/connection';
-import { isValidPublicKey } from '../srm-utils/utils';
 import { ValidateStatus } from 'antd/lib/form/FormItem';
 import { TokenInstructions } from '@serum/serum';
-import { parseTokenMintData, useMintToTickers } from '../srm-utils/tokens';
 import { AutoComplete, Form, Tooltip } from 'antd';
+import { useAccountInfo } from '../srm-utils/connection';
+import { isValidPublicKey } from '../srm-utils/utils';
+import { parseTokenMintData, useMintToTickers } from '../srm-utils/tokens';
 import Link from './Link';
 
 export interface MintInfo {
@@ -28,8 +28,7 @@ export function useMintInput(
     return Object.entries(mintToTickers)
       .filter(
         ([mintAddress, ticker]) =>
-          mintAddress.includes(address) ||
-          ticker.toLowerCase().includes(address.toLowerCase()),
+          mintAddress.includes(address) || ticker.toLowerCase().includes(address.toLowerCase()),
       )
       .map(([mintAddress, ticker]) => ({
         value: mintAddress,
@@ -53,7 +52,7 @@ export function useMintInput(
           accountInfo.owner.equals(TokenInstructions.TOKEN_PROGRAM_ID) &&
           accountInfo.data.length === 82
         ) {
-          let parsed = parseTokenMintData(accountInfo.data);
+          const parsed = parseTokenMintData(accountInfo.data);
           if (parsed.initialized) {
             validateStatus = 'success';
             mintInfo = {
@@ -75,6 +74,7 @@ export function useMintInput(
         help = 'Invalid Solana address';
       }
     }
+
     return { validateStatus, hasFeedback, help, mintInfo };
   }, [address, accountInfo, loaded]);
 
@@ -100,11 +100,7 @@ export function useMintInput(
       hasFeedback={hasFeedback}
       help={help}
     >
-      <AutoComplete
-        options={options}
-        value={address}
-        onChange={(value) => setAddress(value)}
-      />
+      <AutoComplete options={options} value={address} onChange={value => setAddress(value)} />
     </Form.Item>
   );
 

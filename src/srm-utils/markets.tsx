@@ -8,6 +8,11 @@ import {
 } from '@serum/serum';
 import { PublicKey } from '@solana/web3.js';
 import React, { useContext, useEffect, useState } from 'react';
+import tuple from 'immutable-tuple';
+import BN from 'bn.js';
+import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
+import { Order } from '@serum/serum/lib/market';
+import { useWallet } from '../components/wallet/wallet';
 import {
   divideBnToNumber,
   floorToDecimal,
@@ -17,15 +22,8 @@ import {
 } from './utils';
 import { refreshCache, useAsyncData } from './fetch-loop';
 import { useAccountData, useAccountInfo, useConnection } from './connection';
-import { useWallet } from '../components/wallet/wallet';
-import tuple from 'immutable-tuple';
 import { notify } from './notifications';
-import BN from 'bn.js';
-import {
-  getTokenAccountInfo,
-  parseTokenAccountData,
-  useMintInfos,
-} from './tokens';
+import { getTokenAccountInfo, parseTokenAccountData, useMintInfos } from './tokens';
 import {
   Balances,
   CustomMarketInfo,
@@ -37,21 +35,18 @@ import {
   SelectedTokenAccounts,
   TokenAccount,
 } from './types';
-import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
-import { Order } from '@serum/serum/lib/market';
 import BonfidaApi from './bonfidaConnector';
 
 // Used in debugging, should be false in production
 const _IGNORE_DEPRECATED = false;
 
 export const USE_MARKETS: MarketInfo[] = _IGNORE_DEPRECATED
-  ? MARKETS.map((m) => ({ ...m, deprecated: false }))
+  ? MARKETS.map(m => ({ ...m, deprecated: false }))
   : MARKETS;
 
 export function useMarketsList() {
   return USE_MARKETS.filter(
-    ({ name, deprecated }) =>
-      !deprecated && !process.env.REACT_APP_EXCLUDE_MARKETS?.includes(name),
+    ({ name, deprecated }) => !deprecated && !process.env.REACT_APP_EXCLUDE_MARKETS?.includes(name),
   );
 }
 
@@ -65,7 +60,7 @@ export function useAllMarkets() {
       marketName: string;
       programId: PublicKey;
     } | null> = await Promise.all(
-      getMarketInfos(customMarkets).map(async (marketInfo) => {
+      getMarketInfos(customMarkets).map(async marketInfo => {
         try {
           const market = await Market.load(
             connection,
@@ -73,6 +68,7 @@ export function useAllMarkets() {
             {},
             marketInfo.programId,
           );
+
           return {
             market,
             marketName: marketInfo.name,
@@ -84,20 +80,20 @@ export function useAllMarkets() {
             description: e.message,
             type: 'error',
           });
+
           return null;
         }
       }),
     );
+
     return markets.filter(
-      (m): m is { market: Market; marketName: string; programId: PublicKey } =>
-        !!m,
+      (m): m is { market: Market; marketName: string; programId: PublicKey } => !!m,
     );
   };
-  return useAsyncData(
-    getAllMarkets,
-    tuple('getAllMarkets', customMarkets.length, connection),
-    { refreshInterval: _VERY_SLOW_REFRESH_INTERVAL },
-  );
+
+  return useAsyncData(getAllMarkets, tuple('getAllMarkets', customMarkets.length, connection), {
+    refreshInterval: _VERY_SLOW_REFRESH_INTERVAL,
+  });
 }
 
 export function useUnmigratedOpenOrdersAccounts() {
@@ -112,11 +108,11 @@ export function useUnmigratedOpenOrdersAccounts() {
     let deprecatedOpenOrdersAccounts: OpenOrders[] = [];
     const deprecatedProgramIds = Array.from(
       new Set(
-        USE_MARKETS.filter(
-          ({ deprecated }) => deprecated,
-        ).map(({ programId }) => programId.toBase58()),
+        USE_MARKETS.filter(({ deprecated }) => deprecated).map(({ programId }) =>
+          programId.toBase58(),
+        ),
       ),
-    ).map((publicKeyStr) => new PublicKey(publicKeyStr));
+    ).map(publicKeyStr => new PublicKey(publicKeyStr));
     let programId: PublicKey;
     for (programId of deprecatedProgramIds) {
       try {
@@ -128,25 +124,20 @@ export function useUnmigratedOpenOrdersAccounts() {
         deprecatedOpenOrdersAccounts = deprecatedOpenOrdersAccounts.concat(
           openOrdersAccounts
             .filter(
-              (openOrders) =>
-                openOrders.baseTokenTotal.toNumber() ||
-                openOrders.quoteTokenTotal.toNumber(),
+              openOrders =>
+                openOrders.baseTokenTotal.toNumber() || openOrders.quoteTokenTotal.toNumber(),
             )
-            .filter((openOrders) =>
+            .filter(openOrders =>
               USE_MARKETS.some(
-                (market) =>
-                  market.deprecated && market.address.equals(openOrders.market),
+                market => market.deprecated && market.address.equals(openOrders.market),
               ),
             ),
         );
       } catch (e) {
-        console.log(
-          'Error loading deprecated markets',
-          programId?.toBase58(),
-          e.message,
-        );
+        console.log('Error loading deprecated markets', programId?.toBase58(), e.message);
       }
     }
+
     // Maybe sort
     return deprecatedOpenOrdersAccounts;
   }
@@ -190,19 +181,15 @@ export function getMarketDetails(
     return {};
   }
   const marketInfos = getMarketInfos(customMarkets);
-  const marketInfo = marketInfos.find((otherMarket) =>
-    otherMarket.address.equals(market.address),
-  );
+  const marketInfo = marketInfos.find(otherMarket => otherMarket.address.equals(market.address));
   const baseCurrency =
     (market?.baseMintAddress &&
-      TOKEN_MINTS.find((token) => token.address.equals(market.baseMintAddress))
-        ?.name) ||
+      TOKEN_MINTS.find(token => token.address.equals(market.baseMintAddress))?.name) ||
     (marketInfo?.baseLabel && `${marketInfo?.baseLabel}*`) ||
     'UNKNOWN';
   const quoteCurrency =
     (market?.quoteMintAddress &&
-      TOKEN_MINTS.find((token) => token.address.equals(market.quoteMintAddress))
-        ?.name) ||
+      TOKEN_MINTS.find(token => token.address.equals(market.quoteMintAddress))?.name) ||
     (marketInfo?.quoteLabel && `${marketInfo?.quoteLabel}*`) ||
     'UNKNOWN';
 
@@ -216,9 +203,11 @@ export function getMarketDetails(
 }
 
 export function useCustomMarkets() {
-  const [customMarkets, setCustomMarkets] = useLocalStorageState<
-    CustomMarketInfo[]
-  >('customMarkets', []);
+  const [customMarkets, setCustomMarkets] = useLocalStorageState<CustomMarketInfo[]>(
+    'customMarkets',
+    [],
+  );
+
   return { customMarkets, setCustomMarkets };
 }
 
@@ -228,8 +217,7 @@ export function MarketProvider({ marketAddress, setMarketAddress, children }) {
   const address = marketAddress && new PublicKey(marketAddress);
   const connection = useConnection();
   const marketInfos = getMarketInfos(customMarkets);
-  const marketInfo =
-    address && marketInfos.find((market) => market.address.equals(address));
+  const marketInfo = address && marketInfos.find(market => market.address.equals(address));
 
   // Replace existing market with a non-deprecated one on first load
   useEffect(() => {
@@ -259,11 +247,12 @@ export function MarketProvider({ marketAddress, setMarketAddress, children }) {
         description: 'Please select a market from the dropdown',
         type: 'error',
       });
+
       return;
     }
     Market.load(connection, marketInfo.address, {}, marketInfo.programId)
       .then(setMarket)
-      .catch((e) =>
+      .catch(e =>
         notify({
           message: 'Error loading market',
           description: e.message,
@@ -296,6 +285,7 @@ export function getTradePageUrl(marketAddress?: string) {
     }
     marketAddress = marketAddress || DEFAULT_MARKET?.address.toBase58() || '';
   }
+
   return `/market/${marketAddress}`;
 }
 
@@ -307,6 +297,7 @@ export function useSelectedTokenAccounts(): [
     selectedTokenAccounts,
     setSelectedTokenAccounts,
   ] = useLocalStorageState<SelectedTokenAccounts>('selectedTokenAccounts', {});
+
   return [selectedTokenAccounts, setSelectedTokenAccounts];
 }
 
@@ -315,6 +306,7 @@ export function useMarket() {
   if (!context) {
     throw new Error('Missing market context');
   }
+
   return context;
 }
 
@@ -325,16 +317,12 @@ export function useMarkPrice() {
   const trades = useTrades();
 
   useEffect(() => {
-    let bb = orderbook?.bids?.length > 0 && Number(orderbook.bids[0][0]);
-    let ba = orderbook?.asks?.length > 0 && Number(orderbook.asks[0][0]);
-    let last = trades && trades.length > 0 && trades[0].price;
+    const bb = orderbook?.bids?.length > 0 && Number(orderbook.bids[0][0]);
+    const ba = orderbook?.asks?.length > 0 && Number(orderbook.asks[0][0]);
+    const last = trades && trades.length > 0 && trades[0].price;
 
-    let markPrice =
-      bb && ba
-        ? last
-          ? [bb, ba, last].sort((a, b) => a - b)[1]
-          : (bb + ba) / 2
-        : null;
+    const markPrice =
+      bb && ba ? (last ? [bb, ba, last].sort((a, b) => a - b)[1] : (bb + ba) / 2) : null;
 
     setMarkPrice(markPrice);
   }, [orderbook, trades]);
@@ -349,6 +337,7 @@ export function _useUnfilteredTrades(limit = 10000) {
     if (!market || !connection) {
       return null;
     }
+
     return await market.loadFills(connection, limit);
   }
   const [trades] = useAsyncData(
@@ -356,6 +345,7 @@ export function _useUnfilteredTrades(limit = 10000) {
     tuple('getUnfilteredTrades', market, connection),
     { refreshInterval: _SLOW_REFRESH_INTERVAL },
   );
+
   return trades;
   // NOTE: For now, websocket is too expensive since the event queue is large
   // and updates very frequently
@@ -378,6 +368,7 @@ export function useBonfidaTrades() {
     if (!marketAddress) {
       return null;
     }
+
     return await BonfidaApi.getRecentTrades(marketAddress);
   }
 
@@ -392,28 +383,24 @@ export function useBonfidaTrades() {
 export function useOrderbookAccounts() {
   const { market } = useMarket();
   // @ts-ignore
-  let bidData = useAccountData(market && market._decoded.bids);
+  const bidData = useAccountData(market && market._decoded.bids);
   // @ts-ignore
-  let askData = useAccountData(market && market._decoded.asks);
+  const askData = useAccountData(market && market._decoded.asks);
+
   return {
     bidOrderbook: market && bidData ? Orderbook.decode(market, bidData) : null,
     askOrderbook: market && askData ? Orderbook.decode(market, askData) : null,
   };
 }
 
-export function useOrderbook(
-  depth = 20,
-): [{ bids: number[][]; asks: number[][] }, boolean] {
+export function useOrderbook(depth = 20): [{ bids: number[][]; asks: number[][] }, boolean] {
   const { bidOrderbook, askOrderbook } = useOrderbookAccounts();
   const { market } = useMarket();
   const bids =
-    !bidOrderbook || !market
-      ? []
-      : bidOrderbook.getL2(depth).map(([price, size]) => [price, size]);
+    !bidOrderbook || !market ? [] : bidOrderbook.getL2(depth).map(([price, size]) => [price, size]);
   const asks =
-    !askOrderbook || !market
-      ? []
-      : askOrderbook.getL2(depth).map(([price, size]) => [price, size]);
+    !askOrderbook || !market ? [] : askOrderbook.getL2(depth).map(([price, size]) => [price, size]);
+
   return [{ bids, asks }, !!bids || !!asks];
 }
 
@@ -430,11 +417,10 @@ export function useOpenOrdersAccounts(fast = false) {
     if (!market) {
       return null;
     }
-    return await market.findOpenOrdersAccountsForOwner(
-      connection,
-      wallet.publicKey,
-    );
+
+    return await market.findOpenOrdersAccountsForOwner(connection, wallet.publicKey);
   }
+
   return useAsyncData<OpenOrders[] | null>(
     getOpenOrdersAccounts,
     tuple('getOpenOrdersAccounts', wallet, market, connected),
@@ -447,26 +433,24 @@ export function useSelectedOpenOrdersAccount(fast = false) {
   if (!accounts) {
     return null;
   }
+
   return accounts[0];
 }
 
-export function useTokenAccounts(): [
-  TokenAccount[] | null | undefined,
-  boolean,
-] {
+export function useTokenAccounts(): [TokenAccount[] | null | undefined, boolean] {
   const { connected, wallet } = useWallet();
   const connection = useConnection();
   async function getTokenAccounts() {
     if (!connected || !wallet) {
       return null;
     }
+
     return await getTokenAccountInfo(connection, wallet.publicKey);
   }
-  return useAsyncData(
-    getTokenAccounts,
-    tuple('getTokenAccounts', wallet, connected),
-    { refreshInterval: _SLOW_REFRESH_INTERVAL },
-  );
+
+  return useAsyncData(getTokenAccounts, tuple('getTokenAccounts', wallet, connected), {
+    refreshInterval: _SLOW_REFRESH_INTERVAL,
+  });
 }
 
 export function getSelectedTokenAccountForMint(
@@ -481,10 +465,10 @@ export function getSelectedTokenAccountForMint(
     ({ effectiveMint, pubkey }) =>
       mint.equals(effectiveMint) &&
       (!selectedPubKey ||
-        (typeof selectedPubKey === 'string'
-          ? selectedPubKey
-          : selectedPubKey.toBase58()) === pubkey.toBase58()),
+        (typeof selectedPubKey === 'string' ? selectedPubKey : selectedPubKey.toBase58()) ===
+          pubkey.toBase58()),
   );
+
   return filtered && filtered[0];
 }
 
@@ -493,6 +477,7 @@ export function useSelectedQuoteCurrencyAccount() {
   const { market } = useMarket();
   const [selectedTokenAccounts] = useSelectedTokenAccounts();
   const mintAddress = market?.quoteMintAddress;
+
   return getSelectedTokenAccountForMint(
     accounts,
     mintAddress,
@@ -505,6 +490,7 @@ export function useSelectedBaseCurrencyAccount() {
   const { market } = useMarket();
   const [selectedTokenAccounts] = useSelectedTokenAccounts();
   const mintAddress = market?.baseMintAddress;
+
   return getSelectedTokenAccountForMint(
     accounts,
     mintAddress,
@@ -523,9 +509,8 @@ export function useSelectedQuoteCurrencyBalances() {
   if (market.quoteMintAddress.equals(TokenInstructions.WRAPPED_SOL_MINT)) {
     return accountInfo?.lamports / 1e9 ?? 0;
   }
-  return market.quoteSplSizeToNumber(
-    new BN(accountInfo.data.slice(64, 72), 10, 'le'),
-  );
+
+  return market.quoteSplSizeToNumber(new BN(accountInfo.data.slice(64, 72), 10, 'le'));
 }
 
 // TODO: Update to use websocket
@@ -539,9 +524,8 @@ export function useSelectedBaseCurrencyBalances() {
   if (market.baseMintAddress.equals(TokenInstructions.WRAPPED_SOL_MINT)) {
     return accountInfo?.lamports / 1e9 ?? 0;
   }
-  return market.baseSplSizeToNumber(
-    new BN(accountInfo.data.slice(64, 72), 10, 'le'),
-  );
+
+  return market.baseSplSizeToNumber(new BN(accountInfo.data.slice(64, 72), 10, 'le'));
 }
 
 export function useOpenOrders() {
@@ -551,9 +535,10 @@ export function useOpenOrders() {
   if (!market || !openOrdersAccount || !bidOrderbook || !askOrderbook) {
     return null;
   }
+
   return market
     .filterForOpenOrders(bidOrderbook, askOrderbook, [openOrdersAccount])
-    .map((order) => ({ ...order, marketName, market }));
+    .map(order => ({ ...order, marketName, market }));
 }
 
 export function useTrades(limit = 100) {
@@ -561,10 +546,11 @@ export function useTrades(limit = 100) {
   if (!trades) {
     return null;
   }
+
   // Until partial fills are each given their own fill, use maker fills
   return trades
     .filter(({ eventFlags }) => eventFlags.maker)
-    .map((trade) => ({
+    .map(trade => ({
       ...trade,
       side: trade.side === 'buy' ? 'sell' : 'buy',
     }));
@@ -574,14 +560,13 @@ export function useLocallyStoredFeeDiscountKey(): {
   storedFeeDiscountKey: PublicKey | undefined;
   setStoredFeeDiscountKey: (key: string) => void;
 } {
-  const [
-    storedFeeDiscountKey,
-    setStoredFeeDiscountKey,
-  ] = useLocalStorageState<string>(`feeDiscountKey`, undefined);
+  const [storedFeeDiscountKey, setStoredFeeDiscountKey] = useLocalStorageState<string>(
+    `feeDiscountKey`,
+    undefined,
+  );
+
   return {
-    storedFeeDiscountKey: storedFeeDiscountKey
-      ? new PublicKey(storedFeeDiscountKey)
-      : undefined,
+    storedFeeDiscountKey: storedFeeDiscountKey ? new PublicKey(storedFeeDiscountKey) : undefined,
     setStoredFeeDiscountKey,
   };
 }
@@ -603,27 +588,24 @@ export function useFeeDiscountKeys(): [
   const { connected, wallet } = useWallet();
   const connection = useConnection();
   const { setStoredFeeDiscountKey } = useLocallyStoredFeeDiscountKey();
-  let getFeeDiscountKeys = async () => {
+  const getFeeDiscountKeys = async () => {
     if (!connected || !wallet) {
       return null;
     }
     if (!market) {
       return null;
     }
-    const feeDiscountKey = await market.findFeeDiscountKeys(
-      connection,
-      wallet.publicKey,
-    );
+    const feeDiscountKey = await market.findFeeDiscountKeys(connection, wallet.publicKey);
     if (feeDiscountKey) {
       setStoredFeeDiscountKey(feeDiscountKey[0].pubkey.toBase58());
     }
+
     return feeDiscountKey;
   };
-  return useAsyncData(
-    getFeeDiscountKeys,
-    tuple('getFeeDiscountKeys', wallet, market, connected),
-    { refreshInterval: _SLOW_REFRESH_INTERVAL },
-  );
+
+  return useAsyncData(getFeeDiscountKeys, tuple('getFeeDiscountKeys', wallet, market, connected), {
+    refreshInterval: _SLOW_REFRESH_INTERVAL,
+  });
 }
 
 export function useFills(limit = 100) {
@@ -636,35 +618,38 @@ export function useFills(limit = 100) {
   if (!fills) {
     return null;
   }
+
   return fills
-    .filter((fill) =>
-      openOrdersAccounts.some((openOrdersAccount) =>
+    .filter(fill =>
+      openOrdersAccounts.some(openOrdersAccount =>
         fill.openOrders.equals(openOrdersAccount.publicKey),
       ),
     )
-    .map((fill) => ({ ...fill, marketName }));
+    .map(fill => ({ ...fill, marketName }));
 }
 
 export function useAllOpenOrdersAccounts() {
   const { wallet, connected } = useWallet();
   const connection = useConnection();
   const marketInfos = useMarketInfos();
-  const programIds = [
-    ...new Set(marketInfos.map((info) => info.programId.toBase58())),
-  ].map((stringProgramId) => new PublicKey(stringProgramId));
+  const programIds = [...new Set(marketInfos.map(info => info.programId.toBase58()))].map(
+    stringProgramId => new PublicKey(stringProgramId),
+  );
 
   const getAllOpenOrdersAccounts = async () => {
     if (!connected || !wallet) {
       return [];
     }
+
     return (
       await Promise.all(
-        programIds.map((programId) =>
+        programIds.map(programId =>
           OpenOrders.findForOwner(connection, wallet.publicKey, programId),
         ),
       )
     ).flat();
   };
+
   return useAsyncData(
     getAllOpenOrdersAccounts,
     tuple(
@@ -680,10 +665,7 @@ export function useAllOpenOrdersAccounts() {
 }
 
 export function useAllOpenOrdersBalances() {
-  const [
-    openOrdersAccounts,
-    loadedOpenOrdersAccounts,
-  ] = useAllOpenOrdersAccounts();
+  const [openOrdersAccounts, loadedOpenOrdersAccounts] = useAllOpenOrdersAccounts();
   const [mintInfos, mintInfosConnected] = useMintInfos();
   const [allMarkets] = useAllMarkets();
   if (!loadedOpenOrdersAccounts || !mintInfosConnected) {
@@ -691,12 +673,12 @@ export function useAllOpenOrdersBalances() {
   }
 
   const marketsByAddress = Object.fromEntries(
-    (allMarkets || []).map((m) => [m.market.address.toBase58(), m]),
+    (allMarkets || []).map(m => [m.market.address.toBase58(), m]),
   );
   const openOrdersBalances: {
     [mint: string]: { market: PublicKey; free: number; total: number }[];
   } = {};
-  for (let account of openOrdersAccounts || []) {
+  for (const account of openOrdersAccounts || []) {
     const marketInfo = marketsByAddress[account.market.toBase58()];
     const baseMint = marketInfo?.market.baseMintAddress.toBase58();
     const quoteMint = marketInfo?.market.quoteMintAddress.toBase58();
@@ -737,6 +719,7 @@ export function useAllOpenOrdersBalances() {
       total: quoteTotal,
     });
   }
+
   return openOrdersBalances;
 }
 
@@ -756,7 +739,7 @@ export const useAllOpenOrders = (): {
 
   const refreshOpenOrders = () => {
     if (new Date().getTime() - lastRefresh > 10 * 1000) {
-      setRefresh((prev) => prev + 1);
+      setRefresh(prev => prev + 1);
     } else {
       console.log('not refreshing');
     }
@@ -776,11 +759,7 @@ export const useAllOpenOrders = (): {
               undefined,
               marketInfo.programId,
             );
-            const orders = await market.loadOrdersForOwner(
-              connection,
-              wallet?.publicKey,
-              30000,
-            );
+            const orders = await market.loadOrdersForOwner(connection, wallet?.publicKey, 30000);
             _openOrders.push({
               orders: orders,
               marketAddress: marketInfo.address.toBase58(),
@@ -789,7 +768,7 @@ export const useAllOpenOrders = (): {
             console.warn(`Error loading open order ${marketInfo.name} - ${e}`);
           }
         };
-        await Promise.all(USE_MARKETS.map((m) => getOpenOrdersForMarket(m)));
+        await Promise.all(USE_MARKETS.map(m => getOpenOrdersForMarket(m)));
         setOpenOrders(_openOrders);
         setLastRefresh(new Date().getTime());
         setLoaded(true);
@@ -797,6 +776,7 @@ export const useAllOpenOrders = (): {
       getAllOpenOrders();
     }
   }, [connection, connected, wallet, refresh]);
+
   return {
     openOrders: openOrders,
     loaded: loaded,
@@ -809,10 +789,8 @@ export function useBalances(): Balances[] {
   const quoteCurrencyBalances = useSelectedQuoteCurrencyBalances();
   const openOrders = useSelectedOpenOrdersAccount(true);
   const { baseCurrency, quoteCurrency, market } = useMarket();
-  const baseExists =
-    openOrders && openOrders.baseTokenTotal && openOrders.baseTokenFree;
-  const quoteExists =
-    openOrders && openOrders.quoteTokenTotal && openOrders.quoteTokenFree;
+  const baseExists = openOrders && openOrders.baseTokenTotal && openOrders.baseTokenFree;
+  const quoteExists = openOrders && openOrders.quoteTokenTotal && openOrders.quoteTokenFree;
   if (
     baseCurrency === 'UNKNOWN' ||
     quoteCurrency === 'UNKNOWN' ||
@@ -821,6 +799,7 @@ export function useBalances(): Balances[] {
   ) {
     return [];
   }
+
   return [
     {
       market,
@@ -829,9 +808,7 @@ export function useBalances(): Balances[] {
       wallet: baseCurrencyBalances,
       orders:
         baseExists && market && openOrders
-          ? market.baseSplSizeToNumber(
-              openOrders.baseTokenTotal.sub(openOrders.baseTokenFree),
-            )
+          ? market.baseSplSizeToNumber(openOrders.baseTokenTotal.sub(openOrders.baseTokenFree))
           : null,
       openOrders,
       unsettled:
@@ -847,9 +824,7 @@ export function useBalances(): Balances[] {
       openOrders,
       orders:
         quoteExists && market && openOrders
-          ? market.quoteSplSizeToNumber(
-              openOrders.quoteTokenTotal.sub(openOrders.quoteTokenFree),
-            )
+          ? market.quoteSplSizeToNumber(openOrders.quoteTokenTotal.sub(openOrders.quoteTokenFree))
           : null,
       unsettled:
         quoteExists && market && openOrders
@@ -871,8 +846,8 @@ export function useWalletBalancesForAllMarkets(): {
     return [];
   }
 
-  let balances: { [mint: string]: number } = {};
-  for (let account of tokenAccounts || []) {
+  const balances: { [mint: string]: number } = {};
+  for (const account of tokenAccounts || []) {
     if (!account.account) {
       continue;
     }
@@ -896,6 +871,7 @@ export function useWalletBalancesForAllMarkets(): {
     );
     balances[parsedAccount.mint.toBase58()] += additionalAmount;
   }
+
   return Object.entries(balances).map(([mint, balance]) => {
     return { mint, balance };
   });
@@ -905,35 +881,29 @@ export function useUnmigratedDeprecatedMarkets() {
   const connection = useConnection();
   const { accounts } = useUnmigratedOpenOrdersAccounts();
   const marketsList =
-    accounts &&
-    Array.from(new Set(accounts.map((openOrders) => openOrders.market)));
-  const deps = marketsList && marketsList.map((m) => m.toBase58());
+    accounts && Array.from(new Set(accounts.map(openOrders => openOrders.market)));
+  const deps = marketsList && marketsList.map(m => m.toBase58());
 
   const useUnmigratedDeprecatedMarketsInner = async () => {
     if (!marketsList) {
       return null;
     }
-    const getMarket = async (address) => {
-      const marketInfo = USE_MARKETS.find((market) =>
-        market.address.equals(address),
-      );
+    const getMarket = async address => {
+      const marketInfo = USE_MARKETS.find(market => market.address.equals(address));
       if (!marketInfo) {
         console.log('Failed loading market');
         notify({
           message: 'Error loading market',
           type: 'error',
         });
+
         return null;
       }
       try {
         console.log('Loading market', marketInfo.name);
+
         // NOTE: Should this just be cached by (connection, marketInfo.address, marketInfo.programId)?
-        return await Market.load(
-          connection,
-          marketInfo.address,
-          {},
-          marketInfo.programId,
-        );
+        return await Market.load(connection, marketInfo.address, {}, marketInfo.programId);
       } catch (e) {
         console.log('Failed loading market', marketInfo.name, e);
         notify({
@@ -941,27 +911,26 @@ export function useUnmigratedDeprecatedMarkets() {
           description: e.message,
           type: 'error',
         });
+
         return null;
       }
     };
-    return (await Promise.all(marketsList.map(getMarket))).filter((x) => x);
+
+    return (await Promise.all(marketsList.map(getMarket))).filter(x => x);
   };
   const [markets] = useAsyncData(
     useUnmigratedDeprecatedMarketsInner,
-    tuple(
-      'useUnmigratedDeprecatedMarketsInner',
-      connection,
-      deps && deps.toString(),
-    ),
+    tuple('useUnmigratedDeprecatedMarketsInner', connection, deps && deps.toString()),
     { refreshInterval: _VERY_SLOW_REFRESH_INTERVAL },
   );
   if (!markets) {
     return null;
   }
-  return markets.map((market) => ({
+
+  return markets.map(market => ({
     market,
     openOrdersList: accounts?.filter(
-      (openOrders) => market && openOrders.market.equals(market.address),
+      openOrders => market && openOrders.market.equals(market.address),
     ),
   }));
 }
@@ -975,15 +944,14 @@ export function useGetOpenOrdersForDeprecatedMarkets(): {
   const { customMarkets } = useCustomMarkets();
   const connection = useConnection();
   const marketsAndOrders = useUnmigratedDeprecatedMarkets();
-  const marketsList =
-    marketsAndOrders && marketsAndOrders.map(({ market }) => market);
+  const marketsList = marketsAndOrders && marketsAndOrders.map(({ market }) => market);
 
   // This isn't quite right: open order balances could change
   const deps =
     marketsList &&
     marketsList
       .filter((market): market is Market => !!market)
-      .map((market) => market.address.toBase58());
+      .map(market => market.address.toBase58());
 
   async function getOpenOrdersForDeprecatedMarkets() {
     if (!connected || !wallet) {
@@ -1000,10 +968,13 @@ export function useGetOpenOrdersForDeprecatedMarkets(): {
       const { marketName } = getMarketDetails(market, customMarkets);
       try {
         console.log('Fetching open orders for', marketName);
+
         // Can do better than this, we have the open orders accounts already
-        return (
-          await market.loadOrdersForOwner(connection, wallet.publicKey)
-        ).map((order) => ({ marketName, market, ...order }));
+        return (await market.loadOrdersForOwner(connection, wallet.publicKey)).map(order => ({
+          marketName,
+          market,
+          ...order,
+        }));
       } catch (e) {
         console.log('Failed loading open orders', market.address.toBase58(), e);
         notify({
@@ -1011,9 +982,11 @@ export function useGetOpenOrdersForDeprecatedMarkets(): {
           description: e.message,
           type: 'error',
         });
+
         return null;
       }
     };
+
     return (await Promise.all(marketsList.map(getOrders)))
       .filter((x): x is OrderWithMarketAndMarketName[] => !!x)
       .flat();
@@ -1026,14 +999,11 @@ export function useGetOpenOrdersForDeprecatedMarkets(): {
     wallet,
     deps && deps.toString(),
   );
-  const [openOrders, loaded] = useAsyncData(
-    getOpenOrdersForDeprecatedMarkets,
-    cacheKey,
-    {
-      refreshInterval: _VERY_SLOW_REFRESH_INTERVAL,
-    },
-  );
+  const [openOrders, loaded] = useAsyncData(getOpenOrdersForDeprecatedMarkets, cacheKey, {
+    refreshInterval: _VERY_SLOW_REFRESH_INTERVAL,
+  });
   console.log('openOrders', openOrders);
+
   return {
     openOrders,
     loaded,
@@ -1043,42 +1013,30 @@ export function useGetOpenOrdersForDeprecatedMarkets(): {
 
 export function useBalancesForDeprecatedMarkets() {
   const markets = useUnmigratedDeprecatedMarkets();
-  const [customMarkets] = useLocalStorageState<CustomMarketInfo[]>(
-    'customMarkets',
-    [],
-  );
+  const [customMarkets] = useLocalStorageState<CustomMarketInfo[]>('customMarkets', []);
   if (!markets) {
     return null;
   }
 
   const openOrderAccountBalances: DeprecatedOpenOrdersBalances[] = [];
   markets.forEach(({ market, openOrdersList }) => {
-    const { baseCurrency, quoteCurrency, marketName } = getMarketDetails(
-      market,
-      customMarkets,
-    );
+    const { baseCurrency, quoteCurrency, marketName } = getMarketDetails(market, customMarkets);
     if (!baseCurrency || !quoteCurrency || !market) {
       return;
     }
-    (openOrdersList || []).forEach((openOrders) => {
+    (openOrdersList || []).forEach(openOrders => {
       const inOrdersBase =
         openOrders?.baseTokenTotal &&
         openOrders?.baseTokenFree &&
-        market.baseSplSizeToNumber(
-          openOrders.baseTokenTotal.sub(openOrders.baseTokenFree),
-        );
+        market.baseSplSizeToNumber(openOrders.baseTokenTotal.sub(openOrders.baseTokenFree));
       const inOrdersQuote =
         openOrders?.quoteTokenTotal &&
         openOrders?.quoteTokenFree &&
-        market.baseSplSizeToNumber(
-          openOrders.quoteTokenTotal.sub(openOrders.quoteTokenFree),
-        );
+        market.baseSplSizeToNumber(openOrders.quoteTokenTotal.sub(openOrders.quoteTokenFree));
       const unsettledBase =
-        openOrders?.baseTokenFree &&
-        market.baseSplSizeToNumber(openOrders.baseTokenFree);
+        openOrders?.baseTokenFree && market.baseSplSizeToNumber(openOrders.baseTokenFree);
       const unsettledQuote =
-        openOrders?.quoteTokenFree &&
-        market.baseSplSizeToNumber(openOrders.quoteTokenFree);
+        openOrders?.quoteTokenFree && market.baseSplSizeToNumber(openOrders.quoteTokenFree);
 
       openOrderAccountBalances.push({
         marketName,
@@ -1100,13 +1058,12 @@ export function useBalancesForDeprecatedMarkets() {
       });
     });
   });
+
   return openOrderAccountBalances;
 }
 
-export function getMarketInfos(
-  customMarkets: CustomMarketInfo[],
-): MarketInfo[] {
-  const customMarketsInfo = customMarkets.map((m) => ({
+export function getMarketInfos(customMarkets: CustomMarketInfo[]): MarketInfo[] {
+  const customMarketsInfo = customMarkets.map(m => ({
     ...m,
     address: new PublicKey(m.address),
     programId: new PublicKey(m.programId),
@@ -1118,6 +1075,7 @@ export function getMarketInfos(
 
 export function useMarketInfos() {
   const { customMarkets } = useCustomMarkets();
+
   return getMarketInfos(customMarkets);
 }
 
@@ -1131,11 +1089,7 @@ export function useMarketInfos() {
  *  quote currency if buying.
  * @param tickSizeDecimals size of price increment of the market
  */
-export function getMarketOrderPrice(
-  orderbook: Orderbook,
-  cost: number,
-  tickSizeDecimals?: number,
-) {
+export function getMarketOrderPrice(orderbook: Orderbook, cost: number, tickSizeDecimals?: number) {
   if (orderbook.isBids) {
     return orderbook.market.tickSize;
   }
@@ -1156,6 +1110,7 @@ export function getMarketOrderPrice(
   } else {
     formattedPrice = sendPrice;
   }
+
   return formattedPrice;
 }
 
@@ -1184,15 +1139,12 @@ export function getExpectedFillPrice(
   } else {
     formattedPrice = totalAvgPrice;
   }
+
   return formattedPrice;
 }
 
-export function useCurrentlyAutoSettling(): [
-  boolean,
-  (currentlyAutoSettling: boolean) => void,
-] {
-  const [currentlyAutoSettling, setCurrentlyAutosettling] = useState<boolean>(
-    false,
-  );
+export function useCurrentlyAutoSettling(): [boolean, (currentlyAutoSettling: boolean) => void] {
+  const [currentlyAutoSettling, setCurrentlyAutosettling] = useState<boolean>(false);
+
   return [currentlyAutoSettling, setCurrentlyAutosettling];
 }

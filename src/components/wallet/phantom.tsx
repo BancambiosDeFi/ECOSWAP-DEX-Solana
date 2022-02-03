@@ -1,14 +1,10 @@
 import EventEmitter from 'eventemitter3';
 import { PublicKey, Transaction } from '@solana/web3.js';
-import { DEFAULT_PUBLIC_KEY, WalletAdapter } from './types';
 import { notify } from '../../srm-utils/notifications';
+import { DEFAULT_PUBLIC_KEY, WalletAdapter } from './types';
 
 type PhantomEvent = 'disconnect' | 'connect';
-type PhantomRequestMethod =
-  | 'connect'
-  | 'disconnect'
-  | 'signTransaction'
-  | 'signAllTransactions';
+type PhantomRequestMethod = 'connect' | 'disconnect' | 'signTransaction' | 'signAllTransactions';
 
 interface PhantomProvider {
   publicKey?: PublicKey;
@@ -23,9 +19,7 @@ interface PhantomProvider {
   listeners: (event: PhantomEvent) => (() => void)[];
 }
 
-export class PhantomWalletAdapter
-  extends EventEmitter
-  implements WalletAdapter {
+export class PhantomWalletAdapter extends EventEmitter implements WalletAdapter {
   constructor() {
     super();
     this.connect = this.connect.bind(this);
@@ -35,6 +29,7 @@ export class PhantomWalletAdapter
     if ((window as any)?.solana?.isPhantom) {
       return (window as any).solana;
     }
+
     return undefined;
   }
 
@@ -54,9 +49,7 @@ export class PhantomWalletAdapter
     return this._provider?.autoApprove || false;
   }
 
-  async signAllTransactions(
-    transactions: Transaction[],
-  ): Promise<Transaction[]> {
+  async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     if (!this._provider) {
       return transactions;
     }
@@ -83,6 +76,7 @@ export class PhantomWalletAdapter
         message: 'Connection Error',
         description: 'Please install Phantom wallet',
       });
+
       return;
     }
     if (!this._provider.listeners('connect').length) {
@@ -91,6 +85,7 @@ export class PhantomWalletAdapter
     if (!this._provider.listeners('disconnect').length) {
       this._provider?.on('disconnect', this._handleDisconnect);
     }
+
     return this._provider?.connect();
   }
 

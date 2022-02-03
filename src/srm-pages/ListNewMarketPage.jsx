@@ -67,19 +67,13 @@ export default function ListNewMarketPage() {
     baseLotSize = Math.round(10 ** baseMintInfo.decimals * parseFloat(lotSize));
     if (quoteMintInfo && parseFloat(tickSize) > 0) {
       quoteLotSize = Math.round(
-        parseFloat(lotSize) *
-          10 ** quoteMintInfo.decimals *
-          parseFloat(tickSize),
+        parseFloat(lotSize) * 10 ** quoteMintInfo.decimals * parseFloat(tickSize),
       );
     }
   }
 
   const canSubmit =
-    connected &&
-    !!baseMintInfo &&
-    !!quoteMintInfo &&
-    !!baseLotSize &&
-    !!quoteLotSize;
+    connected && !!baseMintInfo && !!quoteMintInfo && !!baseLotSize && !!quoteLotSize;
 
   async function onSubmit() {
     if (!canSubmit) {
@@ -124,24 +118,19 @@ export default function ListNewMarketPage() {
           <Form.Item
             label={
               <Tooltip title="Smallest allowed order size. For a BTC/USDT market, this would be in units of BTC.">
-                Minimum Order Size{' '}
-                <Text type="secondary">(Lot size in e.g. BTC)</Text>
+                Minimum Order Size <Text type="secondary">(Lot size in e.g. BTC)</Text>
               </Tooltip>
             }
             name="lotSize"
             initialValue="1"
             validateStatus={
-              baseMintInfo && quoteMintInfo
-                ? baseLotSize
-                  ? 'success'
-                  : 'error'
-                : null
+              baseMintInfo && quoteMintInfo ? (baseLotSize ? 'success' : 'error') : null
             }
             hasFeedback={baseMintInfo && quoteMintInfo}
           >
             <Input
               value={lotSize}
-              onChange={(e) => setLotSize(e.target.value.trim())}
+              onChange={e => setLotSize(e.target.value.trim())}
               type="number"
               min="0"
               step="any"
@@ -150,36 +139,26 @@ export default function ListNewMarketPage() {
           <Form.Item
             label={
               <Tooltip title="Smallest amount by which prices can move. For a BTC/USDT market, this would be in units of USDT.">
-                Tick Size{' '}
-                <Text type="secondary">(Price increment in e.g. USDT)</Text>
+                Tick Size <Text type="secondary">(Price increment in e.g. USDT)</Text>
               </Tooltip>
             }
             name="tickSize"
             initialValue="0.01"
             validateStatus={
-              baseMintInfo && quoteMintInfo
-                ? quoteLotSize
-                  ? 'success'
-                  : 'error'
-                : null
+              baseMintInfo && quoteMintInfo ? (quoteLotSize ? 'success' : 'error') : null
             }
             hasFeedback={baseMintInfo && quoteMintInfo}
           >
             <Input
               value={tickSize}
-              onChange={(e) => setTickSize(e.target.value.trim())}
+              onChange={e => setTickSize(e.target.value.trim())}
               type="number"
               min="0"
               step="any"
             />
           </Form.Item>
           <Form.Item label=" " colon={false}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={!canSubmit}
-              loading={submitting}
-            >
+            <Button type="primary" htmlType="submit" disabled={!canSubmit} loading={submitting}>
               {connected ? 'Submit' : 'Not connected to wallet'}
             </Button>
           </Form.Item>

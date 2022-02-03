@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Row, Select, Typography } from 'antd';
 import styled from 'styled-components';
 import { Orderbook } from '@serum/serum';
+import { SwapOutlined } from '@ant-design/icons';
 import {
   getExpectedFillPrice,
   getMarketDetails,
@@ -20,11 +21,10 @@ import { useWallet } from '../components/wallet/wallet';
 import { useConnection, useSendConnection } from '../srm-utils/connection';
 import { placeOrder } from '../srm-utils/send';
 import { floorToDecimal, getDecimalCount } from '../srm-utils/utils';
-import FloatingElement from './layout/FloatingElement';
 import WalletConnect from '../components/wallet/WalletConnect';
-import { SwapOutlined } from '@ant-design/icons';
 import { CustomMarketInfo } from '../srm-utils/types';
 import { WalletAdapter } from '../components/wallet/types';
+import FloatingElement from './layout/FloatingElement';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -50,32 +50,24 @@ export default function ConvertForm() {
   const [toToken, setToToken] = useState<string | undefined>(undefined);
   const [size, setSize] = useState<number | undefined>(undefined);
 
-  const marketInfosbyName = Object.fromEntries(
-    marketInfos.map((market) => [market.name, market]),
-  );
+  const marketInfosbyName = Object.fromEntries(marketInfos.map(market => [market.name, market]));
 
   const tokenConvertMap: Map<string, Set<string>> = new Map();
-  Object.keys(marketInfosbyName).forEach((market) => {
-    let [base, quote] = market.split('/');
+  Object.keys(marketInfosbyName).forEach(market => {
+    const [base, quote] = market.split('/');
     !tokenConvertMap.has(base)
       ? tokenConvertMap.set(base, new Set([quote]))
-      : tokenConvertMap.set(
-          base,
-          new Set([...(tokenConvertMap.get(base) || []), quote]),
-        );
+      : tokenConvertMap.set(base, new Set([...(tokenConvertMap.get(base) || []), quote]));
     !tokenConvertMap.has(quote)
       ? tokenConvertMap.set(quote, new Set([base]))
-      : tokenConvertMap.set(
-          quote,
-          new Set([...(tokenConvertMap.get(quote) || []), base]),
-        );
+      : tokenConvertMap.set(quote, new Set([...(tokenConvertMap.get(quote) || []), base]));
   });
 
-  const setMarket = (toToken) => {
+  const setMarket = toToken => {
     const marketInfo = marketInfos
-      .filter((marketInfo) => !marketInfo.deprecated)
+      .filter(marketInfo => !marketInfo.deprecated)
       .find(
-        (marketInfo) =>
+        marketInfo =>
           marketInfo.name === `${fromToken}/${toToken}` ||
           marketInfo.name === `${toToken}/${fromToken}`,
       );
@@ -87,6 +79,7 @@ export default function ConvertForm() {
         message: 'Invalid market',
         type: 'error',
       });
+
       return;
     }
     setMarketAddress(marketInfo.address.toBase58());
@@ -111,12 +104,12 @@ export default function ConvertForm() {
                 style={{ minWidth: 300 }}
                 placeholder="Select a token"
                 value={fromToken}
-                onChange={(token) => {
+                onChange={token => {
                   setFromToken(token);
                   setToToken(undefined);
                 }}
               >
-                {Array.from(tokenConvertMap.keys()).map((token) => (
+                {Array.from(tokenConvertMap.keys()).map(token => (
                   <Option value={token} key={token}>
                     {token}
                   </Option>
@@ -127,12 +120,8 @@ export default function ConvertForm() {
           {fromToken && (
             <Row style={{ marginBottom: 8 }}>
               <Col>
-                <Select
-                  style={{ minWidth: 300 }}
-                  value={toToken}
-                  onChange={setMarket}
-                >
-                  {[...(tokenConvertMap.get(fromToken) || [])].map((token) => (
+                <Select style={{ minWidth: 300 }} value={toToken} onChange={setMarket}>
+                  {[...(tokenConvertMap.get(fromToken) || [])].map(token => (
                     <Option value={token} key={token}>
                       {token}
                     </Option>
@@ -142,10 +131,7 @@ export default function ConvertForm() {
             </Row>
           )}
           {fromToken && toToken && (
-            <MarketProvider
-              marketAddress={marketAddress}
-              setMarketAddress={setMarketAddress}
-            >
+            <MarketProvider marketAddress={marketAddress} setMarketAddress={setMarketAddress}>
               <ConvertFormSubmit
                 size={size}
                 setSize={setSize}
@@ -182,23 +168,20 @@ function ConvertFormSubmit({
   const balances = useBalances();
   const [fromAmount, setFromAmount] = useState<number | undefined>();
   const [toAmount, setToAmount] = useState<number | undefined>();
-  const {
-    storedFeeDiscountKey: feeDiscountKey,
-  } = useLocallyStoredFeeDiscountKey();
+  const { storedFeeDiscountKey: feeDiscountKey } = useLocallyStoredFeeDiscountKey();
 
   const connection = useConnection();
   const sendConnection = useSendConnection();
 
   const [isConverting, setIsConverting] = useState(false);
 
-  const isFromTokenBaseOfMarket = (market) => {
+  const isFromTokenBaseOfMarket = market => {
     const { marketName } = getMarketDetails(market, customMarkets);
     if (!marketName) {
-      throw Error(
-        'Cannot determine if coin is quote or base because marketName is missing',
-      );
+      throw Error('Cannot determine if coin is quote or base because marketName is missing');
     }
     const [base] = marketName.split('/');
+
     return fromToken === base;
   };
 
@@ -209,17 +192,12 @@ function ConvertFormSubmit({
         message: 'Invalid market',
         type: 'error',
       });
+
       return;
     }
     // get accounts
-    const baseCurrencyAccount = getSelectedTokenAccountForMint(
-      accounts,
-      market?.baseMintAddress,
-    );
-    const quoteCurrencyAccount = getSelectedTokenAccountForMint(
-      accounts,
-      market?.quoteMintAddress,
-    );
+    const baseCurrencyAccount = getSelectedTokenAccountForMint(accounts, market?.baseMintAddress);
+    const quoteCurrencyAccount = getSelectedTokenAccountForMint(accounts, market?.quoteMintAddress);
 
     // get approximate price
     let side;
@@ -232,38 +210,34 @@ function ConvertFormSubmit({
         description: e.message,
         type: 'error',
       });
+
       return;
     }
 
     const sidedOrderbookAccount =
       // @ts-ignore
       side === 'buy' ? market._decoded.asks : market._decoded.bids;
-    const orderbookData = await connection.getAccountInfo(
-      sidedOrderbookAccount,
-    );
+    const orderbookData = await connection.getAccountInfo(sidedOrderbookAccount);
     if (!orderbookData?.data) {
       notify({ message: 'Invalid orderbook data', type: 'error' });
+
       return;
     }
     const decodedOrderbookData = Orderbook.decode(market, orderbookData.data);
-    const [bbo] =
-      decodedOrderbookData &&
-      decodedOrderbookData.getL2(1).map(([price]) => price);
+    const [bbo] = decodedOrderbookData && decodedOrderbookData.getL2(1).map(([price]) => price);
     if (!bbo) {
       notify({ message: 'No best price found', type: 'error' });
+
       return;
     }
     if (!size) {
       notify({ message: 'Size not specified', type: 'error' });
+
       return;
     }
 
     const tickSizeDecimals = getDecimalCount(market.tickSize);
-    const parsedPrice = getMarketOrderPrice(
-      decodedOrderbookData,
-      size,
-      tickSizeDecimals,
-    );
+    const parsedPrice = getMarketOrderPrice(decodedOrderbookData, size, tickSizeDecimals);
 
     // round size
     const sizeDecimalCount = getDecimalCount(market.minOrderSize);
@@ -306,25 +280,17 @@ function ConvertFormSubmit({
       const sidedOrderbookAccount =
         // @ts-ignore
         side === 'buy' ? market._decoded.asks : market._decoded.bids;
-      const orderbookData = await connection.getAccountInfo(
-        sidedOrderbookAccount,
-      );
+      const orderbookData = await connection.getAccountInfo(sidedOrderbookAccount);
       if (!orderbookData?.data || !market) {
         return [null, null];
       }
       const decodedOrderbookData = Orderbook.decode(market, orderbookData.data);
-      const [bbo] =
-        decodedOrderbookData &&
-        decodedOrderbookData.getL2(1).map(([price]) => price);
+      const [bbo] = decodedOrderbookData && decodedOrderbookData.getL2(1).map(([price]) => price);
       if (!bbo || !size) {
         return [null, null];
       }
       const tickSizeDecimals = getDecimalCount(market.tickSize);
-      const expectedPrice = getExpectedFillPrice(
-        decodedOrderbookData,
-        size,
-        tickSizeDecimals,
-      );
+      const expectedPrice = getExpectedFillPrice(decodedOrderbookData, size, tickSizeDecimals);
       if (side === 'buy') {
         return [expectedPrice.toFixed(6), 1];
       } else {
@@ -332,6 +298,7 @@ function ConvertFormSubmit({
       }
     } catch (e) {
       console.log(`Got error ${e}`);
+
       return [null, null];
     }
   };
@@ -348,11 +315,8 @@ function ConvertFormSubmit({
   );
 
   const canConvert = market && size && size > 0;
-  const balance = balances.find(
-    (coinBalance) => coinBalance.coin === fromToken,
-  );
-  const availableBalance =
-    ((balance?.unsettled || 0) + (balance?.wallet || 0)) * 0.99;
+  const balance = balances.find(coinBalance => coinBalance.coin === fromToken);
+  const availableBalance = ((balance?.unsettled || 0) + (balance?.wallet || 0)) * 0.99;
 
   return (
     <React.Fragment>
@@ -364,7 +328,7 @@ function ConvertFormSubmit({
             placeholder="Size"
             value={size === null ? undefined : size}
             type="number"
-            onChange={(e) => setSize(parseFloat(e.target.value) || undefined)}
+            onChange={e => setSize(parseFloat(e.target.value) || undefined)}
           />
         </Col>
       </Row>

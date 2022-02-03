@@ -1,18 +1,18 @@
 import { getPoolBasket, PoolInfo, PoolTransactions } from '@serum/pool';
 import React, { useMemo, useState } from 'react';
-import FloatingElement from '../../../srm-components/layout/FloatingElement';
 import { Button, Input, Spin, Tabs, Typography } from 'antd';
-import { MintInfo } from '../../../srm-utils/tokens';
-import { useAsyncData } from '../../../srm-utils/fetch-loop';
-import { useConnection } from '../../../srm-utils/connection';
 import { PublicKey } from '@solana/web3.js';
 import tuple from 'immutable-tuple';
-import PoolBasketDisplay from './PoolBasketDisplay';
 import BN from 'bn.js';
+import { useConnection } from '../../../srm-utils/connection';
+import { useAsyncData } from '../../../srm-utils/fetch-loop';
+import { MintInfo } from '../../../srm-utils/tokens';
+import FloatingElement from '../../../srm-components/layout/FloatingElement';
 import { notify } from '../../../srm-utils/notifications';
 import { useWallet } from '../../../components/wallet/wallet';
 import { useTokenAccounts } from '../../../srm-utils/markets';
 import { sendTransaction } from '../../../srm-utils/send';
+import PoolBasketDisplay from './PoolBasketDisplay';
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
@@ -22,26 +22,15 @@ interface PoolCreateRedeemPanel {
   mintInfo: MintInfo;
 }
 
-export default function PoolCreateRedeemPanel({
-  poolInfo,
-  mintInfo,
-}: PoolCreateRedeemPanel) {
+export default function PoolCreateRedeemPanel({ poolInfo, mintInfo }: PoolCreateRedeemPanel) {
   return (
     <FloatingElement stretchVertical>
       <Tabs>
         <TabPane tab="Create" key="create">
-          <CreateRedeemTab
-            poolInfo={poolInfo}
-            mintInfo={mintInfo}
-            tab="create"
-          />
+          <CreateRedeemTab poolInfo={poolInfo} mintInfo={mintInfo} tab="create" />
         </TabPane>
         <TabPane tab="Redeem" key="redeem">
-          <CreateRedeemTab
-            poolInfo={poolInfo}
-            mintInfo={mintInfo}
-            tab="redeem"
-          />
+          <CreateRedeemTab poolInfo={poolInfo} mintInfo={mintInfo} tab="redeem" />
         </TabPane>
       </Tabs>
     </FloatingElement>
@@ -62,9 +51,7 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
   const [submitting, setSubmitting] = useState(false);
 
   const action = useMemo(() => {
-    const parsedQuantity = Math.round(
-      parseFloat(quantity) * 10 ** mintInfo.decimals,
-    );
+    const parsedQuantity = Math.round(parseFloat(quantity) * 10 ** mintInfo.decimals);
     if (parsedQuantity > 0) {
       if (tab === 'create') {
         return { create: new BN(parsedQuantity) };
@@ -72,19 +59,17 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
         return { redeem: new BN(parsedQuantity) };
       }
     }
+
     return null;
   }, [mintInfo.decimals, quantity, tab]);
 
   const [basket, basketLoaded] = useAsyncData(
-    async () =>
-      action ? await getPoolBasket(connection, poolInfo, action) : null,
+    async () => (action ? await getPoolBasket(connection, poolInfo, action) : null),
     tuple(getPoolBasket, connection, poolInfo.address.toBase58(), action),
   );
 
   function findTokenAccount(mint: PublicKey): PublicKey {
-    const account = tokenAccounts?.find((account) =>
-      account.effectiveMint.equals(mint),
-    );
+    const account = tokenAccounts?.find(account => account.effectiveMint.equals(mint));
     if (account) {
       return account.pubkey;
     }
@@ -106,9 +91,7 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
         {
           owner: wallet.publicKey,
           poolTokenAccount: findTokenAccount(poolInfo.state.poolTokenMint),
-          assetAccounts: poolInfo.state.assets.map((asset) =>
-            findTokenAccount(asset.mint),
-          ),
+          assetAccounts: poolInfo.state.assets.map(asset => findTokenAccount(asset.mint)),
         },
         basket,
       );
@@ -116,10 +99,7 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
     } catch (e) {
       console.warn(e);
       notify({
-        message:
-          'Error ' +
-          (tab === 'create' ? 'creating' : 'redeeming') +
-          ' pool tokens',
+        message: 'Error ' + (tab === 'create' ? 'creating' : 'redeeming') + ' pool tokens',
         description: e.message,
         type: 'error',
       });
@@ -133,7 +113,7 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
       <Input
         addonBefore={<>Quantity</>}
         value={quantity}
-        onChange={(e) => setQuantity(e.target.value.trim())}
+        onChange={e => setQuantity(e.target.value.trim())}
         style={{ marginBottom: 24 }}
       />
       <div>
@@ -149,11 +129,7 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
           </>
         )}
       </div>
-      <Button
-        htmlType="submit"
-        type="primary"
-        disabled={!canSubmit || submitting}
-      >
+      <Button htmlType="submit" type="primary" disabled={!canSubmit || submitting}>
         {!connected ? 'Wallet not connected' : 'Submit'}
       </Button>
     </form>

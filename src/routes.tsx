@@ -1,7 +1,7 @@
 import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import React from 'react';
 import TradePage from './srm-pages/TradePage';
 import OpenOrdersPage from './srm-pages/OpenOrdersPage';
-import React from 'react';
 import BalancesPage from './srm-pages/BalancesPage';
 import ConvertPage from './srm-pages/ConvertPage';
 import BasicLayout from './srm-components/BasicLayout';
@@ -27,11 +27,7 @@ export function Routes() {
             <Route exact path="/orders" component={OpenOrdersPage} />
             <Route exact path="/balances" component={BalancesPage} />
             <Route exact path="/convert" component={ConvertPage} />
-            <Route
-              exact
-              path="/list-new-market"
-              component={ListNewMarketPage}
-            />
+            <Route exact path="/list-new-market" component={ListNewMarketPage} />
             <Route exact path="/pools">
               <PoolListPage />
             </Route>
@@ -42,7 +38,7 @@ export function Routes() {
               <PoolPage />
             </Route>
             <Route exact path="/design-system">
-              <DesignSystemPage/>
+              <DesignSystemPage />
             </Route>
           </Switch>
         </BasicLayout>

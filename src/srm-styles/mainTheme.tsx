@@ -4,7 +4,7 @@ export const theme = createTheme({
   typography: {
     //styleName: H1
     h1: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       fontFamily: '"Spy Agency", sans-serif',
       fontSize: '64px',
       fontStyle: 'normal',
@@ -15,7 +15,7 @@ export const theme = createTheme({
     },
     //styleName: H2
     h2: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       fontFamily: '"Spy Agency", sans-serif',
       fontSize: '40px',
       fontStyle: 'normal',
@@ -26,7 +26,7 @@ export const theme = createTheme({
     },
     //styleName: H3
     h3: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       fontFamily: '"Saira", sans-serif',
       fontSize: '24px',
       fontStyle: 'normal',
@@ -37,7 +37,7 @@ export const theme = createTheme({
     },
     //styleName: Subtitle
     subtitle1: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       fontFamily: '"Saira", sans-serif',
       fontSize: '24px',
       fontStyle: 'normal',
@@ -48,7 +48,7 @@ export const theme = createTheme({
     },
     //styleName: Strong
     subtitle2: {
-      color: "#EC26F5",
+      color: '#EC26F5',
       fontFamily: '"Spy Agency", sans-serif',
       fontSize: '32px',
       fontStyle: 'normal',
@@ -59,7 +59,7 @@ export const theme = createTheme({
     },
     //styleName: Body
     body1: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       fontFamily: '"Saira", sans-serif',
       fontSize: '16px',
       fontStyle: 'normal',
@@ -70,7 +70,7 @@ export const theme = createTheme({
     },
     //styleName: Small
     body2: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       fontFamily: '"Saira", sans-serif',
       fontSize: '12px',
       fontStyle: 'normal',

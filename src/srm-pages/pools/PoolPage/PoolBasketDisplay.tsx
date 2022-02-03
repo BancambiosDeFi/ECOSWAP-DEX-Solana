@@ -2,9 +2,9 @@ import { Basket, PoolInfo } from '@serum/pool';
 import React from 'react';
 import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
+import { Spin } from 'antd';
 import { useAccountInfo } from '../../../srm-utils/connection';
 import { parseTokenMintData } from '../../../srm-utils/tokens';
-import { Spin } from 'antd';
 import { MintName } from '../../../srm-components/MintName';
 
 interface BasketDisplayProps {
@@ -12,18 +12,11 @@ interface BasketDisplayProps {
   basket?: Basket | null | undefined;
 }
 
-export default function PoolBasketDisplay({
-  poolInfo,
-  basket,
-}: BasketDisplayProps) {
+export default function PoolBasketDisplay({ poolInfo, basket }: BasketDisplayProps) {
   return (
     <ul>
       {poolInfo.state.assets.map((asset, index) => (
-        <BasketItem
-          key={index}
-          mint={asset.mint}
-          quantity={basket?.quantities[index]}
-        />
+        <BasketItem key={index} mint={asset.mint} quantity={basket?.quantities[index]} />
       ))}
     </ul>
   );

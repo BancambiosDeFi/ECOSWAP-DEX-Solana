@@ -5,8 +5,8 @@ import EventEmitter from 'eventemitter3';
 import { PublicKey } from '@solana/web3.js';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { notify } from '../../srm-utils/notifications';
-import { getPublicKey, signTransaction } from './core';
 import { DEFAULT_PUBLIC_KEY, WalletAdapter } from '../../components/wallet/types';
+import { getPublicKey, signTransaction } from './core';
 
 export class LedgerWalletAdapter extends EventEmitter implements WalletAdapter {
   _connecting: boolean;
@@ -32,9 +32,7 @@ export class LedgerWalletAdapter extends EventEmitter implements WalletAdapter {
     return false;
   }
 
-  public async signAllTransactions(
-    transactions: Transaction[],
-  ): Promise<Transaction[]> {
+  public async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     const result: Transaction[] = [];
     for (let i = 0; i < transactions.length; i++) {
       const transaction = transactions[i];

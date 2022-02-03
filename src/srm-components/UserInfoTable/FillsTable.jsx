@@ -18,11 +18,8 @@ export default function FillsTable() {
       title: 'Side',
       dataIndex: 'side',
       key: 'side',
-      render: (side) => (
-        <Tag
-          color={side === 'buy' ? '#41C77A' : '#F23B69'}
-          style={{ fontWeight: 700 }}
-        >
+      render: side => (
+        <Tag color={side === 'buy' ? '#41C77A' : '#F23B69'} style={{ fontWeight: 700 }}>
           {side.charAt(0).toUpperCase() + side.slice(1)}
         </Tag>
       ),
@@ -49,7 +46,7 @@ export default function FillsTable() {
     },
   ];
 
-  const dataSource = (fills || []).map((fill) => ({
+  const dataSource = (fills || []).map(fill => ({
     ...fill,
     key: `${fill.orderId}${fill.side}`,
     liquidity: fill.eventFlags.maker ? 'Maker' : 'Taker',

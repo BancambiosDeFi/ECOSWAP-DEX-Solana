@@ -26,12 +26,12 @@ const Line = styled.div`
   text-align: right;
   float: right;
   height: 100%;
-  ${(props) =>
+  ${props =>
     props['data-width'] &&
     css`
       width: ${props['data-width']};
     `}
-  ${(props) =>
+  ${props =>
     props['data-bgcolor'] &&
     css`
       background-color: ${props['data-bgcolor']};
@@ -57,14 +57,12 @@ export default function Orderbook({ smallScreen, depth = 7, onPrice, onSize }) {
   useInterval(() => {
     if (
       !currentOrderbookData.current ||
-      JSON.stringify(currentOrderbookData.current) !==
-        JSON.stringify(lastOrderbookData.current)
+      JSON.stringify(currentOrderbookData.current) !== JSON.stringify(lastOrderbookData.current)
     ) {
       let bids = orderbook?.bids || [];
       let asks = orderbook?.asks || [];
 
-      let sum = (total, [, size], index) =>
-        index < depth ? total + size : total;
+      let sum = (total, [, size], index) => (index < depth ? total + size : total);
       let totalSize = bids.reduce(sum, 0) + asks.reduce(sum, 0);
 
       let bidsToDisplay = getCumulativeOrderbookSide(bids, totalSize, false);
@@ -87,18 +85,16 @@ export default function Orderbook({ smallScreen, depth = 7, onPrice, onSize }) {
   }, [orderbook]);
 
   function getCumulativeOrderbookSide(orders, totalSize, backwards = false) {
-    let cumulative = orders
-      .slice(0, depth)
-      .reduce((cumulative, [price, size], i) => {
-        const cumulativeSize = (cumulative[i - 1]?.cumulativeSize || 0) + size;
-        cumulative.push({
-          price,
-          size,
-          cumulativeSize,
-          sizePercent: Math.round((cumulativeSize / (totalSize || 1)) * 100),
-        });
-        return cumulative;
-      }, []);
+    let cumulative = orders.slice(0, depth).reduce((cumulative, [price, size], i) => {
+      const cumulativeSize = (cumulative[i - 1]?.cumulativeSize || 0) + size;
+      cumulative.push({
+        price,
+        size,
+        cumulativeSize,
+        sizePercent: Math.round((cumulativeSize / (totalSize || 1)) * 100),
+      });
+      return cumulative;
+    }, []);
     if (backwards) {
       cumulative = cumulative.reverse();
     }
@@ -106,11 +102,7 @@ export default function Orderbook({ smallScreen, depth = 7, onPrice, onSize }) {
   }
 
   return (
-    <FloatingElement
-      style={
-        smallScreen ? { flex: 1 } : { height: '500px', overflow: 'hidden' }
-      }
-    >
+    <FloatingElement style={smallScreen ? { flex: 1 } : { height: '500px', overflow: 'hidden' }}>
       <Title>Orderbook</Title>
       <SizeTitle>
         <Col span={12} style={{ textAlign: 'left' }}>
@@ -155,8 +147,7 @@ const OrderbookRow = React.memo(
 
     useEffect(() => {
       // eslint-disable-next-line
-      !element.current?.classList.contains('flash') &&
-        element.current?.classList.add('flash');
+      !element.current?.classList.contains('flash') && element.current?.classList.add('flash');
       const id = setTimeout(
         () =>
           element.current?.classList.contains('flash') &&
@@ -184,19 +175,14 @@ const OrderbookRow = React.memo(
         <Col span={12} style={{ textAlign: 'right' }}>
           <Line
             data-width={sizePercent + '%'}
-            data-bgcolor={
-              side === 'buy'
-                ? 'rgba(65, 199, 122, 0.6)'
-                : 'rgba(242, 60, 105, 0.6)'
-            }
+            data-bgcolor={side === 'buy' ? 'rgba(65, 199, 122, 0.6)' : 'rgba(242, 60, 105, 0.6)'}
           />
           <Price onClick={onPriceClick}>{formattedPrice}</Price>
         </Col>
       </Row>
     );
   },
-  (prevProps, nextProps) =>
-    isEqual(prevProps, nextProps, ['price', 'size', 'sizePercent']),
+  (prevProps, nextProps) => isEqual(prevProps, nextProps, ['price', 'size', 'sizePercent']),
 );
 
 const MarkPriceComponent = React.memo(
@@ -212,19 +198,13 @@ const MarkPriceComponent = React.memo(
         : 'white';
 
     let formattedMarkPrice =
-      markPrice &&
-      market?.tickSize &&
-      markPrice.toFixed(getDecimalCount(market.tickSize));
+      markPrice && market?.tickSize && markPrice.toFixed(getDecimalCount(market.tickSize));
 
     return (
       <MarkPriceTitle justify="center">
         <Col style={{ color: markPriceColor }}>
-          {markPrice > previousMarkPrice && (
-            <ArrowUpOutlined style={{ marginRight: 5 }} />
-          )}
-          {markPrice < previousMarkPrice && (
-            <ArrowDownOutlined style={{ marginRight: 5 }} />
-          )}
+          {markPrice > previousMarkPrice && <ArrowUpOutlined style={{ marginRight: 5 }} />}
+          {markPrice < previousMarkPrice && <ArrowDownOutlined style={{ marginRight: 5 }} />}
           {formattedMarkPrice || '----'}
         </Col>
       </MarkPriceTitle>

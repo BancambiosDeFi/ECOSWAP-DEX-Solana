@@ -22,9 +22,7 @@ export class SolongWalletAdapter extends EventEmitter implements WalletAdapter {
     return false;
   }
 
-  public async signAllTransactions(
-    transactions: Transaction[],
-  ): Promise<Transaction[]> {
+  public async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     const solong = (window as any).solong;
     if (solong.signAllTransactions) {
       return solong.signAllTransactions(transactions);
@@ -58,6 +56,7 @@ export class SolongWalletAdapter extends EventEmitter implements WalletAdapter {
         message: 'Solong Error',
         description: 'Please install solong wallet from Chrome ',
       });
+
       return;
     }
 

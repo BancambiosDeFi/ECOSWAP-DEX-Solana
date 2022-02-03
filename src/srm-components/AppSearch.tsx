@@ -7,20 +7,13 @@ import apps from '@project-serum/awesome-serum';
 const { Option } = Select;
 
 const appsAndTokens = apps.concat(
-  TOKEN_MINTS.map((mint) => {
+  TOKEN_MINTS.map(mint => {
     return {
       name: `${mint.name} SPL`,
       url: `https://solscan.io/address/${mint.address.toBase58()}`,
       description: `${mint.name} SPL token`,
       icon: '',
-      tags: [
-        'token',
-        'blockchain',
-        'solana',
-        'spl',
-        'solana',
-        mint.address.toBase58(),
-      ],
+      tags: ['token', 'blockchain', 'solana', 'spl', 'solana', mint.address.toBase58()],
     };
   }),
 );
@@ -38,19 +31,19 @@ export default function AppSearch(props) {
 
   const matchApp = (searchString: string, app: App) => {
     const lowerSearchStr = searchString.toLowerCase();
+
     return (
       app.name.toLowerCase().includes(lowerSearchStr) ||
       app.tags.some(
-        (tag) =>
-          tag.toLowerCase().includes(lowerSearchStr) ||
-          lowerSearchStr.includes(tag.toLowerCase()),
+        tag =>
+          tag.toLowerCase().includes(lowerSearchStr) || lowerSearchStr.includes(tag.toLowerCase()),
       )
     );
   };
 
-  const handleSearch = (value) => {
+  const handleSearch = value => {
     setSearchValue(value === '' ? undefined : value);
-    const filteredApps = appsAndTokens.filter((app) => matchApp(value, app));
+    const filteredApps = appsAndTokens.filter(app => matchApp(value, app));
     setSearchMatches(filteredApps);
   };
 
@@ -64,16 +57,15 @@ export default function AppSearch(props) {
     setSearchValue(undefined);
   };
 
-  const options = searchMatches.map((d) => (
+  const options = searchMatches.map(d => (
     <Option key={d.name} value={d.name} href={d.url}>
       <h3>{d.name}</h3>
-      <Typography.Text type="secondary">
-        {d.url.replace('https://', '')}
-      </Typography.Text>
+      <Typography.Text type="secondary">{d.url.replace('https://', '')}</Typography.Text>
     </Option>
   ));
 
   const ref = useRef<any>();
+
   return (
     <Select
       ref={ref}
@@ -102,9 +94,7 @@ export default function AppSearch(props) {
         width: props.width || '300px',
       }}
       dropdownMatchSelectWidth={false}
-      suffixIcon={
-        <SearchOutlined onClick={() => ref.current && ref.current.focus()} />
-      }
+      suffixIcon={<SearchOutlined onClick={() => ref.current && ref.current.focus()} />}
       filterOption={false}
     >
       {options}

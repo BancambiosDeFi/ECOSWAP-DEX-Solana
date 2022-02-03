@@ -1,35 +1,27 @@
 import React, { useContext, useState } from 'react';
+import { Market } from '@serum/serum';
+import { useWallet } from '../components/wallet/wallet';
 import { sleep, useLocalStorageState } from './utils';
 import { useInterval } from './useInterval';
 import { useConnection } from './connection';
-import { useWallet } from '../components/wallet/wallet';
 import { useMarketInfos, useTokenAccounts } from './markets';
 import { settleAllFunds } from './send';
 import { PreferencesContextValues } from './types';
-import { Market } from '@serum/serum';
 
 export const AUTO_SETTLE_DISABLED_OVERRIDE = true;
 
-const PreferencesContext = React.createContext<PreferencesContextValues | null>(
-  null,
-);
+const PreferencesContext = React.createContext<PreferencesContextValues | null>(null);
 
 export function PreferencesProvider({ children }) {
-  const [autoSettleEnabled, setAutoSettleEnabled] = useLocalStorageState(
-    'autoSettleEnabled',
-    true,
-  );
+  const [autoSettleEnabled, setAutoSettleEnabled] = useLocalStorageState('autoSettleEnabled', true);
 
   const [tokenAccounts] = useTokenAccounts();
   const { connected, wallet } = useWallet();
   const marketInfoList = useMarketInfos();
-  const [
-    currentlyFetchingMarkets,
-    setCurrentlyFetchingMarkets,
-  ] = useState<boolean>(false);
+  const [currentlyFetchingMarkets, setCurrentlyFetchingMarkets] = useState<boolean>(false);
   const [markets, setMarkets] = useState<Map<string, Market>>(new Map());
   const addToMarketsMap = (marketId, market) => {
-    setMarkets((prev) => new Map(prev).set(marketId, market));
+    setMarkets(prev => new Map(prev).set(marketId, market));
   };
   const connection = useConnection();
 
@@ -51,6 +43,7 @@ export function PreferencesProvider({ children }) {
         });
       } catch (e) {
         console.log('Error auto settling funds: ' + e.message);
+
         return;
       }
       console.log('Finished settling funds.');
@@ -109,6 +102,7 @@ export function usePreferences() {
   if (!context) {
     throw new Error('Missing preferences context');
   }
+
   return {
     autoSettleEnabled: context.autoSettleEnabled,
     setAutoSettleEnabled: context.setAutoSettleEnabled,

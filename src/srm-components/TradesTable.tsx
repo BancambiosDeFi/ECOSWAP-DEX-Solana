@@ -3,8 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useMarket, useBonfidaTrades } from '../srm-utils/markets';
 import { getDecimalCount } from '../srm-utils/utils';
-import FloatingElement from './layout/FloatingElement';
 import { BonfidaTrade } from '../srm-utils/types';
+import FloatingElement from './layout/FloatingElement';
 
 const Title = styled.div`
   color: rgba(255, 255, 255, 1);
@@ -46,9 +46,7 @@ export default function PublicTrades({ smallScreen }) {
             marginRight: '-20px',
             paddingRight: '5px',
             overflowY: 'scroll',
-            maxHeight: smallScreen
-              ? 'calc(100% - 75px)'
-              : 'calc(100vh - 800px)',
+            maxHeight: smallScreen ? 'calc(100% - 75px)' : 'calc(100vh - 800px)',
           }}
         >
           {trades.map((trade: BonfidaTrade, i: number) => (
@@ -60,16 +58,12 @@ export default function PublicTrades({ smallScreen }) {
                 }}
               >
                 {market?.tickSize && !isNaN(trade.price)
-                  ? Number(trade.price).toFixed(
-                      getDecimalCount(market.tickSize),
-                    )
+                  ? Number(trade.price).toFixed(getDecimalCount(market.tickSize))
                   : trade.price}
               </Col>
               <Col span={8} style={{ textAlign: 'right' }}>
                 {market?.minOrderSize && !isNaN(trade.size)
-                  ? Number(trade.size).toFixed(
-                      getDecimalCount(market.minOrderSize),
-                    )
+                  ? Number(trade.size).toFixed(getDecimalCount(market.minOrderSize))
                   : trade.size}
               </Col>
               <Col span={8} style={{ textAlign: 'right', color: '#434a59' }}>

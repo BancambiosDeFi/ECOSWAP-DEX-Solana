@@ -1,28 +1,17 @@
 import React, { FormEvent, useMemo, useState } from 'react';
 import { AdminControlledPoolInstructions, PoolInfo } from '@serum/pool';
 import { TokenInstructions } from '@serum/serum';
+import { Account, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
+import { AutoComplete, Button, Input, Select, Tabs } from 'antd';
+import { createAssociatedTokenAccount, getAssociatedTokenAddress } from '@serum/associated-token';
+import BN from 'bn.js';
 import FloatingElement from '../../../srm-components/layout/FloatingElement';
 import { useConnection } from '../../../srm-utils/connection';
 import { useWallet } from '../../../components/wallet/wallet';
-import {
-  getSelectedTokenAccountForMint,
-  useTokenAccounts,
-} from '../../../srm-utils/markets';
+import { getSelectedTokenAccountForMint, useTokenAccounts } from '../../../srm-utils/markets';
 import { sendTransaction } from '../../../srm-utils/send';
 import { notify } from '../../../srm-utils/notifications';
-import {
-  Account,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from '@solana/web3.js';
-import { AutoComplete, Button, Input, Select, Tabs } from 'antd';
-import {
-  createAssociatedTokenAccount,
-  getAssociatedTokenAddress,
-} from '@serum/associated-token';
 import { parseTokenMintData, useMintToTickers } from '../../../srm-utils/tokens';
-import BN from 'bn.js';
 import { refreshAllCaches } from '../../../srm-utils/fetch-loop';
 
 const { TabPane } = Tabs;
@@ -121,37 +110,30 @@ function AddAssetTab({ poolInfo }: TabParams) {
   const [address, setAddress] = useState('');
   const { wallet, connected } = useWallet();
   const canSubmit = connected && address;
-  const [onSubmit, submitting] = useOnSubmitHandler(
-    'adding asset to pool',
-    async () => {
-      const mintAddress = new PublicKey(address);
-      const vaultAddress = await getAssociatedTokenAddress(
-        poolInfo.state.vaultSigner,
-        mintAddress,
-      );
-      const transaction = new Transaction();
-      if (!(await connection.getAccountInfo(vaultAddress)) && wallet) {
-        transaction.add(
-          await createAssociatedTokenAccount(
-            wallet.publicKey,
-            poolInfo.state.vaultSigner,
-            mintAddress,
-          ),
-        );
-      }
+  const [onSubmit, submitting] = useOnSubmitHandler('adding asset to pool', async () => {
+    const mintAddress = new PublicKey(address);
+    const vaultAddress = await getAssociatedTokenAddress(poolInfo.state.vaultSigner, mintAddress);
+    const transaction = new Transaction();
+    if (!(await connection.getAccountInfo(vaultAddress)) && wallet) {
       transaction.add(
-        AdminControlledPoolInstructions.addAsset(poolInfo, vaultAddress),
+        await createAssociatedTokenAccount(
+          wallet.publicKey,
+          poolInfo.state.vaultSigner,
+          mintAddress,
+        ),
       );
-      return [transaction, []];
-    },
-  );
+    }
+    transaction.add(AdminControlledPoolInstructions.addAsset(poolInfo, vaultAddress));
+
+    return [transaction, []];
+  });
 
   return (
     <form onSubmit={onSubmit}>
       <MintSelector
         label="Token Mint Address"
         value={address}
-        onChange={(value) => setAddress(value)}
+        onChange={value => setAddress(value)}
         style={{ marginBottom: 24 }}
       />
       <SubmitButton canSubmit={canSubmit} submitting={submitting} />
@@ -163,23 +145,18 @@ function RemoveAssetTab({ poolInfo }: TabParams) {
   const [address, setAddress] = useState('');
   const { connected } = useWallet();
   const canSubmit = connected && address;
-  const [onSubmit, submitting] = useOnSubmitHandler(
-    'removing asset from pool',
-    async () => {
-      const mintAddress = new PublicKey(address);
-      const vaultAddress = poolInfo.state.assets.find((asset) =>
-        asset.mint.equals(mintAddress),
-      )?.vaultAddress;
-      if (!vaultAddress) {
-        throw new Error('Asset not in pool');
-      }
-      const transaction = new Transaction();
-      transaction.add(
-        AdminControlledPoolInstructions.removeAsset(poolInfo, vaultAddress),
-      );
-      return [transaction, []];
-    },
-  );
+  const [onSubmit, submitting] = useOnSubmitHandler('removing asset from pool', async () => {
+    const mintAddress = new PublicKey(address);
+    const vaultAddress = poolInfo.state.assets.find(asset => asset.mint.equals(mintAddress))
+      ?.vaultAddress;
+    if (!vaultAddress) {
+      throw new Error('Asset not in pool');
+    }
+    const transaction = new Transaction();
+    transaction.add(AdminControlledPoolInstructions.removeAsset(poolInfo, vaultAddress));
+
+    return [transaction, []];
+  });
 
   return (
     <form onSubmit={onSubmit}>
@@ -187,7 +164,7 @@ function RemoveAssetTab({ poolInfo }: TabParams) {
         poolInfo={poolInfo}
         label="Token Mint Address"
         value={address}
-        onChange={(value) => setAddress(value)}
+        onChange={value => setAddress(value)}
         style={{ marginBottom: 24 }}
       />
       <SubmitButton canSubmit={canSubmit} submitting={submitting} />
@@ -202,8 +179,7 @@ function DepositTab({ poolInfo }: TabParams) {
   const connection = useConnection();
   const { wallet, connected } = useWallet();
   const [tokenAccounts] = useTokenAccounts();
-  const canSubmit =
-    connected && address && tokenAccounts && parseFloat(quantity);
+  const canSubmit = connected && address && tokenAccounts && parseFloat(quantity);
 
   const [onSubmit, submitting] = useOnSubmitHandler(
     'depositing to pool',
@@ -213,17 +189,13 @@ function DepositTab({ poolInfo }: TabParams) {
       }
 
       const mintAddress = new PublicKey(address);
-      const vaultAddress = poolInfo.state.assets.find((asset) =>
-        asset.mint.equals(mintAddress),
-      )?.vaultAddress;
+      const vaultAddress = poolInfo.state.assets.find(asset => asset.mint.equals(mintAddress))
+        ?.vaultAddress;
       if (!vaultAddress) {
         throw new Error('Asset not in pool');
       }
 
-      const walletTokenAccount = getSelectedTokenAccountForMint(
-        tokenAccounts,
-        mintAddress,
-      );
+      const walletTokenAccount = getSelectedTokenAccountForMint(tokenAccounts, mintAddress);
       if (!walletTokenAccount) {
         throw new Error('Asset not in wallet');
       }
@@ -233,9 +205,7 @@ function DepositTab({ poolInfo }: TabParams) {
         throw new Error('Mint not found');
       }
       const mintDecimals = parseTokenMintData(mintAccountInfo.data).decimals;
-      const parsedQuantity = Math.round(
-        parseFloat(quantity) * 10 ** mintDecimals,
-      );
+      const parsedQuantity = Math.round(parseFloat(quantity) * 10 ** mintDecimals);
 
       const wrappedSolAccount =
         mintAddress.equals(TokenInstructions.WRAPPED_SOL_MINT) &&
@@ -282,6 +252,7 @@ function DepositTab({ poolInfo }: TabParams) {
           }),
         );
       }
+
       return [transaction, signers];
     },
     true,
@@ -293,13 +264,13 @@ function DepositTab({ poolInfo }: TabParams) {
         poolInfo={poolInfo}
         label="Token Mint Address"
         value={address}
-        onChange={(value) => setAddress(value)}
+        onChange={value => setAddress(value)}
         style={{ marginBottom: 24 }}
       />
       <Input
         addonBefore={<>Quantity</>}
         value={quantity}
-        onChange={(e) => setQuantity(e.target.value.trim())}
+        onChange={e => setQuantity(e.target.value.trim())}
         style={{ marginBottom: 24 }}
       />
       <SubmitButton canSubmit={canSubmit} submitting={submitting} />
@@ -314,101 +285,92 @@ function WithdrawTab({ poolInfo }: TabParams) {
   const connection = useConnection();
   const { wallet, connected } = useWallet();
   const [tokenAccounts] = useTokenAccounts();
-  const canSubmit =
-    connected && address && tokenAccounts && parseFloat(quantity);
+  const canSubmit = connected && address && tokenAccounts && parseFloat(quantity);
 
-  const [onSubmit, submitting] = useOnSubmitHandler(
-    'withdrawing from pool',
-    async () => {
-      if (!wallet) {
-        throw new Error('Wallet is not connected');
-      }
+  const [onSubmit, submitting] = useOnSubmitHandler('withdrawing from pool', async () => {
+    if (!wallet) {
+      throw new Error('Wallet is not connected');
+    }
 
-      const mintAddress = new PublicKey(address);
-      const vaultAddress = poolInfo.state.assets.find((asset) =>
-        asset.mint.equals(mintAddress),
-      )?.vaultAddress;
-      if (!vaultAddress) {
-        throw new Error('Asset not in pool');
-      }
+    const mintAddress = new PublicKey(address);
+    const vaultAddress = poolInfo.state.assets.find(asset => asset.mint.equals(mintAddress))
+      ?.vaultAddress;
+    if (!vaultAddress) {
+      throw new Error('Asset not in pool');
+    }
 
-      const walletTokenAccount = getSelectedTokenAccountForMint(
-        tokenAccounts,
-        mintAddress,
-      );
-      if (!walletTokenAccount) {
-        throw new Error('Asset not in wallet');
-      }
+    const walletTokenAccount = getSelectedTokenAccountForMint(tokenAccounts, mintAddress);
+    if (!walletTokenAccount) {
+      throw new Error('Asset not in wallet');
+    }
 
-      const mintAccountInfo = await connection.getAccountInfo(mintAddress);
-      if (!mintAccountInfo) {
-        throw new Error('Mint not found');
-      }
-      const mintDecimals = parseTokenMintData(mintAccountInfo.data).decimals;
-      const parsedQuantity = Math.round(
-        parseFloat(quantity) * 10 ** mintDecimals,
-      );
+    const mintAccountInfo = await connection.getAccountInfo(mintAddress);
+    if (!mintAccountInfo) {
+      throw new Error('Mint not found');
+    }
+    const mintDecimals = parseTokenMintData(mintAccountInfo.data).decimals;
+    const parsedQuantity = Math.round(parseFloat(quantity) * 10 ** mintDecimals);
 
-      const wrappedSolAccount =
-        mintAddress.equals(TokenInstructions.WRAPPED_SOL_MINT) &&
-        walletTokenAccount.pubkey.equals(wallet.publicKey)
-          ? new Account()
-          : null;
+    const wrappedSolAccount =
+      mintAddress.equals(TokenInstructions.WRAPPED_SOL_MINT) &&
+      walletTokenAccount.pubkey.equals(wallet.publicKey)
+        ? new Account()
+        : null;
 
-      const transaction = new Transaction();
-      const signers: Account[] = [];
-      if (wrappedSolAccount) {
-        transaction.add(
-          SystemProgram.createAccount({
-            fromPubkey: wallet.publicKey,
-            lamports: 2.04e6,
-            newAccountPubkey: wrappedSolAccount.publicKey,
-            programId: TokenInstructions.TOKEN_PROGRAM_ID,
-            space: 165,
-          }),
-          TokenInstructions.initializeAccount({
-            account: wrappedSolAccount.publicKey,
-            mint: TokenInstructions.WRAPPED_SOL_MINT,
-            owner: wallet.publicKey,
-          }),
-        );
-        signers.push(wrappedSolAccount);
-      }
+    const transaction = new Transaction();
+    const signers: Account[] = [];
+    if (wrappedSolAccount) {
       transaction.add(
-        AdminControlledPoolInstructions.approveDelegate(
-          poolInfo,
-          vaultAddress,
-          wallet.publicKey,
-          new BN(parsedQuantity),
-        ),
+        SystemProgram.createAccount({
+          fromPubkey: wallet.publicKey,
+          lamports: 2.04e6,
+          newAccountPubkey: wrappedSolAccount.publicKey,
+          programId: TokenInstructions.TOKEN_PROGRAM_ID,
+          space: 165,
+        }),
+        TokenInstructions.initializeAccount({
+          account: wrappedSolAccount.publicKey,
+          mint: TokenInstructions.WRAPPED_SOL_MINT,
+          owner: wallet.publicKey,
+        }),
       );
-      if (wrappedSolAccount) {
-        transaction.add(
-          TokenInstructions.transfer({
-            source: vaultAddress,
-            destination: wrappedSolAccount.publicKey,
-            amount: parsedQuantity,
-            owner: wallet.publicKey,
-          }),
-          TokenInstructions.closeAccount({
-            source: wrappedSolAccount.publicKey,
-            destination: walletTokenAccount.pubkey,
-            owner: wallet.publicKey,
-          }),
-        );
-      } else {
-        transaction.add(
-          TokenInstructions.transfer({
-            source: vaultAddress,
-            destination: walletTokenAccount.pubkey,
-            amount: parsedQuantity,
-            owner: wallet.publicKey,
-          }),
-        );
-      }
-      return [transaction, signers];
-    },
-  );
+      signers.push(wrappedSolAccount);
+    }
+    transaction.add(
+      AdminControlledPoolInstructions.approveDelegate(
+        poolInfo,
+        vaultAddress,
+        wallet.publicKey,
+        new BN(parsedQuantity),
+      ),
+    );
+    if (wrappedSolAccount) {
+      transaction.add(
+        TokenInstructions.transfer({
+          source: vaultAddress,
+          destination: wrappedSolAccount.publicKey,
+          amount: parsedQuantity,
+          owner: wallet.publicKey,
+        }),
+        TokenInstructions.closeAccount({
+          source: wrappedSolAccount.publicKey,
+          destination: walletTokenAccount.pubkey,
+          owner: wallet.publicKey,
+        }),
+      );
+    } else {
+      transaction.add(
+        TokenInstructions.transfer({
+          source: vaultAddress,
+          destination: walletTokenAccount.pubkey,
+          amount: parsedQuantity,
+          owner: wallet.publicKey,
+        }),
+      );
+    }
+
+    return [transaction, signers];
+  });
 
   return (
     <form onSubmit={onSubmit}>
@@ -416,13 +378,13 @@ function WithdrawTab({ poolInfo }: TabParams) {
         poolInfo={poolInfo}
         label="Token Mint Address"
         value={address}
-        onChange={(value) => setAddress(value)}
+        onChange={value => setAddress(value)}
         style={{ marginBottom: 24 }}
       />
       <Input
         addonBefore={<>Quantity</>}
         value={quantity}
-        onChange={(e) => setQuantity(e.target.value.trim())}
+        onChange={e => setQuantity(e.target.value.trim())}
         style={{ marginBottom: 24 }}
       />
       <SubmitButton canSubmit={canSubmit} submitting={submitting} />
@@ -437,26 +399,24 @@ function UpdateFeeTab({ poolInfo }: TabParams) {
   const [tokenAccounts] = useTokenAccounts();
   const canSubmit = connected && tokenAccounts && parseFloat(feeRate);
 
-  const [onSubmit, submitting] = useOnSubmitHandler(
-    'changing pool fee',
-    async () => {
-      const transaction = new Transaction();
-      transaction.add(
-        AdminControlledPoolInstructions.updateFee(
-          poolInfo,
-          Math.round(parseFloat(feeRate) * 1_000_000),
-        ),
-      );
-      return [transaction, []];
-    },
-  );
+  const [onSubmit, submitting] = useOnSubmitHandler('changing pool fee', async () => {
+    const transaction = new Transaction();
+    transaction.add(
+      AdminControlledPoolInstructions.updateFee(
+        poolInfo,
+        Math.round(parseFloat(feeRate) * 1_000_000),
+      ),
+    );
+
+    return [transaction, []];
+  });
 
   return (
     <form onSubmit={onSubmit}>
       <Input
         addonBefore={<>Fee Rate</>}
         value={feeRate}
-        onChange={(e) => setFeeRate(e.target.value.trim())}
+        onChange={e => setFeeRate(e.target.value.trim())}
         style={{ marginBottom: 24 }}
       />
       <SubmitButton canSubmit={canSubmit} submitting={submitting} />
@@ -504,12 +464,9 @@ function useOnSubmitHandler(
 
 function SubmitButton({ canSubmit, submitting }) {
   const { connected } = useWallet();
+
   return (
-    <Button
-      htmlType="submit"
-      type="primary"
-      disabled={!canSubmit || submitting}
-    >
+    <Button htmlType="submit" type="primary" disabled={!canSubmit || submitting}>
       {!connected ? 'Wallet not connected' : 'Submit'}
     </Button>
   );
@@ -529,11 +486,12 @@ function MintInPoolSelector({
   style: any;
 }) {
   const mintToTickers = useMintToTickers();
+
   return (
     <Input.Group style={style}>
       <span className="ant-input-group-addon">{label}</span>
       <Select onChange={onChange} value={value} style={{ width: '100%' }}>
-        {poolInfo.state.assets.map((asset) => (
+        {poolInfo.state.assets.map(asset => (
           <Option value={asset.mint.toBase58()} key={asset.mint.toBase58()}>
             {mintToTickers[asset.mint.toBase58()] ? (
               <>
@@ -555,8 +513,7 @@ function MintSelector({ label, style, value, onChange }) {
     return Object.entries(mintToTickers)
       .filter(
         ([mintAddress, ticker]) =>
-          mintAddress.includes(value) ||
-          ticker.toLowerCase().includes(value.toLowerCase()),
+          mintAddress.includes(value) || ticker.toLowerCase().includes(value.toLowerCase()),
       )
       .map(([mintAddress, ticker]) => ({
         value: mintAddress,
@@ -567,13 +524,14 @@ function MintSelector({ label, style, value, onChange }) {
         ),
       }));
   }, [mintToTickers, value]);
+
   return (
     <Input.Group style={style}>
       <span className="ant-input-group-addon">{label}</span>
       <AutoComplete
         options={options}
         value={value}
-        onChange={(e) => onChange(e)}
+        onChange={e => onChange(e)}
         style={{ width: '100%' }}
       />
     </Input.Group>

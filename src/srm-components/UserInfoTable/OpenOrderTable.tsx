@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import DataTable from '../layout/DataTable';
-
 import styled from 'styled-components';
 import { Button, Col, Row, Tag } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import DataTable from '../layout/DataTable';
+
 import { cancelOrder } from '../../srm-utils/send';
 import { useWallet } from '../../components/wallet/wallet';
 import { useSendConnection } from '../../srm-utils/connection';
 import { notify } from '../../srm-utils/notifications';
-import { DeleteOutlined } from '@ant-design/icons';
 import { OrderWithMarketAndMarketName } from '../../srm-utils/types';
 
 const CancelButton = styled(Button)`
@@ -28,8 +28,8 @@ export default function OpenOrderTable({
   loading?: boolean;
   marketFilter?: boolean;
 }) {
-  let { wallet } = useWallet();
-  let connection = useSendConnection();
+  const { wallet } = useWallet();
+  const connection = useSendConnection();
 
   const [cancelId, setCancelId] = useState(null);
 
@@ -52,6 +52,7 @@ export default function OpenOrderTable({
         description: e.message,
         type: 'error',
       });
+
       return;
     } finally {
       setCancelId(null);
@@ -60,8 +61,8 @@ export default function OpenOrderTable({
   }
 
   const marketFilters = [
-    ...new Set((openOrders || []).map((orderInfos) => orderInfos.marketName)),
-  ].map((marketName) => {
+    ...new Set((openOrders || []).map(orderInfos => orderInfos.marketName)),
+  ].map(marketName => {
     return { text: marketName, value: marketName };
   });
 
@@ -77,11 +78,8 @@ export default function OpenOrderTable({
       title: 'Side',
       dataIndex: 'side',
       key: 'side',
-      render: (side) => (
-        <Tag
-          color={side === 'buy' ? '#41C77A' : '#F23B69'}
-          style={{ fontWeight: 700 }}
-        >
+      render: side => (
+        <Tag color={side === 'buy' ? '#41C77A' : '#F23B69'} style={{ fontWeight: 700 }}>
           {side.charAt(0).toUpperCase() + side.slice(1)}
         </Tag>
       ),
@@ -112,7 +110,7 @@ export default function OpenOrderTable({
     },
     {
       key: 'orderId',
-      render: (order) => (
+      render: order => (
         <div style={{ textAlign: 'right' }}>
           <CancelButton
             icon={<DeleteOutlined />}
@@ -125,7 +123,7 @@ export default function OpenOrderTable({
       ),
     },
   ];
-  const dataSource = (openOrders || []).map((order) => ({
+  const dataSource = (openOrders || []).map(order => ({
     ...order,
     key: order.orderId,
   }));

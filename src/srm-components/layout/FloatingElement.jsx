@@ -7,11 +7,7 @@ const Wrapper = styled.div`
   background-color: #1a2029;
 `;
 
-export default function FloatingElement({
-  style = undefined,
-  children,
-  stretchVertical = false,
-}) {
+export default function FloatingElement({ style = undefined, children, stretchVertical = false }) {
   return (
     <Wrapper
       style={{

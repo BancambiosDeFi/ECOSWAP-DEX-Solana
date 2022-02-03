@@ -55,9 +55,7 @@ export const TVChartContainer = () => {
   const tvWidgetRef = React.useRef<IChartingLibraryWidget | null>(null);
   const { market } = useMarket();
 
-  const chartProperties = JSON.parse(
-    localStorage.getItem('chartproperties') || '{}',
-  );
+  const chartProperties = JSON.parse(localStorage.getItem('chartproperties') || '{}');
 
   React.useEffect(() => {
     const savedProperties = flatten(chartProperties, {
@@ -66,17 +64,14 @@ export const TVChartContainer = () => {
 
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol:
-        USE_MARKETS.find(
-          (m) => m.address.toBase58() === market?.publicKey.toBase58(),
-        )?.name || 'SRM/USDC',
+        USE_MARKETS.find(m => m.address.toBase58() === market?.publicKey.toBase58())?.name ||
+        'SRM/USDC',
       // BEWARE: no trailing slash is expected in feed URL
       // tslint:disable-next-line:no-any
       // @ts-ignore
       // datafeed: datafeed,
       // @ts-ignore
-      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(
-        defaultProps.datafeedUrl,
-      ),
+      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(defaultProps.datafeedUrl),
       interval: defaultProps.interval as ChartingLibraryWidgetOptions['interval'],
       container_id: defaultProps.containerId as ChartingLibraryWidgetOptions['container_id'],
       library_path: defaultProps.libraryPath as string,
@@ -119,16 +114,14 @@ export const TVChartContainer = () => {
               hideFloatingPanel: 1,
             }),
           'chart.favoriteDrawings':
-            localStorage.getItem('chart.favoriteDrawings') ||
-            JSON.stringify([]),
+            localStorage.getItem('chart.favoriteDrawings') || JSON.stringify([]),
           'chart.favoriteDrawingsPosition':
-            localStorage.getItem('chart.favoriteDrawingsPosition') ||
-            JSON.stringify({}),
+            localStorage.getItem('chart.favoriteDrawingsPosition') || JSON.stringify({}),
         },
         setValue: (key, value) => {
           localStorage.setItem(key, value);
         },
-        removeValue: (key) => {
+        removeValue: key => {
           localStorage.removeItem(key);
         },
       },

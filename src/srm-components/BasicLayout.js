@@ -1,11 +1,11 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
-import TopBar from './TopBar';
-import { CustomFooter as Footer } from './Footer';
-import { useReferrer } from '../srm-utils/referrer';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
+import { useReferrer } from '../srm-utils/referrer';
 import { notify } from '../srm-utils/notifications';
+import { CustomFooter as Footer } from './Footer';
+import TopBar from './TopBar';
 const { Header, Content } = Layout;
 
 export default function BasicLayout({ children }) {
@@ -22,9 +22,7 @@ export default function BasicLayout({ children }) {
 
   return (
     <React.Fragment>
-      <Layout
-        style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
-      >
+      <Layout style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
         <Header style={{ padding: 0, minHeight: 64, height: 'unset' }}>
           <TopBar />
         </Header>

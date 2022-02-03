@@ -12,7 +12,7 @@ import {
   useSelectedQuoteCurrencyAccount,
   useSelectedQuoteCurrencyBalances,
 } from '../srm-utils/markets';
-import {useWallet} from '../srm-utils/wallet';
+import {useWallet} from '../components/wallet/wallet';
 import {notify} from '../srm-utils/notifications';
 import {floorToDecimal, getDecimalCount, roundToDecimal,} from '../srm-utils/utils';
 import {useSendConnection} from '../srm-utils/connection';

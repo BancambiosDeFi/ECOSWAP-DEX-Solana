@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { sleep, useLocalStorageState } from './utils';
 import { useInterval } from './useInterval';
 import { useConnection } from './connection';
-import { useWallet } from './wallet';
+import { useWallet } from '../components/wallet/wallet';
 import { useMarketInfos, useTokenAccounts } from './markets';
 import { settleAllFunds } from './send';
 import { PreferencesContextValues } from './types';

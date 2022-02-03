@@ -1,16 +1,16 @@
 import EventEmitter from 'eventemitter3';
 import { PublicKey, Transaction } from '@solana/web3.js';
+import { DEFAULT_PUBLIC_KEY, WalletAdapter } from './types';
 import { notify } from '../../srm-utils/notifications';
-import { DEFAULT_PUBLIC_KEY, WalletAdapter } from '../types';
 
-type SolflareExtensionEvent = 'disconnect' | 'connect';
-type SolflareExtensionRequestMethod =
+type PhantomEvent = 'disconnect' | 'connect';
+type PhantomRequestMethod =
   | 'connect'
   | 'disconnect'
   | 'signTransaction'
   | 'signAllTransactions';
 
-interface SolflareExtensionProvider {
+interface PhantomProvider {
   publicKey?: PublicKey;
   isConnected?: boolean;
   autoApprove?: boolean;
@@ -18,12 +18,12 @@ interface SolflareExtensionProvider {
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
-  on: (event: SolflareExtensionEvent, handler: (args: any) => void) => void;
-  off: (event: SolflareExtensionEvent, handler: (args: any) => void) => void;
-  request: (method: SolflareExtensionRequestMethod, params: any) => Promise<any>;
+  on: (event: PhantomEvent, handler: (args: any) => void) => void;
+  request: (method: PhantomRequestMethod, params: any) => Promise<any>;
+  listeners: (event: PhantomEvent) => (() => void)[];
 }
 
-export class SolflareExtensionWalletAdapter
+export class PhantomWalletAdapter
   extends EventEmitter
   implements WalletAdapter {
   constructor() {
@@ -31,22 +31,20 @@ export class SolflareExtensionWalletAdapter
     this.connect = this.connect.bind(this);
   }
 
-  private get _provider(): SolflareExtensionProvider | undefined {
-    if ((window as any)?.solflare?.isSolflare) {
-      return (window as any).solflare;
+  private get _provider(): PhantomProvider | undefined {
+    if ((window as any)?.solana?.isPhantom) {
+      return (window as any).solana;
     }
     return undefined;
   }
 
   private _handleConnect = (...args) => {
     this.emit('connect', ...args);
-  }
+  };
 
   private _handleDisconnect = (...args) => {
-    this._provider?.off('connect', this._handleConnect);
-    this._provider?.off('disconnect', this._handleDisconnect);
     this.emit('disconnect', ...args);
-  }
+  };
 
   get connected() {
     return this._provider?.isConnected || false;
@@ -78,21 +76,25 @@ export class SolflareExtensionWalletAdapter
     return this._provider.signTransaction(transaction);
   }
 
-  async connect() {
+  connect() {
     if (!this._provider) {
-      window.open('https://solflare.com/', '_blank');
+      window.open('https://phantom.app/', '_blank');
       notify({
         message: 'Connection Error',
-        description: 'Please install Solflare extension',
+        description: 'Please install Phantom wallet',
       });
       return;
     }
-    this._provider?.on('connect', this._handleConnect);
-    this._provider?.on('disconnect', this._handleDisconnect);
+    if (!this._provider.listeners('connect').length) {
+      this._provider?.on('connect', this._handleConnect);
+    }
+    if (!this._provider.listeners('disconnect').length) {
+      this._provider?.on('disconnect', this._handleDisconnect);
+    }
     return this._provider?.connect();
   }
 
-  async disconnect() {
+  disconnect() {
     if (this._provider) {
       this._provider.disconnect();
     }

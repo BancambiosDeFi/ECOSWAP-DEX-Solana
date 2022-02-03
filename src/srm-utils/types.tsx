@@ -2,7 +2,7 @@ import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import { Market, OpenOrders } from '@serum/serum';
 import { Event } from '@serum/serum/lib/queue';
 import { Order } from '@serum/serum/lib/market';
-import { WalletAdapter } from '../srm-wallet-adapters';
+import { WalletAdapter } from '../components/wallet/types';
 
 export interface ConnectionContextValues {
   endpoint: string;

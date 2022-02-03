@@ -4,7 +4,7 @@ import { Button, Row } from 'antd';
 import { settleAllFunds } from '../../srm-utils/send';
 import { notify } from '../../srm-utils/notifications';
 import { useConnection } from '../../srm-utils/connection';
-import { useWallet } from '../../srm-utils/wallet';
+import { useWallet } from '../../components/wallet/wallet';
 import {
   useAllMarkets,
   useSelectedTokenAccounts,

@@ -32,7 +32,7 @@ import { Order } from '@serum/serum/lib/market';
 import { Buffer } from 'buffer';
 import assert from 'assert';
 import { struct } from 'superstruct';
-import { WalletAdapter } from '../srm-wallet-adapters';
+import { WalletAdapter } from '../components/wallet/types';
 
 export async function createTokenAccountTransaction({
   connection,

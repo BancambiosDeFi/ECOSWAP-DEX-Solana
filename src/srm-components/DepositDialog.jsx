@@ -5,7 +5,7 @@ import {
   useMarket,
   useSelectedQuoteCurrencyAccount,
 } from '../srm-utils/markets';
-import { useWallet } from '../srm-utils/wallet';
+import { useWallet } from '../components/wallet/wallet';
 import Link from './Link';
 
 export default function DepositDialog({ onClose, baseOrQuote }) {

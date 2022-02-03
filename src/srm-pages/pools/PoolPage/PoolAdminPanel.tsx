@@ -3,7 +3,7 @@ import { AdminControlledPoolInstructions, PoolInfo } from '@serum/pool';
 import { TokenInstructions } from '@serum/serum';
 import FloatingElement from '../../../srm-components/layout/FloatingElement';
 import { useConnection } from '../../../srm-utils/connection';
-import { useWallet } from '../../../srm-utils/wallet';
+import { useWallet } from '../../../components/wallet/wallet';
 import {
   getSelectedTokenAccountForMint,
   useTokenAccounts,

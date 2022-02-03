@@ -6,7 +6,7 @@ import { PublicKey } from '@solana/web3.js';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { notify } from '../../srm-utils/notifications';
 import { getPublicKey, signTransaction } from './core';
-import { DEFAULT_PUBLIC_KEY, WalletAdapter } from '../types';
+import { DEFAULT_PUBLIC_KEY, WalletAdapter } from '../../components/wallet/types';
 
 export class LedgerWalletAdapter extends EventEmitter implements WalletAdapter {
   _connecting: boolean;

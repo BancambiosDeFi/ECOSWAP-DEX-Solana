@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import './App.less';
 import { ConnectionProvider } from './srm-utils/connection';
-import { WalletProvider } from './srm-utils/wallet';
+import { WalletProvider } from './components/wallet/wallet';
 import { GlobalStyle } from './global_style';
 import { Spin } from 'antd';
 import ErrorBoundary from './srm-components/ErrorBoundary';

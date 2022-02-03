@@ -17,7 +17,7 @@ import {
 } from './utils';
 import { refreshCache, useAsyncData } from './fetch-loop';
 import { useAccountData, useAccountInfo, useConnection } from './connection';
-import { useWallet } from './wallet';
+import { useWallet } from '../components/wallet/wallet';
 import tuple from 'immutable-tuple';
 import { notify } from './notifications';
 import BN from 'bn.js';

@@ -11,7 +11,7 @@ import PoolPage from './srm-pages/pools/PoolPage';
 import PoolListPage from './srm-pages/pools/PoolListPage';
 import { getTradePageUrl } from './srm-utils/markets';
 import DesignSystemPage from './srm-pages/DesignSystemPage';
-import SwapPage from './srm-pages/SwapPage';
+import SwapPage from './pages/swap';
 
 export function Routes() {
   return (

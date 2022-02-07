@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
+import { TokenInfo } from '@solana/spl-token-registry';
 import { Card, Button, Typography, TextField, useTheme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ExpandMore, ImportExportRounded } from '@mui/icons-material';
@@ -10,6 +11,7 @@ import {
   useMint,
   useOwnedTokenAccount,
   useOnSwap,
+  useSwappableTokens,
 } from '@serum/swap-ui';
 import TokenDialog from './TokenDialog';
 import { SettingsButton } from './Settings';
@@ -92,13 +94,16 @@ export default function SwapCard({
   swapTokenContainerStyle?: any;
 }) {
   const styles = useStyles();
+  // TODO: use storage/context instead of passing props to children
+  const { swappableTokens: tokenList } = useSwappableTokens();
+
   return (
     <Card className={styles.card} style={containerStyle}>
       <SwapHeader />
       <div style={contentStyle}>
-        <SwapFromForm style={swapTokenContainerStyle} />
+        <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
         <ArrowButton />
-        <SwapToForm style={swapTokenContainerStyle} />
+        <SwapToForm style={swapTokenContainerStyle} tokenList={tokenList} />
         <InfoLabel />
         <SwapButton />
       </div>
@@ -142,7 +147,7 @@ export function ArrowButton() {
   );
 }
 
-function SwapFromForm({ style }: { style?: any }) {
+function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { fromMint, setFromMint, fromAmount, setFromAmount } = useSwapContext();
   return (
     <SwapTokenForm
@@ -152,11 +157,12 @@ function SwapFromForm({ style }: { style?: any }) {
       setMint={setFromMint}
       amount={fromAmount}
       setAmount={setFromAmount}
+      tokenList={tokenList}
     />
   );
 }
 
-function SwapToForm({ style }: { style?: any }) {
+function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { toMint, setToMint, toAmount, setToAmount } = useSwapContext();
   return (
     <SwapTokenForm
@@ -166,6 +172,7 @@ function SwapToForm({ style }: { style?: any }) {
       setMint={setToMint}
       amount={toAmount}
       setAmount={setToAmount}
+      tokenList={tokenList}
     />
   );
 }
@@ -177,6 +184,7 @@ export function SwapTokenForm({
   setMint,
   amount,
   setAmount,
+  tokenList = [],
 }: {
   from: boolean;
   style?: any;
@@ -184,6 +192,7 @@ export function SwapTokenForm({
   setMint: (m: PublicKey) => void;
   amount: number;
   setAmount: (a: number) => void;
+  tokenList: TokenInfo[];
 }) {
   const styles = useStyles();
 
@@ -233,6 +242,7 @@ export function SwapTokenForm({
         setMint={setMint}
         open={showTokenDialog}
         onClose={() => setShowTokenDialog(false)}
+        tokenList={tokenList}
       />
     </div>
   );
@@ -266,13 +276,20 @@ export function TokenIcon({
   mint,
   style,
   className = '',
+  onError,
 }: {
   mint: PublicKey;
   style?: any;
   className?: string;
+  onError?: any;
 }) {
   const tokenMap = useTokenMap();
   const tokenInfo = tokenMap.get(mint.toString());
+
+  if (!tokenInfo?.logoURI) {
+    onError(true);
+    return null;
+  }
   return (
     <div
       style={{
@@ -281,11 +298,17 @@ export function TokenIcon({
         flexDirection: 'column',
       }}
     >
-      {tokenInfo?.logoURI ? (
-        <img alt="Logo" style={style} src={tokenInfo?.logoURI} className={className} />
-      ) : (
-        <div style={style} className={className}></div>
-      )}
+      <img
+        alt="Logo"
+        style={style}
+        src={tokenInfo?.logoURI}
+        className={className}
+        onError={() => {
+          if (onError) {
+            onError(true);
+          }
+        }}
+      />
     </div>
   );
 }

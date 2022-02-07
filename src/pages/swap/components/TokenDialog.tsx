@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import {
-  useMediaQuery,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -11,16 +10,16 @@ import {
   List,
   ListItem,
   Typography,
-  Tabs,
-  Tab,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-import { useSwappableTokens } from '@serum/swap-ui';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 import { TokenIcon } from './SwapCard';
 
 const useStyles = makeStyles(theme => ({
+  displayNone: {
+    display: 'none',
+  },
   scrollBar: {
     '&::-webkit-scrollbar': {
       width: 10,
@@ -138,22 +137,22 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '30px',
     padding: 0,
   },
-  commonBasesWrap: {
+  commonBaseWrap: {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
   },
-  commonBasesList: {
+  commonBaseList: {
     display: 'flex',
     justifyContent: 'space-between',
   },
-  commonBasesTitle: {
+  commonBaseTitle: {
     color: '#fff',
     fontSize: '14px',
     fontWeight: 800,
     marginBottom: '10px',
   },
-  commonBasesToken: {
+  commonBaseToken: {
     display: 'flex',
     alignItems: 'center',
     borderRadius: '20px',
@@ -161,10 +160,10 @@ const useStyles = makeStyles(theme => ({
     padding: '7px 12px',
     cursor: 'pointer',
   },
-  commonBasesTokenNameWrap: {
+  commonBaseTokenNameWrap: {
     marginLeft: '5px',
   },
-  commonBasesTokenName: {
+  commonBaseTokenName: {
     fontSize: '16px',
     lineHeight: '16px',
     fontWeight: 700,
@@ -173,46 +172,40 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const COMMON_BASES_TOKENS: string[] = ['Native SOL', 'USDT', 'USD Coin'];
+const COMMON_BASE_TOKENS: string[] = ['Native SOL', 'USDT', 'USD Coin'];
 
 export default function TokenDialog({
   open,
   onClose,
   setMint,
+  tokenList = [],
 }: {
   open: boolean;
   onClose: () => void;
   setMint: (mint: PublicKey) => void;
+  tokenList: TokenInfo[];
 }) {
-  const [tabSelection, setTabSelection] = useState(0);
   const [tokenFilter, setTokenFilter] = useState('');
-  const [commonBasesTokens, setCommonBasesTokens] = useState<TokenInfo[]>([]);
+  const [commonBaseTokens, setCommonBaseTokens] = useState<TokenInfo[]>([]);
   const filter = tokenFilter.toLowerCase();
   const styles = useStyles();
-  const { swappableTokens, swappableTokensSollet, swappableTokensWormhole } = useSwappableTokens();
-  const displayTabs = !useMediaQuery('(max-width:450px)');
-  const selectedTokens =
-    tabSelection === 0
-      ? swappableTokens
-      : tabSelection === 1
-      ? swappableTokensWormhole
-      : swappableTokensSollet;
-  const tokens =
-    tokenFilter === ''
-      ? selectedTokens
-      : selectedTokens.filter(
-          t =>
-            t.symbol.toLowerCase().startsWith(filter) ||
-            t.name.toLowerCase().startsWith(filter) ||
-            t.address.toLowerCase().startsWith(filter),
-        );
+  const tokens = useMemo(
+    () =>
+      tokenList.filter(
+        t =>
+          t.symbol.toLowerCase().startsWith(filter) ||
+          t.name.toLowerCase().startsWith(filter) ||
+          t.address.toLowerCase().startsWith(filter),
+      ),
+    [tokenList, filter],
+  );
   useEffect(() => {
-    if (!commonBasesTokens.length) {
-      setCommonBasesTokens(
-        tokens.length ? tokens.filter(({ name }) => COMMON_BASES_TOKENS.includes(name)) : [],
+    if (!commonBaseTokens.length) {
+      setCommonBaseTokens(
+        tokens.length ? tokens.filter(({ name }) => COMMON_BASE_TOKENS.includes(name)) : [],
       );
     }
-  }, [tokens, commonBasesTokens]);
+  }, [tokens, commonBaseTokens]);
 
   return (
     <Dialog
@@ -224,9 +217,6 @@ export default function TokenDialog({
       }}
     >
       <DialogTitle className={styles.dialogTitle}>
-        {/* <Typography variant="h6" style={{ paddingBottom: '16px' }}>
-          Select a token
-        </Typography> */}
         <TextField
           className={styles.dialogTitleTextField}
           placeholder={'Search name'}
@@ -242,7 +232,7 @@ export default function TokenDialog({
       </DialogTitle>
       <DialogActions className={styles.dialogActions}>
         <CommonBases
-          commonBasesTokens={commonBasesTokens}
+          commonBaseTokens={commonBaseTokens}
           onClick={mint => {
             setMint(mint);
             onClose();
@@ -267,22 +257,22 @@ export default function TokenDialog({
   );
 }
 
-function CommonBases({ commonBasesTokens, onClick }) {
+function CommonBases({ commonBaseTokens, onClick }) {
   const styles = useStyles();
 
   return (
-    <div className={styles.commonBasesWrap}>
-      <span className={styles.commonBasesTitle}>Common bases</span>
-      <div className={styles.commonBasesList}>
-        {commonBasesTokens.map(tokenInfo => {
+    <div className={styles.commonBaseWrap}>
+      <span className={styles.commonBaseTitle}>Common bases</span>
+      <div className={styles.commonBaseList}>
+        {commonBaseTokens.map(tokenInfo => {
           const mint = new PublicKey(tokenInfo.address);
           return (
-            <div className={styles.commonBasesToken} onClick={() => onClick(mint)}>
+            <div className={styles.commonBaseToken} onClick={() => onClick(mint)}>
               <TokenIcon mint={mint} className={styles.tokenIconSmall} />
               <TokenName
                 tokenInfo={tokenInfo}
-                wrapStyles={styles.commonBasesTokenNameWrap}
-                tokenNameStyles={styles.commonBasesTokenName}
+                wrapStyles={styles.commonBaseTokenNameWrap}
+                tokenNameStyles={styles.commonBaseTokenName}
               />
             </div>
           );
@@ -299,11 +289,21 @@ function TokenListItem({
   tokenInfo: TokenInfo;
   onClick: (mint: PublicKey) => void;
 }) {
+  const [errorDownloading, setErrorDownloading] = useState(false);
   const mint = new PublicKey(tokenInfo.address);
   const styles = useStyles();
+
   return (
-    <ListItem button onClick={() => onClick(mint)} className={styles.dialogListItem}>
-      <TokenIcon mint={mint} style={{ width: '40px', height: '40px', borderRadius: '15px' }} />
+    <ListItem
+      button
+      onClick={() => onClick(mint)}
+      className={errorDownloading ? styles.displayNone : styles.dialogListItem}
+    >
+      <TokenIcon
+        mint={mint}
+        style={{ width: '40px', height: '40px', borderRadius: '15px' }}
+        onError={setErrorDownloading}
+      />
       <TokenName
         tokenInfo={tokenInfo}
         tokenNameStyles={styles.dialogListTokenName}
@@ -325,9 +325,6 @@ function TokenName({
   return (
     <div className={wrapStyles}>
       <Typography className={tokenNameStyles}>{tokenInfo?.symbol}</Typography>
-      {/* <Typography color="textSecondary" style={{ fontSize: '14px' }}>
-        {tokenInfo?.symbol}
-      </Typography> */}
     </div>
   );
 }

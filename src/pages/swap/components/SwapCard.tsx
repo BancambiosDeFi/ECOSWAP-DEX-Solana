@@ -262,7 +262,15 @@ function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }
   );
 }
 
-export function TokenIcon({ mint, style }: { mint: PublicKey; style: any }) {
+export function TokenIcon({
+  mint,
+  style,
+  className = '',
+}: {
+  mint: PublicKey;
+  style?: any;
+  className?: string;
+}) {
   const tokenMap = useTokenMap();
   const tokenInfo = tokenMap.get(mint.toString());
   return (
@@ -274,9 +282,9 @@ export function TokenIcon({ mint, style }: { mint: PublicKey; style: any }) {
       }}
     >
       {tokenInfo?.logoURI ? (
-        <img alt="Logo" style={style} src={tokenInfo?.logoURI} />
+        <img alt="Logo" style={style} src={tokenInfo?.logoURI} className={className} />
       ) : (
-        <div style={style}></div>
+        <div style={style} className={className}></div>
       )}
     </div>
   );

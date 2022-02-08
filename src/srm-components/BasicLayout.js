@@ -1,12 +1,10 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
-import TopBar from './TopBar';
-import { SwapFooter } from './SwapFooter';
 import { useReferrer } from '../srm-utils/referrer';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
 import { notify } from '../srm-utils/notifications';
-import { CustomFooter as Footer } from './Footer';
+import { SwapFooter } from './SwapFooter';
 import TopBar from './TopBar';
 const { Header, Content } = Layout;
 

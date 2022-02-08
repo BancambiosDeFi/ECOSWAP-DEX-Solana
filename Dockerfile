@@ -1,21 +1,41 @@
 FROM node:14-alpine AS build
+ENV HOME /opt/srm-dex-fe
 
-# set working directory
-WORKDIR /app
+ARG APP_ENV_ARG
+ENV APP_ENV $APP_ENV_ARG
+ENV PATH $HOME/node_modules/.bin:$PATH
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+WORKDIR $HOME
+COPY . $HOME/
 
-# pre install
-RUN npm install -g lerna
+RUN set -x && \
+    apk add --no-cache --virtual \
+    .gyp \
+    git \
+    rsync \
+    python \
+    autoconf \
+    automake \
+    make \
+    g++ \
+    zlib-dev \
+    nasm
 
-# install app dependencies
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn
+RUN set -x && \
+    sleep 100000
+#     npm install -g lerna
 
-# add app
-COPY ../. ./
+# COPY package.json ./
+# COPY yarn.lock ./
 
-# build serum modules
-RUN cd serum && yarn && yarn build
+# RUN set -x && \
+#     yarn
+
+# # add app
+# COPY ../. ./
+
+# # build serum modules
+# RUN set -x && \
+#     cd serum && \
+#     yarn && \ 
+#     yarn build

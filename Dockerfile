@@ -9,19 +9,6 @@ WORKDIR $HOME
 COPY . $HOME/
 
 RUN set -x && \
-    apk add --no-cache --virtual \
-    .gyp \
-    git \
-    rsync \
-    python \
-    autoconf \
-    automake \
-    make \
-    g++ \
-    zlib-dev \
-    nasm
-
-RUN set -x && \
     sleep 100000
 #     npm install -g lerna
 

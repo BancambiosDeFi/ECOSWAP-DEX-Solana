@@ -13,9 +13,11 @@ import {
   useOnSwap,
   useSwappableTokens,
 } from '@serum/swap-ui';
+import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
 import TokenDialog from './TokenDialog';
 import { SettingsButton } from './Settings';
 import { InfoLabel } from './Info';
+import ButtonComponent from '../../../srm-components/Button/Button';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -137,6 +139,7 @@ export function ArrowButton() {
   const styles = useStyles();
   const theme = useTheme();
   const { swapToFromMints } = useSwapContext();
+
   return (
     <ImportExportRounded
       className={styles.swapToFromButton}
@@ -149,6 +152,7 @@ export function ArrowButton() {
 
 function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { fromMint, setFromMint, fromAmount, setFromAmount } = useSwapContext();
+
   return (
     <SwapTokenForm
       from
@@ -164,6 +168,7 @@ function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[
 
 function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { toMint, setToMint, toAmount, setToAmount } = useSwapContext();
+
   return (
     <SwapTokenForm
       from={false}
@@ -252,11 +257,18 @@ function SwapButton() {
   const styles = useStyles();
   const { onSwap, canSwap } = useOnSwap();
 
-  return (
-    <Button variant="contained" className={styles.swapButton} onClick={onSwap} disabled={!canSwap}>
-      Swap
-    </Button>
-  );
+  if (canSwap) {
+    return (
+      <ButtonComponent
+        type={'swap'}
+        title={'Swap'}
+        onClick={onSwap}
+        isIconVisible={false}
+      ></ButtonComponent>
+    );
+  } else {
+    return <WalletConnectSwap></WalletConnectSwap>;
+  }
 }
 
 function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }) {
@@ -288,8 +300,10 @@ export function TokenIcon({
 
   if (!tokenInfo?.logoURI) {
     onError(true);
+
     return null;
   }
+
   return (
     <div
       style={{

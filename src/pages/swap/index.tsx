@@ -9,6 +9,7 @@ import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registr
 import SwapProvider from '@serum/swap-ui';
 import SwapCard from './components/SwapCard';
 import { NotifyingProvider } from './Provider';
+import BasicLayout from '../../srm-components/BasicLayout';
 
 // App illustrating the use of the Swap component.
 //
@@ -88,19 +89,14 @@ export default function SwapPage() {
 
   // TODO: change tokenList any type to something meaningful
   return (
-    <Grid container justifyContent="center" alignItems="center" className={styles.root}>
-      <Button
-        variant="outlined"
-        onClick={() => (!isConnected ? wallet.connect() : wallet.disconnect())}
-        style={{ position: 'fixed', right: 24, top: 24 }}
-      >
-        {!isConnected ? 'Connect' : 'Disconnect'}
-      </Button>
-      {tokenList && (
-        <SwapProvider provider={provider} tokenList={tokenList as any}>
-          <SwapCard />
-        </SwapProvider>
-      )}
-    </Grid>
+    <BasicLayout>
+      <Grid container justifyContent="center" alignItems="center" className={styles.root}>
+        {tokenList && (
+          <SwapProvider provider={provider} tokenList={tokenList as any}>
+            <SwapCard />
+          </SwapProvider>
+        )}
+      </Grid>
+    </BasicLayout>
   );
 }

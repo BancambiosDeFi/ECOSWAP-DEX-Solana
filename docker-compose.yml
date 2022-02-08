@@ -1,19 +1,17 @@
-version: '3.2'
-
-networks:
-  network1:
-    external: true
+version: '3.7'
 
 services:
-
-  srm-dex-fe:
-    container_name: srm-dex-fe-develop
-    image: srm_dex_fe:latest
-    restart: always
+  sample:
+    container_name: srm-dex-fe
     build:
       context: .
-      dockerfile: ./dockerfile
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
     ports:
-      - "8091:80"
-    networks:
-      - network1
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    command: ['yarn', 'start']

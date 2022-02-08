@@ -1,0 +1,16 @@
+version: '3.2'
+
+networks:
+  network1:
+    external: true
+
+services:
+
+  srm-vesting-fe:
+    container_name: srm-vesting-fe-{{ server }}
+    image: "{{ image_name }}"
+    restart: always
+    ports:
+      - "8091:80"
+    networks:
+      - network1

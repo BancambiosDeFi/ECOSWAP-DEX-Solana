@@ -1,0 +1,5 @@
+---
+- name: setup role srm-vesting-fe
+  hosts: all-servers
+  roles:
+    - { role: srm-vesting-fe, tags: [ 'srm-vesting-fe' ] }

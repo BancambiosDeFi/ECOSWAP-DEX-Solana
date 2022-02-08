@@ -1,0 +1,38 @@
+---
+- name: connect elastic container registry
+  become: true
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
+  shell: aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ aws_reg_url }}
+
+- name: remove docker container
+  become: true
+  docker_container:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - srm-vesting-fe-{{ server }}
+
+- name: create folder
+  become: true
+  file:
+    state: directory
+    path: "{{ item }}"
+  loop:
+    - /opt/all-config/srm-vesting-fe/srm-vesting-fe-{{ server }}
+
+- name: copy docker-compose.yml
+  become: true
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/all-config/srm-vesting-fe/docker-compose.yml
+    mode: "0755"
+
+- name: start application
+  become: true
+  command: "{{ item }}"
+  args:
+    chdir: "/opt/all-config/srm-vesting-fe"
+  loop:
+    - docker-compose up -d

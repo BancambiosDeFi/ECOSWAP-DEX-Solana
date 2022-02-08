@@ -1,0 +1,15 @@
+# ----------
+[all-servers]
+bc-bx-tge-stand-01-develop ansible_ssh_host=52.19.41.155 ansible_user=root
+bc-bx-tge-stand-01-prod ansible_ssh_host=34.243.216.225 ansible_user=root
+
+[develop]
+bc-bx-tge-stand-01-develop
+
+[stage]
+
+[production]
+bc-bx-tge-stand-01-prod
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -27,6 +27,11 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     fontSize: '14px',
   },
+  infoLabelIcon: {
+    color: 'white',
+    position: 'relative',
+    top: '-3px',
+  },
 }));
 
 export function InfoLabel() {
@@ -42,7 +47,7 @@ export function InfoLabel() {
 
   return (
     <div className={styles.infoLabel}>
-      <Typography color="textSecondary" style={{ fontSize: '14px' }}>
+      <Typography color="textSecondary" style={{ fontSize: '14px', color: 'white' }}>
         {fair !== undefined && toTokenInfo && fromTokenInfo
           ? `1 ${toTokenInfo.symbol} = ${fair.toFixed(fromMintInfo?.decimals)} ${
               fromTokenInfo.symbol
@@ -56,6 +61,7 @@ export function InfoLabel() {
 
 function InfoButton() {
   const styles = useStyles();
+
   return (
     <PopupState variant="popover">
       {
@@ -63,7 +69,7 @@ function InfoButton() {
         popupState => (
           <div style={{ display: 'flex' }}>
             <IconButton {...bindTrigger(popupState)} className={styles.infoButton}>
-              <Info fontSize="small" />
+              <Info fontSize="small" className={styles.infoLabelIcon} />
             </IconButton>
             <Popover
               {...bindPopover(popupState)}

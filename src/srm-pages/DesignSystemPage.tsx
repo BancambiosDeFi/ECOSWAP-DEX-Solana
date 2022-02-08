@@ -18,7 +18,12 @@ export default function DesignSystemPage() {
         onClick={handleUnlocksModal}
         isIconVisible={false}
       ></ButtonComponent>
-      {/* <ButtonComponent type={"connectSwap"} title={"Connect Wallet"} onClick={handleUnlocksModal} isIconVisible={false}></ButtonComponent> */}
+      {/* <ButtonComponent
+        type={'connectSwap'}
+        title={'Connect Wallet'}
+        onClick={handleUnlocksModal}
+        isIconVisible={false}
+      ></ButtonComponent> */}
       <WalletConnectSwap></WalletConnectSwap>
       <ButtonComponent
         type={'swap'}
@@ -44,7 +49,12 @@ export default function DesignSystemPage() {
         onClick={handleUnlocksModal}
         isIconVisible={false}
       ></ButtonComponent>
-      {/* <ButtonComponent type={"connect"} title={"Connect Wallet"} onClick={handleUnlocksModal} isIconVisible={false}></ButtonComponent> */}
+      {/* <ButtonComponent
+        type={'connect'}
+        title={'Connect Wallet'}
+        onClick={handleUnlocksModal}
+        isIconVisible={false}
+      ></ButtonComponent> */}
       <WalletConnect></WalletConnect>
 
       <Typography variant={'h1'}>Some text h1</Typography>

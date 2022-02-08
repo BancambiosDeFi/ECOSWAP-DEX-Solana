@@ -16,33 +16,33 @@ export function Routes() {
   return (
     <>
       <HashRouter basename={'/'}>
-          <Switch>
-            <Route exact path="/">
-              <Redirect to={getTradePageUrl()} />
-            </Route>
-            <Route exact path="/market/:marketAddress">
-              <TradePage />
-            </Route>
-            <Route exact path="/orders" component={OpenOrdersPage} />
-            <Route exact path="/balances" component={BalancesPage} />
-            <Route exact path="/convert" component={ConvertPage} />
-            <Route exact path="/list-new-market" component={ListNewMarketPage} />
-            <Route exact path="/pools">
-              <PoolListPage />
-            </Route>
-            <Route exact path="/pools/new">
-              <NewPoolPage />
-            </Route>
-            <Route exact path="/pools/:poolAddress">
-              <PoolPage />
-            </Route>
-            <Route exact path="/design-system">
-              <DesignSystemPage />
-            </Route>
-            <Route exact path="/swap">
-              <SwapPage />
-            </Route>
-          </Switch>
+        <Switch>
+          <Route exact path="/">
+            <Redirect to={getTradePageUrl()} />
+          </Route>
+          <Route exact path="/market/:marketAddress">
+            <TradePage />
+          </Route>
+          <Route exact path="/orders" component={OpenOrdersPage} />
+          <Route exact path="/balances" component={BalancesPage} />
+          <Route exact path="/convert" component={ConvertPage} />
+          <Route exact path="/list-new-market" component={ListNewMarketPage} />
+          <Route exact path="/pools">
+            <PoolListPage />
+          </Route>
+          <Route exact path="/pools/new">
+            <NewPoolPage />
+          </Route>
+          <Route exact path="/pools/:poolAddress">
+            <PoolPage />
+          </Route>
+          <Route exact path="/design-system">
+            <DesignSystemPage />
+          </Route>
+          <Route exact path="/swap">
+            <SwapPage />
+          </Route>
+        </Switch>
       </HashRouter>
     </>
   );

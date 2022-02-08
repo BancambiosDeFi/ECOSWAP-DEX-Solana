@@ -14,17 +14,23 @@ import {
   useSwappableTokens,
 } from '@serum/swap-ui';
 import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
+import ButtonComponent from '../../../srm-components/Button/Button';
 import TokenDialog from './TokenDialog';
 import { SettingsButton } from './Settings';
 import { InfoLabel } from './Info';
-import ButtonComponent from '../../../srm-components/Button/Button';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    width: theme.spacing(50),
     borderRadius: theme.spacing(2),
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    padding: theme.spacing(2),
+    backgroundColor: '#35363A !important',
+    width: '435px',
+    padding: '26px 16px',
+  },
+  title: {
+    fontSize: '20px',
+    color: 'white',
+    marginBottom: '0px',
   },
   tab: {
     width: '50%',
@@ -43,22 +49,27 @@ const useStyles = makeStyles(theme => ({
   },
   swapToFromButton: {
     display: 'block',
-    margin: '10px auto 10px auto',
+    margin: '10px 0px 0px 0px',
     cursor: 'pointer',
+    padding: '0px',
   },
   amountInput: {
-    fontSize: 22,
     fontWeight: 600,
+    color: 'white !important',
   },
   input: {
     textAlign: 'right',
+    color: 'white',
+    fontSize: '20px !important',
   },
   swapTokenFormContainer: {
     borderRadius: theme.spacing(2),
-    boxShadow: '0px 0px 15px 2px rgba(33,150,243,0.1)',
     display: 'flex',
     justifyContent: 'space-between',
     padding: theme.spacing(1),
+    backgroundColor: '#202023 !important',
+    color: 'white',
+    textTransform: 'uppercase',
   },
   swapTokenSelectorContainer: {
     marginLeft: theme.spacing(1),
@@ -82,7 +93,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
-    marginBottom: theme.spacing(1),
+    paddingTop: '6px',
+  },
+  tokenIcon: {
+    height: '45px',
+    width: '45px !important',
   },
 }));
 
@@ -101,10 +116,14 @@ export default function SwapCard({
 
   return (
     <Card className={styles.card} style={containerStyle}>
-      <SwapHeader />
+      {/* <SwapHeader /> */}
       <div style={contentStyle}>
+        <p className={styles.title}>From</p>
         <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
-        <ArrowButton />
+        <p className={styles.title}>
+          To (Estimate) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <ArrowButton />
+        </p>
         <SwapToForm style={swapTokenContainerStyle} tokenList={tokenList} />
         <InfoLabel />
         <SwapButton />
@@ -223,7 +242,7 @@ export function SwapTokenForm({
       <div className={styles.swapTokenSelectorContainer}>
         <TokenButton mint={mint} onClick={() => setShowTokenDialog(true)} />
         <Typography color="textSecondary" className={styles.balanceContainer}>
-          {tokenAccount && mintAccount ? `Balance: ${balance?.toFixed(mintAccount.decimals)}` : `-`}
+          {/* {tokenAccount && mintAccount ? `Balance: ${balance?.toFixed(mintAccount.decimals)}` : `-`} */}
           {from && !!balance ? (
             <span className={styles.maxButton} onClick={() => setAmount(balance)}>
               MAX
@@ -278,7 +297,7 @@ function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }
   return (
     <div onClick={onClick} className={styles.tokenButton}>
       <TokenIcon mint={mint} style={{ width: theme.spacing(4) }} />
-      <TokenName mint={mint} style={{ fontSize: 14, fontWeight: 700 }} />
+      <TokenName mint={mint} style={{ fontSize: 20, fontWeight: 700, paddingTop: 4 }} />
       <ExpandMore />
     </div>
   );
@@ -297,6 +316,7 @@ export function TokenIcon({
 }) {
   const tokenMap = useTokenMap();
   const tokenInfo = tokenMap.get(mint.toString());
+  const styles = useStyles();
 
   if (!tokenInfo?.logoURI) {
     onError(true);
@@ -316,7 +336,7 @@ export function TokenIcon({
         alt="Logo"
         style={style}
         src={tokenInfo?.logoURI}
-        className={className}
+        className={styles.tokenIcon}
         onError={() => {
           if (onError) {
             onError(true);

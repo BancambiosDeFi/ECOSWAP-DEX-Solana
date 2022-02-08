@@ -12,7 +12,7 @@ variables:
 
 stages:
   - build
-  # - deploy
+  - deploy
 
 # --- commit develop
 build-develop:
@@ -41,32 +41,32 @@ build-develop:
   tags:
     - bc-exchange-gitlab-runner-01
 
-# stand-01-develop:
-#   stage: deploy
-#   image: williamyeh/ansible:ubuntu16.04
-#   script:
-#     # - apt-get update -y && apt-get install -y vim
-#     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-#     - mkdir -p ~/.ssh
-#     - echo "$OPENSSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
-#     - chmod 600 ~/.ssh/id_rsa
-#     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-#     - eval $(ssh-agent -s)
-#     - ssh-add ~/.ssh/id_rsa
-#     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-#     - chmod -R 755 .ansible && cd .ansible
-#     - ansible -m ping bc-bx-tge-stand-01-develop
-#     - ansible-playbook
-#       -l develop
-#       -e aws_access_key_id=$AZ_AWS_ACCESS_KEY_ID
-#       -e aws_secret_access_key=$AZ_AWS_SECRET_ACCESS_KEY
-#       -e aws_region=$AWS_REGION
-#       -e aws_reg_url=$AWS_REG_URL
-#       -e image_name=$IMAGE_NAME
-#       -e server=develop
-#       srm-vesting-fe.yml
-#   only:
-#     - develop
-#   tags:
-#     - bc-exchange-gitlab-runner-01
-# # ---
+stand-01-develop:
+  stage: deploy
+  image: williamyeh/ansible:ubuntu16.04
+  script:
+    # - apt-get update -y && apt-get install -y vim
+    - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+    - mkdir -p ~/.ssh
+    - echo "$OPENSSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - eval $(ssh-agent -s)
+    - ssh-add ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - chmod -R 755 .ansible && cd .ansible
+    - ansible -m ping bc-exchange-stand-01-develop
+    - ansible-playbook
+      -l develop
+      -e aws_access_key_id=$AZ_AWS_ACCESS_KEY_ID
+      -e aws_secret_access_key=$AZ_AWS_SECRET_ACCESS_KEY
+      -e aws_region=$AWS_REGION
+      -e aws_reg_url=$AWS_REG_URL
+      -e image_name=$IMAGE_NAME
+      -e server=develop
+      srm-dex-fe.yml
+  only:
+    - develop
+  tags:
+    - bc-exchange-gitlab-runner-01
+# ---

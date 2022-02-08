@@ -8,21 +8,31 @@ ENV PATH $HOME/node_modules/.bin:$PATH
 WORKDIR $HOME
 COPY . $HOME/
 
+# yarn install
 RUN set -x && \
-    sleep 100000
-#     npm install -g lerna
+    npm install -g lerna && \
+    yarn install && \
+    yarn --version
 
-# COPY package.json ./
-# COPY yarn.lock ./
+# yarn build
+RUN set -x && \
+    # cp $HOME/.env.$APP_ENV $HOME/.env && \
+    # cat $HOME/.env && \
+    yarn build:serum && \
+    yarn build && \
+    ls -la $HOME/build
 
-# RUN set -x && \
-#     yarn
+FROM nginx:1.19
+ENV HOME /opt/srm-dex-fe
+WORKDIR $HOME
+COPY .build $HOME/.build
+COPY --from=build /opt/srm-dex-fe/build $HOME/build
 
-# # add app
-# COPY ../. ./
+RUN set -x && \
+    rm -rf /etc/nginx/conf.d/default.conf && \
+    cp $HOME/.build/.nginx/bx-app.conf /etc/nginx/conf.d/bx-app.conf && \
+    nginx -t && \
+    ls -la $HOME/build
 
-# # build serum modules
-# RUN set -x && \
-#     cd serum && \
-#     yarn && \ 
-#     yarn build
+STOPSIGNAL SIGTERM
+CMD ["nginx", "-g", "daemon off;"]

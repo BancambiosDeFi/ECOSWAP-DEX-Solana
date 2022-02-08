@@ -1,4 +1,3 @@
-# pull official base image
 FROM node:14-alpine AS build
 
 # set working directory

@@ -16,6 +16,7 @@ import {
 import TokenDialog from './TokenDialog';
 import { SettingsButton } from './Settings';
 import { InfoLabel } from './Info';
+import { ChartContainer } from './ChartContainer';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -101,6 +102,7 @@ export default function SwapCard({
     <Card className={styles.card} style={containerStyle}>
       <SwapHeader />
       <div style={contentStyle}>
+        <ChartContainer />
         <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
         <ArrowButton />
         <SwapToForm style={swapTokenContainerStyle} tokenList={tokenList} />

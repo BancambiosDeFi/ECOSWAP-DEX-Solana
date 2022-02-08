@@ -12,7 +12,7 @@
     name: "{{ item }}"
     state: absent
   loop:
-    - srm-vesting-fe-{{ server }}
+    - srm-dex-fe-{{ server }}
 
 - name: create folder
   become: true
@@ -20,19 +20,19 @@
     state: directory
     path: "{{ item }}"
   loop:
-    - /opt/all-config/srm-vesting-fe/srm-vesting-fe-{{ server }}
+    - /opt/all-config/srm-dex-fe/srm-dex-fe-{{ server }}
 
 - name: copy docker-compose.yml
   become: true
   template:
     src: docker-compose.yml.j2
-    dest: /opt/all-config/srm-vesting-fe/docker-compose.yml
+    dest: /opt/all-config/srm-dex-fe/docker-compose.yml
     mode: "0755"
 
 - name: start application
   become: true
   command: "{{ item }}"
   args:
-    chdir: "/opt/all-config/srm-vesting-fe"
+    chdir: "/opt/all-config/srm-dex-fe"
   loop:
     - docker-compose up -d

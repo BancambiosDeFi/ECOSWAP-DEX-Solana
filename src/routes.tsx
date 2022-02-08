@@ -4,7 +4,6 @@ import TradePage from './srm-pages/TradePage';
 import OpenOrdersPage from './srm-pages/OpenOrdersPage';
 import BalancesPage from './srm-pages/BalancesPage';
 import ConvertPage from './srm-pages/ConvertPage';
-import BasicLayout from './srm-components/BasicLayout';
 import ListNewMarketPage from './srm-pages/ListNewMarketPage';
 import NewPoolPage from './srm-pages/pools/NewPoolPage';
 import PoolPage from './srm-pages/pools/PoolPage';
@@ -17,7 +16,6 @@ export function Routes() {
   return (
     <>
       <HashRouter basename={'/'}>
-        <BasicLayout>
           <Switch>
             <Route exact path="/">
               <Redirect to={getTradePageUrl()} />
@@ -45,7 +43,6 @@ export function Routes() {
               <SwapPage />
             </Route>
           </Switch>
-        </BasicLayout>
       </HashRouter>
     </>
   );

@@ -1,8 +1,10 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
+import TopBar from './TopBar';
+import { SwapFooter } from './SwapFooter';
+import { useReferrer } from '../srm-utils/referrer';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
-import { useReferrer } from '../srm-utils/referrer';
 import { notify } from '../srm-utils/notifications';
 import { CustomFooter as Footer } from './Footer';
 import TopBar from './TopBar';
@@ -27,7 +29,7 @@ export default function BasicLayout({ children }) {
           <TopBar />
         </Header>
         <Content style={{ flex: 1 }}>{children}</Content>
-        <Footer />
+        <SwapFooter />
       </Layout>
     </React.Fragment>
   );

@@ -8,7 +8,7 @@ import ListNewMarketPage from './srm-pages/ListNewMarketPage';
 import NewPoolPage from './srm-pages/pools/NewPoolPage';
 import PoolPage from './srm-pages/pools/PoolPage';
 import PoolListPage from './srm-pages/pools/PoolListPage';
-import { getTradePageUrl } from './srm-utils/markets';
+// import { getTradePageUrl } from './srm-utils/markets';
 import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
 
@@ -18,7 +18,8 @@ export function Routes() {
       <HashRouter basename={'/'}>
         <Switch>
           <Route exact path="/">
-            <Redirect to={getTradePageUrl()} />
+            {/* <Redirect to={getTradePageUrl()} /> */}
+            <Redirect to="/swap" />
           </Route>
           <Route exact path="/market/:marketAddress">
             <TradePage />

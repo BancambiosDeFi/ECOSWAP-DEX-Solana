@@ -71,6 +71,3 @@ See [spl-token-wallet](https://github.com/project-serum/spl-token-wallet) for an
 
 - Actualise yarn.lock and dependencies in package.json
 - Actualise serum/yarn.lock and dependencies in serum/package.json
-#
-dsds
-fsfs

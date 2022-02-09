@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
-import { Card, Button, Typography, TextField, useTheme } from '@mui/material';
+import { Card, Typography, TextField, useTheme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ExpandMore, ImportExportRounded } from '@mui/icons-material';
 
@@ -13,17 +13,24 @@ import {
   useOnSwap,
   useSwappableTokens,
 } from '@serum/swap-ui';
+import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
+import ButtonComponent from '../../../srm-components/Button/Button';
 import TokenDialog from './TokenDialog';
 import { SettingsButton } from './Settings';
 import { InfoLabel } from './Info';
-import { ChartContainer } from './ChartContainer';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    width: theme.spacing(50),
     borderRadius: theme.spacing(2),
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    padding: theme.spacing(2),
+    backgroundColor: '#35363A !important',
+    width: '435px',
+    padding: '26px 16px',
+  },
+  title: {
+    fontSize: '20px',
+    color: 'white',
+    marginBottom: '0px',
   },
   tab: {
     width: '50%',
@@ -42,22 +49,27 @@ const useStyles = makeStyles(theme => ({
   },
   swapToFromButton: {
     display: 'block',
-    margin: '10px auto 10px auto',
+    margin: '10px 0px 0px 0px',
     cursor: 'pointer',
+    padding: '0px',
   },
   amountInput: {
-    fontSize: 22,
     fontWeight: 600,
+    color: 'white !important',
   },
   input: {
     textAlign: 'right',
+    color: 'white',
+    fontSize: '20px !important',
   },
   swapTokenFormContainer: {
     borderRadius: theme.spacing(2),
-    boxShadow: '0px 0px 15px 2px rgba(33,150,243,0.1)',
     display: 'flex',
     justifyContent: 'space-between',
     padding: theme.spacing(1),
+    backgroundColor: '#202023 !important',
+    color: 'white',
+    textTransform: 'uppercase',
   },
   swapTokenSelectorContainer: {
     marginLeft: theme.spacing(1),
@@ -81,7 +93,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
-    marginBottom: theme.spacing(1),
+    paddingTop: '6px',
+  },
+  tokenIcon: {
+    height: '45px',
+    width: '45px !important',
   },
 }));
 
@@ -99,12 +115,15 @@ export default function SwapCard({
   const { swappableTokens: tokenList } = useSwappableTokens();
 
   return (
-    <Card className={styles.card} style={containerStyle}>
-      <SwapHeader />
+    <Card sx={{ margin: '20px 0' }} className={styles.card} style={containerStyle}>
+      {/* <SwapHeader /> */}
       <div style={contentStyle}>
-        <ChartContainer />
+        <p className={styles.title}>From</p>
         <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
-        <ArrowButton />
+        <p className={styles.title}>
+          To (Estimate) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <ArrowButton />
+        </p>
         <SwapToForm style={swapTokenContainerStyle} tokenList={tokenList} />
         <InfoLabel />
         <SwapButton />
@@ -139,6 +158,7 @@ export function ArrowButton() {
   const styles = useStyles();
   const theme = useTheme();
   const { swapToFromMints } = useSwapContext();
+
   return (
     <ImportExportRounded
       className={styles.swapToFromButton}
@@ -151,6 +171,7 @@ export function ArrowButton() {
 
 function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { fromMint, setFromMint, fromAmount, setFromAmount } = useSwapContext();
+
   return (
     <SwapTokenForm
       from
@@ -166,6 +187,7 @@ function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[
 
 function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { toMint, setToMint, toAmount, setToAmount } = useSwapContext();
+
   return (
     <SwapTokenForm
       from={false}
@@ -220,7 +242,7 @@ export function SwapTokenForm({
       <div className={styles.swapTokenSelectorContainer}>
         <TokenButton mint={mint} onClick={() => setShowTokenDialog(true)} />
         <Typography color="textSecondary" className={styles.balanceContainer}>
-          {tokenAccount && mintAccount ? `Balance: ${balance?.toFixed(mintAccount.decimals)}` : `-`}
+          {/* {tokenAccount && mintAccount ? `Balance: ${balance?.toFixed(mintAccount.decimals)}` : `-`} */}
           {from && !!balance ? (
             <span className={styles.maxButton} onClick={() => setAmount(balance)}>
               MAX
@@ -251,14 +273,14 @@ export function SwapTokenForm({
 }
 
 function SwapButton() {
-  const styles = useStyles();
+  // const styles = useStyles();
   const { onSwap, canSwap } = useOnSwap();
 
-  return (
-    <Button variant="contained" className={styles.swapButton} onClick={onSwap} disabled={!canSwap}>
-      Swap
-    </Button>
-  );
+  if (canSwap) {
+    return <ButtonComponent type={'swap'} title={'Swap'} onClick={onSwap} isIconVisible={false} />;
+  } else {
+    return <WalletConnectSwap />;
+  }
 }
 
 function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }) {
@@ -268,7 +290,7 @@ function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }
   return (
     <div onClick={onClick} className={styles.tokenButton}>
       <TokenIcon mint={mint} style={{ width: theme.spacing(4) }} />
-      <TokenName mint={mint} style={{ fontSize: 14, fontWeight: 700 }} />
+      <TokenName mint={mint} style={{ fontSize: 20, fontWeight: 700, paddingTop: 4 }} />
       <ExpandMore />
     </div>
   );
@@ -287,11 +309,14 @@ export function TokenIcon({
 }) {
   const tokenMap = useTokenMap();
   const tokenInfo = tokenMap.get(mint.toString());
+  const styles = useStyles();
 
   if (!tokenInfo?.logoURI) {
     onError(true);
+
     return null;
   }
+
   return (
     <div
       style={{
@@ -304,7 +329,7 @@ export function TokenIcon({
         alt="Logo"
         style={style}
         src={tokenInfo?.logoURI}
-        className={className}
+        className={styles.tokenIcon}
         onError={() => {
           if (onError) {
             onError(true);
@@ -315,7 +340,7 @@ export function TokenIcon({
   );
 }
 
-function TokenName({ mint, style }: { mint: PublicKey; style: any }) {
+export function TokenName({ mint, style }: { mint: PublicKey; style: any }) {
   const tokenMap = useTokenMap();
   const theme = useTheme();
   const tokenInfo = tokenMap.get(mint.toString());

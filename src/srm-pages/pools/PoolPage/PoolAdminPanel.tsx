@@ -147,8 +147,9 @@ function RemoveAssetTab({ poolInfo }: TabParams) {
   const canSubmit = connected && address;
   const [onSubmit, submitting] = useOnSubmitHandler('removing asset from pool', async () => {
     const mintAddress = new PublicKey(address);
-    const vaultAddress = poolInfo.state.assets.find(asset => asset.mint.equals(mintAddress))
-      ?.vaultAddress;
+    const vaultAddress = poolInfo.state.assets.find(asset =>
+      asset.mint.equals(mintAddress),
+    )?.vaultAddress;
     if (!vaultAddress) {
       throw new Error('Asset not in pool');
     }
@@ -189,8 +190,9 @@ function DepositTab({ poolInfo }: TabParams) {
       }
 
       const mintAddress = new PublicKey(address);
-      const vaultAddress = poolInfo.state.assets.find(asset => asset.mint.equals(mintAddress))
-        ?.vaultAddress;
+      const vaultAddress = poolInfo.state.assets.find(asset =>
+        asset.mint.equals(mintAddress),
+      )?.vaultAddress;
       if (!vaultAddress) {
         throw new Error('Asset not in pool');
       }
@@ -293,8 +295,9 @@ function WithdrawTab({ poolInfo }: TabParams) {
     }
 
     const mintAddress = new PublicKey(address);
-    const vaultAddress = poolInfo.state.assets.find(asset => asset.mint.equals(mintAddress))
-      ?.vaultAddress;
+    const vaultAddress = poolInfo.state.assets.find(asset =>
+      asset.mint.equals(mintAddress),
+    )?.vaultAddress;
     if (!vaultAddress) {
       throw new Error('Asset not in pool');
     }

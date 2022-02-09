@@ -1,0 +1,19 @@
+version: '3.2'
+
+networks:
+  network1:
+    external: true
+
+services:
+
+  srm-dex-fe:
+    container_name: srm-dex-fe-develop
+    image: srm_dex_fe:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    ports:
+      - "8091:80"
+    networks:
+      - network1

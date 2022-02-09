@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Wallet from '@project-serum/sol-wallet-adapter';
@@ -7,8 +7,9 @@ import { ConfirmOptions, Connection } from '@solana/web3.js';
 import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
 
 import SwapProvider from '@serum/swap-ui';
-import SwapCard from './components/SwapCard';
 import { NotifyingProvider } from './Provider';
+import BasicLayout from '../../srm-components/BasicLayout';
+import SwapContainer from './components/SwapContainer';
 
 // App illustrating the use of the Swap component.
 //
@@ -66,6 +67,7 @@ export default function SwapPage() {
       //   });
       // }
     });
+
     return [provider, wallet];
   }, []);
 
@@ -87,19 +89,22 @@ export default function SwapPage() {
 
   // TODO: change tokenList any type to something meaningful
   return (
-    <Grid container justifyContent="center" alignItems="center" className={styles.root}>
-      <Button
-        variant="outlined"
-        onClick={() => (!isConnected ? wallet.connect() : wallet.disconnect())}
-        style={{ position: 'fixed', right: 24, top: 24 }}
+    <BasicLayout>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        className={styles.root}
       >
-        {!isConnected ? 'Connect' : 'Disconnect'}
-      </Button>
-      {tokenList && (
-        <SwapProvider provider={provider} tokenList={tokenList as any}>
-          <SwapCard />
-        </SwapProvider>
-      )}
-    </Grid>
+        {tokenList && (
+          <SwapProvider provider={provider} tokenList={tokenList as any}>
+            <>
+              <SwapContainer />
+            </>
+          </SwapProvider>
+        )}
+      </Grid>
+    </BasicLayout>
   );
 }

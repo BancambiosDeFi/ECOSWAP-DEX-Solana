@@ -1,6 +1,17 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; 
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+fieldset {
+  border-color: transparent !important;
+}
 html,body{
   background: #11161D;
 }

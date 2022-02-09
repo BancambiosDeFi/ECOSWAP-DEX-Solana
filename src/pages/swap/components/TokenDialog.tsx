@@ -13,12 +13,13 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
+import { useTokenMap } from '@serum/swap-ui';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
-import { TokenIcon } from './SwapCard';
 
-const useStyles = makeStyles(theme => ({
+// TODO: replace '&&' with styled components
+const useStyles = makeStyles(() => ({
   displayNone: {
-    display: 'none',
+    '&&': { display: 'none' },
   },
   scrollBar: {
     '&::-webkit-scrollbar': {
@@ -35,140 +36,147 @@ const useStyles = makeStyles(theme => ({
     },
   },
   dialogWrapper: {
-    backgroundColor: '#35363A',
-    borderRadius: '20px',
-    width: '390px',
-    height: '660px',
-    padding: '40px',
+    '&&': {
+      backgroundColor: '#35363A',
+      borderRadius: '20px',
+      width: '390px',
+      height: '660px',
+      padding: '40px',
+    },
   },
   dialogContent: {
-    padding: 0,
-    border: 0,
-    overflowX: 'hidden',
+    '&&': { padding: 0, border: 0, overflowX: 'hidden' },
   },
   dialogList: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    width: '100%',
-    boxSizing: 'border-box',
-    padding: '0',
-    marginTop: '-10px',
+    '&&': {
+      display: 'flex',
+      flexWrap: 'wrap',
+      width: '100%',
+      boxSizing: 'border-box',
+      padding: '0',
+      marginTop: '-10px',
+    },
   },
   dialogListItem: {
-    'display': 'flex',
-    'width': '48%',
-    'padding': '10px 2% 10px 0',
-    'color': '#fff',
+    '&&': {
+      'display': 'flex',
+      'width': '48%',
+      'padding': '10px 2% 10px 0',
+      'color': '#fff',
 
-    '&:hover': {
-      backgroundColor: 'rgb(189,193,198, 0.1)',
+      '&:hover': {
+        backgroundColor: 'rgb(189,193,198, 0.1)',
+      },
     },
   },
   dialogListTokenNameWrap: {
-    marginLeft: '16px',
-    overflow: 'hidden',
+    '&&': { marginLeft: '16px', overflow: 'hidden' },
   },
   dialogListTokenName: {
-    fontSize: '20px',
-    lineHeight: '40px',
-    fontWeight: 700,
-    fontFamily: '"Saira", sans-serif',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
+    '&&': {
+      fontSize: '20px',
+      lineHeight: '40px',
+      fontWeight: 700,
+      fontFamily: '"Saira", sans-serif',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+    },
   },
   dialogTitle: {
-    position: 'relative',
-    padding: 0,
-    marginBottom: '15px',
-    height: '50px',
+    '&&': { position: 'relative', padding: 0, marginBottom: '15px', height: '50px' },
   },
   dialogTitleTextField: {
-    'height': '100%',
-    'boxSizing': 'border-box',
-    '& .MuiTextField-root': {
-      height: '100%',
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-      border: 0,
+    '&&': {
+      'height': '100%',
+      'boxSizing': 'border-box',
+      '& .MuiTextField-root': {
+        height: '100%',
+      },
+      '& .MuiOutlinedInput-notchedOutline': {
+        border: 0,
+      },
     },
   },
   dialogTitleInput: {
-    'position': 'relative',
-    'height': '100%',
-    'color': '#bdc1c6',
-    'fontWeight': 600,
-    'boxSizing': 'border-box',
-    'padding': '16px 14px 16px 55px',
-    'background': '#1e2022',
-    'borderRadius': '16px',
+    '&&': {
+      'position': 'relative',
+      'height': '100%',
+      'color': '#bdc1c6',
+      'fontWeight': 600,
+      'boxSizing': 'border-box',
+      'padding': '16px 14px 16px 55px',
+      'background': '#1e2022',
+      'borderRadius': '16px',
 
-    '&::placeholder': {
-      fontFamily: '"Saira", sans-serif',
-      fontSize: '18px',
-      fontWeight: 700,
-      opacity: 1,
-      paddingLeft: '15px',
+      '&::placeholder': {
+        fontFamily: '"Saira", sans-serif',
+        fontSize: '18px',
+        fontWeight: 700,
+        opacity: 1,
+        paddingLeft: '15px',
+      },
     },
   },
   dialogTitleSearchIcon: {
-    position: 'absolute',
-    width: '25px',
-    height: '25px',
-    top: '50%',
-    left: '25px',
-    transform: 'translate(0, -50%)',
+    '&&': {
+      position: 'absolute',
+      width: '25px',
+      height: '25px',
+      top: '50%',
+      left: '25px',
+      transform: 'translate(0, -50%)',
+    },
   },
-  tab: {
-    minWidth: '134px',
-  },
-  tabSelected: {
-    color: theme.palette.primary.contrastText,
-    fontWeight: 700,
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: '10px',
-  },
-  tabIndicator: {
-    opacity: 0,
-  },
-  tokenIconSmall: { width: '25px', height: '25px', borderRadius: '15px' },
-  tokenIconBig: { width: '40px', height: '40px', borderRadius: '15px' },
+  tokenIconSmall: { '&&': { width: '25px', height: '25px', borderRadius: '15px' } },
+  tokenIconBig: { '&&': { width: '40px', height: '40px', borderRadius: '15px' } },
   dialogActions: {
-    marginBottom: '30px',
-    padding: 0,
+    '&&': { marginBottom: '30px', padding: 0 },
   },
   commonBaseWrap: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
+    '&&': {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+    },
   },
   commonBaseList: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    '&&': {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
   },
   commonBaseTitle: {
-    color: '#fff',
-    fontSize: '14px',
-    fontWeight: 800,
-    marginBottom: '10px',
+    '&&': {
+      color: '#fff',
+      fontSize: '14px',
+      fontWeight: 800,
+      marginBottom: '10px',
+    },
   },
   commonBaseToken: {
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: '20px',
-    background: '#707070',
-    padding: '7px 12px',
-    cursor: 'pointer',
+    '&&': {
+      display: 'flex',
+      alignItems: 'center',
+      borderRadius: '20px',
+      background: '#707070',
+      padding: '7px 12px',
+      cursor: 'pointer',
+    },
   },
   commonBaseTokenNameWrap: {
-    marginLeft: '5px',
+    '&&': {
+      marginLeft: '5px',
+    },
   },
   commonBaseTokenName: {
-    fontSize: '16px',
-    lineHeight: '16px',
-    fontWeight: 700,
-    fontFamily: '"Saira", sans-serif',
-    color: '#fff',
+    '&&': {
+      fontSize: '16px',
+      lineHeight: '16px',
+      fontWeight: 700,
+      fontFamily: '"Saira", sans-serif',
+      color: '#fff',
+    },
   },
 }));
 
@@ -268,7 +276,7 @@ function CommonBases({ commonBaseTokens, onClick }) {
           const mint = new PublicKey(tokenInfo.address);
           return (
             <div className={styles.commonBaseToken} onClick={() => onClick(mint)}>
-              <TokenIcon mint={mint} className={styles.tokenIconSmall} />
+              <TokenIcon mint={mint} styles={styles.tokenIconSmall} />
               <TokenName
                 tokenInfo={tokenInfo}
                 wrapStyles={styles.commonBaseTokenNameWrap}
@@ -299,11 +307,7 @@ function TokenListItem({
       onClick={() => onClick(mint)}
       className={errorDownloading ? styles.displayNone : styles.dialogListItem}
     >
-      <TokenIcon
-        mint={mint}
-        style={{ width: '40px', height: '40px', borderRadius: '15px' }}
-        onError={setErrorDownloading}
-      />
+      <TokenIcon mint={mint} styles={styles.tokenIconBig} onError={setErrorDownloading} />
       <TokenName
         tokenInfo={tokenInfo}
         tokenNameStyles={styles.dialogListTokenName}
@@ -325,6 +329,46 @@ function TokenName({
   return (
     <div className={wrapStyles}>
       <Typography className={tokenNameStyles}>{tokenInfo?.symbol}</Typography>
+    </div>
+  );
+}
+
+export function TokenIcon({
+  mint,
+  styles,
+  onError,
+}: {
+  mint: PublicKey;
+  styles?: any;
+  onError?: any;
+}) {
+  const tokenMap = useTokenMap();
+  const tokenInfo = tokenMap.get(mint.toString());
+
+  if (!tokenInfo?.logoURI) {
+    onError(true);
+
+    return null;
+  }
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+      }}
+    >
+      <img
+        alt="Logo"
+        src={tokenInfo?.logoURI}
+        className={styles}
+        onError={() => {
+          if (onError) {
+            onError(true);
+          }
+        }}
+      />
     </div>
   );
 }

@@ -174,6 +174,7 @@ export default function TopBar() {
           )}
           {
             <Menu.SubMenu
+              key={1}
               title="LEARN"
               onTitleClick={() => window.open(EXTERNAL_LINKS['/learn'], '_blank')}
               style={{ margin: '0 0px 0 10px' }}

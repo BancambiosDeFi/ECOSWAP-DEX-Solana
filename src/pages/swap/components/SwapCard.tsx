@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
-import { Card, Button, Typography, TextField, useTheme } from '@mui/material';
+import { Card, Typography, TextField, useTheme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ExpandMore, ImportExportRounded } from '@mui/icons-material';
 
@@ -115,7 +115,7 @@ export default function SwapCard({
   const { swappableTokens: tokenList } = useSwappableTokens();
 
   return (
-    <Card className={styles.card} style={containerStyle}>
+    <Card sx={{ margin: '20px 0' }} className={styles.card} style={containerStyle}>
       {/* <SwapHeader /> */}
       <div style={contentStyle}>
         <p className={styles.title}>From</p>
@@ -255,7 +255,7 @@ export function SwapTokenForm({
         value={formattedAmount}
         onChange={e => setAmount(parseFloat(e.target.value))}
         InputProps={{
-          disableUnderline: true,
+          // disableUnderline: true,
           classes: {
             root: styles.amountInput,
             input: styles.input,
@@ -273,20 +273,13 @@ export function SwapTokenForm({
 }
 
 function SwapButton() {
-  const styles = useStyles();
+  // const styles = useStyles();
   const { onSwap, canSwap } = useOnSwap();
 
   if (canSwap) {
-    return (
-      <ButtonComponent
-        type={'swap'}
-        title={'Swap'}
-        onClick={onSwap}
-        isIconVisible={false}
-      ></ButtonComponent>
-    );
+    return <ButtonComponent type={'swap'} title={'Swap'} onClick={onSwap} isIconVisible={false} />;
   } else {
-    return <WalletConnectSwap></WalletConnectSwap>;
+    return <WalletConnectSwap />;
   }
 }
 
@@ -347,7 +340,7 @@ export function TokenIcon({
   );
 }
 
-function TokenName({ mint, style }: { mint: PublicKey; style: any }) {
+export function TokenName({ mint, style }: { mint: PublicKey; style: any }) {
   const tokenMap = useTokenMap();
   const theme = useTheme();
   const tokenInfo = tokenMap.get(mint.toString());

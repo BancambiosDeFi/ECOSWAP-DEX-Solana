@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Wallet from '@project-serum/sol-wallet-adapter';
@@ -7,9 +7,9 @@ import { ConfirmOptions, Connection } from '@solana/web3.js';
 import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
 
 import SwapProvider from '@serum/swap-ui';
-import SwapCard from './components/SwapCard';
 import { NotifyingProvider } from './Provider';
 import BasicLayout from '../../srm-components/BasicLayout';
+import SwapContainer from './components/SwapContainer';
 
 // App illustrating the use of the Swap component.
 //
@@ -90,10 +90,18 @@ export default function SwapPage() {
   // TODO: change tokenList any type to something meaningful
   return (
     <BasicLayout>
-      <Grid container justifyContent="center" alignItems="center" className={styles.root}>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        className={styles.root}
+      >
         {tokenList && (
           <SwapProvider provider={provider} tokenList={tokenList as any}>
-            <SwapCard />
+            <>
+              <SwapContainer />
+            </>
           </SwapProvider>
         )}
       </Grid>

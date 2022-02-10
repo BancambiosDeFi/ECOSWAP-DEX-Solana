@@ -8,6 +8,7 @@ import { PublicKey } from '@solana/web3.js';
 import { getQuotesHistorical } from '../../../services/api';
 import moment from 'moment';
 import { SwapType } from '../../../types';
+import { AxiosResponse } from 'axios';
 
 interface ChartProps {
   mint: PublicKey;
@@ -96,11 +97,12 @@ const useStyles = makeStyles(theme => ({
 export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType }) => {
   const styles = useStyles();
   const tokenMap = useTokenMap();
+  const requestDelay = swapType === SwapType.from ? 0 : 2000;
   const tokenInfo = tokenMap.get(mint.toString());
   const [historicalQuotes, setHistoricalQuotes] = useState<number[]>([]);
   const [percentageChange, setPercentageChange] = useState<number | undefined>(undefined);
 
-  const getTokenHistoricalQuotes = async () => {
+  const getTokenHistoricalQuotes = async (): Promise<AxiosResponse<any>> => {
     const endTime = moment().toISOString();
     const startTime = moment().subtract(1, 'months').toISOString();
 
@@ -114,21 +116,28 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType }) => {
   };
 
   useEffect(() => {
-    getTokenHistoricalQuotes().then(response => {
-      const reducedQuotesArray = response.data.reduce((history, exchange) => {
-        history.push(+Number(exchange.rate).toFixed(5));
-        return history;
-      }, []);
-      setHistoricalQuotes(reducedQuotesArray);
-      if (reducedQuotesArray.length > 0) {
-        setPercentageChange(
-          getPercentageChange(
-            reducedQuotesArray[reducedQuotesArray.length - 2],
-            reducedQuotesArray[reducedQuotesArray.length - 1],
-          ),
-        );
-      }
-    });
+    /*
+     * setTimeout is required while using the free cryptocurrency market data API -
+     * 1 request per second limit
+     */
+    const apiRequestTimer = setTimeout(() => {
+      getTokenHistoricalQuotes().then(response => {
+        const reducedQuotesArray = response.data.reduce((history, exchange) => {
+          history.push(+Number(exchange.rate).toFixed(5));
+          return history;
+        }, []);
+        setHistoricalQuotes(reducedQuotesArray);
+        if (reducedQuotesArray.length > 0) {
+          setPercentageChange(
+            getPercentageChange(
+              reducedQuotesArray[reducedQuotesArray.length - 2],
+              reducedQuotesArray[reducedQuotesArray.length - 1],
+            ),
+          );
+        }
+      });
+    }, requestDelay);
+    return () => clearTimeout(apiRequestTimer);
   }, [mint]);
 
   const config = {
@@ -138,7 +147,7 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType }) => {
     areaStyle: {
       fill:
         swapType === SwapType.from
-          ? 'l(270) 0:#35363a 1:#6fe65a'
+          ? 'l(270) 0:#35363a 1:rgba(0, 255, 163, 0.24)'
           : 'l(270) 0:#35363a 1:rgba(1, 86, 255, 0.7)',
       fillOpacity: 0.1,
       cursor: 'pointer',

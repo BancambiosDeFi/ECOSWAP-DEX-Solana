@@ -255,7 +255,7 @@ export function SwapTokenForm({
         value={formattedAmount}
         onChange={e => setAmount(parseFloat(e.target.value))}
         InputProps={{
-          disableUnderline: true,
+          // disableUnderline: true,
           classes: {
             root: styles.amountInput,
             input: styles.input,

@@ -163,7 +163,7 @@ export function WalletProvider({ children }) {
             padding: '16px',
           }}
         >
-          {WALLET_PROVIDERS.map(provider => {
+          {WALLET_PROVIDERS.map((provider, idx) => {
             const onClick = function () {
               setProviderUrl(provider.url);
               setAutoConnect(true);
@@ -172,6 +172,7 @@ export function WalletProvider({ children }) {
 
             return (
               <Button
+                key={idx}
                 size="large"
                 onClick={onClick}
                 startIcon={

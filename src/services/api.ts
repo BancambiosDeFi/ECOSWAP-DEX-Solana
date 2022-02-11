@@ -14,8 +14,7 @@ export const getQuotesHistorical = (tokenSymbol: string, start: string, end: str
     },
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-      'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token, Authorization, Accept,charset,boundary,Content-Length'
+      crossorigin: true
     },
   });
 };

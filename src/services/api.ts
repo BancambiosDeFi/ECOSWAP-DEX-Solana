@@ -12,8 +12,9 @@ export const getQuotesHistorical = (tokenSymbol: string, start: string, end: str
       start,
       end,
     },
-    // headers: {
-    //   'X-CMC_PRO_API_KEY': '7b4b4f68-3f53-4287-a75e-c2cc99d4b930',
-    // },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    },
   });
 };

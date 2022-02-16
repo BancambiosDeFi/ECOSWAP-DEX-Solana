@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}
+  labels:
+    project: {{ .Values.project }}
+    kind: {{ .Values.kind }}
+    app_env: {{ .Values.app_env }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      project: {{ .Values.project }}
+      kind: {{ .Values.kind }}
+      app_env: {{ .Values.app_env }}
+  template:
+    metadata:
+      labels:
+        project: {{ .Values.project }}
+        kind: {{ .Values.kind }}
+        app_env: {{ .Values.app_env }}
+    spec:
+      containers:
+      - name: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}
+        image: {{ include "container-image" . }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: tcp
+          containerPort: 80
+        resources:
+          requests: 
+            memory: "1G"
+            cpu: "500m"
+          limits:
+            memory: "2G"
+        startupProbe:
+          httpGet:
+            path: {{ .Values.probe_path }}
+            port: 80
+          initialDelaySeconds: 10
+          failureThreshold: 20
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.probe_path }}
+            port: 80
+          failureThreshold: 2
+          periodSeconds: 20
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - {{ .Values.affinity.role }}
+              - key: environment
+                operator: In
+                values:
+                - {{ .Values.affinity.environment }}

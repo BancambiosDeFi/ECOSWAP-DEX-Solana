@@ -1,0 +1,15 @@
+---
+project: ''   # project name on git
+kind: ''      # subgroup on git
+app_env: ''   # branch on git
+namespace: '' # namespase on k8s
+
+container: 
+  image: ''
+
+probe_path: '/'
+host: ''
+
+affinity:
+  role: ''
+  environment: ''

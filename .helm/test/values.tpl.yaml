@@ -1,0 +1,15 @@
+---
+project: 'srm-dex-fe' # project name on git
+kind: 'frontend'      # subgroup on git
+app_env: 'main'       # branch on git
+namespace: 'prod'     # namespase on k8s
+
+container: 
+  image: '293990802426.dkr.ecr.eu-west-1.amazonaws.com/bc-exchange-main-srm-dex-fe:2532-dfccca20'
+
+probe_path: '/'
+host: 'bx.app'
+
+affinity:
+  role: worker
+  environment: prod

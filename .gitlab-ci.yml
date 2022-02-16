@@ -74,6 +74,32 @@ stand-01-develop:
 # ---
 
 # --- commit main
+build-k8s:
+  stage: build
+  before_script:
+    - apk add binutils curl
+    - curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub
+    - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk
+    - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-bin-2.31-r0.apk
+    - apk add glibc-2.31-r0.apk glibc-bin-2.31-r0.apk
+    - curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip &&
+      unzip awscliv2.zip > /dev/null 2>&1 &&
+      aws/install > /dev/null 2>&1
+    - docker --version && aws --version
+    - export AWS_ACCESS_KEY_ID="$BC_AWS_ACCESS_KEY_ID"
+    - export AWS_SECRET_ACCESS_KEY="$BC_AWS_SECRET_ACCESS_KEY"
+    - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_REG_URL}
+  script:
+    - docker build
+        --build-arg APP_ENV_ARG="prod"
+      -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
+    - docker rmi -f $IMAGE_NAME
+  only:
+    - main-new
+  tags:
+    - bc-exchange-gitlab-runner-01-new
+
 k8s-prod:
   stage: deploy
   image:
@@ -97,11 +123,11 @@ k8s-prod:
       --wait
       --timeout 20m
   only:
-    - develop-new
+    - main-new
   tags:
     - exchange-gitlab-runner-01-develop-new
 
-k8s-rollback-prod:
+k8s-rollback:
   stage: deploy
   image:
     name: dtzar/helm-kubectl:latest
@@ -117,7 +143,7 @@ k8s-rollback-prod:
       --timeout 20m
   when: manual
   only:
-    - develop-new
+    - main-new
   tags:
     - exchange-gitlab-runner-01-develop-new
 # ---

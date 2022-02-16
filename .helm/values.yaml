@@ -1,8 +1,8 @@
 ---
-project: ''     # project name on git
-kind: ''        # subgroup on git
-app_env: ''     # branch on git
-environment: '' # namespase on k8s
+project: ''   # project name on git
+kind: ''      # subgroup on git
+app_env: ''   # branch on git
+namespace: '' # namespase on k8s
 
 container: 
   image: ''

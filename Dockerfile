@@ -32,7 +32,7 @@ COPY --from=build /opt/srm-dex-fe/build $HOME/build
 
 RUN set -x && \
     rm -rf /etc/nginx/conf.d/default.conf && \
-    cp $HOME/.build/.nginx/bx-app.conf /etc/nginx/conf.d/bx-app.conf && \
+    cp $HOME/.build/.nginx/srm-dex-fe.conf /etc/nginx/conf.d/srm-dex-fe.conf && \
     nginx -t && \
     ls -la $HOME/build
 

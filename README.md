@@ -2,9 +2,35 @@
 
 An implementation of a UI for the Serum DEX.
 
+### Installing
+
+To get started first install the required build tools:
+
+```
+npm install -g lerna
+npm install -g yarn
+```
+
 ### Running the UI
 
-Run `yarn` to install dependencies, then run `yarn start` to start a development server or `yarn build` to create a production build that can be served by a static file server. Note that prior to compiling you need to add charts yourself (see below).
+With Docker:
+
+Just run `docker-compose up` from the root directory to launch the app and `docker-compose up -d --build` for the first time build or when something was changed
+
+Without Docker:
+
+```
+npm install -g lerna
+yarn
+yarn build:serum
+yarn start
+```
+
+or
+
+```
+yarn install & yarn run build:serum &  yarn start
+```
 
 ### Collect referral fees
 
@@ -40,3 +66,8 @@ See [serum-js](https://github.com/project-serum/serum-js) for DEX client-side co
 See [sol-wallet-adapter](https://github.com/project-serum/sol-wallet-adapter) for an explanation of how the Serum DEX UI interacts with wallet services to sign and send requests to the Serum DEX.
 
 See [spl-token-wallet](https://github.com/project-serum/spl-token-wallet) for an implementation of such a wallet, live at [sollet.io](https://sollet.io).
+
+### Tech debt
+
+- Actualise yarn.lock and dependencies in package.json
+- Actualise serum/yarn.lock and dependencies in serum/package.json

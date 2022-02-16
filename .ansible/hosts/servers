@@ -1,0 +1,13 @@
+# ----------
+[all-servers]
+bc-exchange-stand-01-develop ansible_ssh_host=3.70.135.255 ansible_user=root
+
+[develop]
+bc-exchange-stand-01-develop
+
+[stage]
+
+[production]
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

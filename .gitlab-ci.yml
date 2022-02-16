@@ -74,7 +74,8 @@ stand-01-develop:
 # ---
 
 # --- commit main
-build-k8s:
+# build-k8s
+build:
   stage: build
   before_script:
     - apk add binutils curl
@@ -100,7 +101,8 @@ build-k8s:
   tags:
     - bc-exchange-gitlab-runner-01
 
-k8s-prod:
+# k8s-prod:
+stand:
   stage: deploy
   image:
     name: dtzar/helm-kubectl:latest
@@ -110,10 +112,10 @@ k8s-prod:
     - helm version
     - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
     - helm upgrade --install $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG ./.helm
+      --set namespace=prod
       --set project=$CI_PROJECT_NAME
       --set kind=$KIND
       --set app_env=$CI_COMMIT_REF_SLUG
-      --set environment=prod
       --set container.image=$IMAGE_NAME
       --set affinity.role=worker
       --set affinity.environment=prod
@@ -127,7 +129,8 @@ k8s-prod:
   tags:
     - bc-exchange-gitlab-runner-01
 
-k8s-rollback:
+# k8s-rollback:
+rollback:
   stage: deploy
   image:
     name: dtzar/helm-kubectl:latest

@@ -1,8 +1,8 @@
 ---
 project: 'srm-dex-fe' # project name on git
-kind: 'frontend' # subgroup on git
-app_env: 'stage' # branch on git
-environment: 'stage' # namespase on k8s
+kind: 'frontend'      # subgroup on git
+app_env: 'stage'      # branch on git
+environment: 'stage'  # namespase on k8s
 
 container: 
   image: '293990802426.dkr.ecr.eu-west-1.amazonaws.com/exchange-develop-srm-dex-fe:2532-dfccca20'

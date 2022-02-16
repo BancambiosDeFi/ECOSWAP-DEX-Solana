@@ -2,8 +2,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: prod
-  name: srm-dex-fe-frontend-main-new
+  namespace: {{ .Values.environment }}
+  name: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -11,16 +11,16 @@ metadata:
 spec:
   tls:
   - hosts:
-      - bx.app
-    secretName: srm-dex-fe-frontend-main-new-tls
+      - {{ .Values.host }}
+    secretName: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}-tls
   rules:
-    - host: bx.app
+    - host: {{ .Values.host }}
       http:
         paths:
         - path: /
           pathType: Prefix
           backend:
             service:
-              name: srm-dex-fe-frontend-main-new
+              name: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}
               port: 
                 number: 80

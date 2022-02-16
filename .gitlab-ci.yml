@@ -10,7 +10,7 @@ variables:
   AWS_REG_URL: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
   IMAGE_NAME: $AWS_REG_URL/bc-exchange-${CI_COMMIT_REF_SLUG}-srm-dex-fe:${CI_PIPELINE_ID}-${CI_COMMIT_SHORT_SHA}
   KIND: frontend
-  HOST_URL: app1.mainproject-02.cf
+  HOST_URL: bx.app
 
 stages:
   - build
@@ -125,7 +125,7 @@ k8s-prod:
   only:
     - main-new
   tags:
-    - exchange-gitlab-runner-01-develop-new
+    - bc-exchange-gitlab-runner-01-new
 
 k8s-rollback:
   stage: deploy
@@ -145,5 +145,5 @@ k8s-rollback:
   only:
     - main-new
   tags:
-    - exchange-gitlab-runner-01-develop-new
+    - bc-exchange-gitlab-runner-01-new
 # ---

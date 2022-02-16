@@ -5,10 +5,12 @@ default:
       alias: docker
 
 variables:
-  AWS_ACCOUNT_ID: 293990802426
-  AWS_REGION: eu-west-1
+  AWS_ACCOUNT_ID: 155584866075
+  AWS_REGION: eu-central-1
   AWS_REG_URL: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
   IMAGE_NAME: $AWS_REG_URL/bc-exchange-${CI_COMMIT_REF_SLUG}-srm-dex-fe:${CI_PIPELINE_ID}-${CI_COMMIT_SHORT_SHA}
+  KIND: frontend
+  HOST_URL: bx.app
 
 stages:
   - build
@@ -27,8 +29,8 @@ build-develop:
       unzip awscliv2.zip > /dev/null 2>&1 &&
       aws/install > /dev/null 2>&1
     - docker --version && aws --version
-    - export AWS_ACCESS_KEY_ID="$AZ_AWS_ACCESS_KEY_ID"
-    - export AWS_SECRET_ACCESS_KEY="$AZ_AWS_SECRET_ACCESS_KEY"
+    - export AWS_ACCESS_KEY_ID="$BC_AWS_ACCESS_KEY_ID"
+    - export AWS_SECRET_ACCESS_KEY="$BC_AWS_SECRET_ACCESS_KEY"
     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_REG_URL}
   script:
     - docker build
@@ -58,8 +60,8 @@ stand-01-develop:
     - ansible -m ping bc-exchange-stand-01-develop
     - ansible-playbook
       -l develop
-      -e aws_access_key_id=$AZ_AWS_ACCESS_KEY_ID
-      -e aws_secret_access_key=$AZ_AWS_SECRET_ACCESS_KEY
+      -e aws_access_key_id=$BC_AWS_ACCESS_KEY_ID
+      -e aws_secret_access_key=$BC_AWS_SECRET_ACCESS_KEY
       -e aws_region=$AWS_REGION
       -e aws_reg_url=$AWS_REG_URL
       -e image_name=$IMAGE_NAME
@@ -67,6 +69,81 @@ stand-01-develop:
       srm-dex-fe.yml
   only:
     - develop
+  tags:
+    - bc-exchange-gitlab-runner-01
+# ---
+
+# --- commit main
+build-k8s:
+  stage: build
+  before_script:
+    - apk add binutils curl
+    - curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub
+    - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk
+    - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-bin-2.31-r0.apk
+    - apk add glibc-2.31-r0.apk glibc-bin-2.31-r0.apk
+    - curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip &&
+      unzip awscliv2.zip > /dev/null 2>&1 &&
+      aws/install > /dev/null 2>&1
+    - docker --version && aws --version
+    - export AWS_ACCESS_KEY_ID="$BC_AWS_ACCESS_KEY_ID"
+    - export AWS_SECRET_ACCESS_KEY="$BC_AWS_SECRET_ACCESS_KEY"
+    - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_REG_URL}
+  script:
+    - docker build
+        --build-arg APP_ENV_ARG="prod"
+      -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
+    - docker rmi -f $IMAGE_NAME
+  only:
+    - main
+  tags:
+    - bc-exchange-gitlab-runner-01
+
+k8s-prod:
+  stage: deploy
+  image:
+    name: dtzar/helm-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl version --client
+    - helm version
+    - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
+    - helm upgrade --install $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG ./.helm
+      --set project=$CI_PROJECT_NAME
+      --set kind=$KIND
+      --set app_env=$CI_COMMIT_REF_SLUG
+      --set environment=prod
+      --set container.image=$IMAGE_NAME
+      --set affinity.role=worker
+      --set affinity.environment=prod
+      --set host=$HOST_URL
+      --namespace prod
+      --debug
+      --wait
+      --timeout 20m
+  only:
+    - main
+  tags:
+    - bc-exchange-gitlab-runner-01
+
+k8s-rollback:
+  stage: deploy
+  image:
+    name: dtzar/helm-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl version --client
+    - helm version
+    - mkdir ~/.kube && echo $KUBECTL_CONFIG_PROD | base64 -d > ~/.kube/config
+    - helm rollback $CI_PROJECT_NAME-$KIND-$CI_COMMIT_REF_SLUG
+      --namespace prod
+      --debug
+      --wait
+      --timeout 20m
+  when: manual
+  only:
+    - main
   tags:
     - bc-exchange-gitlab-runner-01
 # ---

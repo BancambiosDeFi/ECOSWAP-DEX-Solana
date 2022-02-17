@@ -5,11 +5,11 @@ import { makeStyles } from '@mui/styles';
 import Wallet from '@project-serum/sol-wallet-adapter';
 import { ConfirmOptions, Connection } from '@solana/web3.js';
 import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
-
 import SwapProvider from '@serum/swap-ui';
-import { NotifyingProvider } from './Provider';
 import BasicLayout from '../../srm-components/BasicLayout';
+import { NotifyingProvider } from './Provider';
 import SwapContainer from './components/SwapContainer';
+import SearchForPairingsComponent from './components/SearchForPairings';
 
 // App illustrating the use of the Swap component.
 //
@@ -100,6 +100,7 @@ export default function SwapPage() {
         {tokenList && (
           <SwapProvider provider={provider} tokenList={tokenList as any}>
             <>
+              <SearchForPairingsComponent type={'none'} />
               <SwapContainer />
             </>
           </SwapProvider>

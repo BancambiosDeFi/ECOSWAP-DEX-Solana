@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function SwapPage() {
   const styles = useStyles();
   //   const { enqueueSnackbar } = useSnackbar();
-  const [isConnected, setIsConnected] = useState(false);
+  // const [isConnected, setIsConnected] = useState(false);
   const [tokenList, setTokenList] = useState<TokenListContainer | null>(null);
 
   const [provider, wallet] = useMemo(() => {
@@ -79,11 +79,11 @@ export default function SwapPage() {
   useEffect(() => {
     wallet.on('connect', () => {
       //   enqueueSnackbar('Wallet connected', { variant: 'success' });
-      setIsConnected(true);
+      // setIsConnected(true);
     });
     wallet.on('disconnect', () => {
       //   enqueueSnackbar('Wallet disconnected', { variant: 'info' });
-      setIsConnected(false);
+      // setIsConnected(false);
     });
   }, [wallet]);
 

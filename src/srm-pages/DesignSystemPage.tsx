@@ -17,7 +17,7 @@ export default function DesignSystemPage() {
         title={'Token Metrics'}
         onClick={handleUnlocksModal}
         isIconVisible={false}
-      ></ButtonComponent>
+      />
       {/* <ButtonComponent
         type={'connectSwap'}
         title={'Connect Wallet'}

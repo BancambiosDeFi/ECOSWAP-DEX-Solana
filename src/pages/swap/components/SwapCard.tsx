@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
-import { Card, Typography, TextField, useTheme } from '@mui/material';
+import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { ExpandMore, ImportExportRounded } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
+import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
 
 import {
   useSwapContext,
@@ -16,8 +17,8 @@ import {
 import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
 import ButtonComponent from '../../../srm-components/Button/Button';
 import TokenDialog from './TokenDialog';
-import { SettingsButton } from './Settings';
-import { InfoLabel } from './Info';
+import SwapSettingsContainer from './SwapSettingsContainer';
+import { useWallet } from '../../../components/wallet/wallet';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -25,15 +26,51 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#35363A !important',
     width: '435px',
+    height: '100%',
     padding: '26px 16px',
   },
   title: {
-    fontSize: '20px',
-    color: 'white',
+    fontFamily: 'Saira !important',
+    fontSize: '24px !important',
+    fontStyle: 'normal',
+    fontWeight: '400 !important',
+    lineHeight: '34px !important',
+    letterSpacing: '0em !important',
+    textAlign: 'left',
+    color: '#FFFFFF',
     marginBottom: '0px',
+  },
+  switchBlock: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '8px 0',
+  },
+  switchTitle: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    fontFamily: 'Saira !important',
+    fontSize: '24px !important',
+    fontStyle: 'normal',
+    fontWeight: '400 !important',
+    lineHeight: '34px !important',
+    letterSpacing: '0em !important',
+    textAlign: 'left',
+    color: '#FFFFFF',
+    marginBottom: '0px',
+  },
+  switchButton: {
+    width: '43px',
+    height: '43px',
+    backgroundColor: 'rgba(32, 33, 36, 1) !important',
   },
   tab: {
     width: '50%',
+  },
+  toForm: {
+    marginBottom: '32px',
   },
   settingsButton: {
     padding: 0,
@@ -113,59 +150,37 @@ export default function SwapCard({
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
+  const { fromAmount, toAmount } = useSwapContext();
+  const { connected } = useWallet();
+
+  const swapSettingsContainer =
+    connected && fromAmount && toAmount ? <SwapSettingsContainer /> : null;
 
   return (
     <Card sx={{ margin: '20px 0' }} className={styles.card} style={containerStyle}>
-      {/*<SwapHeader />*/}
       <div style={contentStyle}>
-        <p className={styles.title}>From</p>
+        <Typography className={styles.title}>From</Typography>
         <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
-        <p className={styles.title}>
-          To (Estimate) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <ArrowButton />
-        </p>
-        <SwapToForm style={swapTokenContainerStyle} tokenList={tokenList} />
-        <InfoLabel />
+        <div className={styles.switchBlock}>
+          <Typography className={styles.switchTitle}>To (Estimate)</Typography>
+          <SwitchButton />
+        </div>
+        <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
+        {swapSettingsContainer}
         <SwapButton />
       </div>
     </Card>
   );
 }
 
-export function SwapHeader() {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '16px',
-      }}
-    >
-      <Typography
-        style={{
-          fontSize: 18,
-          fontWeight: 700,
-        }}
-      >
-        SWAP
-      </Typography>
-      <SettingsButton />
-    </div>
-  );
-}
-
-export function ArrowButton() {
+export function SwitchButton() {
   const styles = useStyles();
-  const theme = useTheme();
   const { swapToFromMints } = useSwapContext();
 
   return (
-    <ImportExportRounded
-      className={styles.swapToFromButton}
-      fontSize="large"
-      htmlColor={theme.palette.primary.main}
-      onClick={swapToFromMints}
-    />
+    <IconButton className={styles.switchButton} onClick={swapToFromMints}>
+      <SwitchIcon />
+    </IconButton>
   );
 }
 

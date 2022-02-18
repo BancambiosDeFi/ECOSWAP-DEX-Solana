@@ -309,6 +309,9 @@ const SwapSettingsContainer: React.FC = () => {
           (pool.baseMint.equals(fromMint) && pool.quoteMint.equals(toMint)) ||
           (pool.baseMint.equals(toMint) && pool.quoteMint.equals(fromMint)),
       );
+      const [pool] = filteredPoolKeys;
+      console.log(tokenMap.get(pool.baseMint.toString()));
+      console.log(tokenMap.get(pool.quoteMint.toString()));
 
       if (filteredPoolKeys.length > 0) {
         getRaydiumPoolInfo({ connection, poolKeys: filteredPoolKeys[0] })

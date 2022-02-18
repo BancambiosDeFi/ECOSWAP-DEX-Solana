@@ -5,9 +5,11 @@ import { makeStyles } from '@mui/styles';
 import Wallet from '@project-serum/sol-wallet-adapter';
 import { ConfirmOptions, Connection } from '@solana/web3.js';
 import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
+
 import SwapProvider from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
-import { NotifyingProvider } from './Provider';
+import { ContentContextProvider } from './ContentContext';
+import { NotifyingProvider } from './NotifyingProvider';
 import SwapContainer from './components/SwapContainer';
 import SearchForPairingsComponent from './components/SearchForPairings';
 
@@ -99,10 +101,12 @@ export default function SwapPage() {
       >
         {tokenList && (
           <SwapProvider provider={provider} tokenList={tokenList as any}>
-            <>
-              <SearchForPairingsComponent type={'none'} />
-              <SwapContainer />
-            </>
+            <ContentContextProvider>
+              <>
+                <SearchForPairingsComponent type={'none'} />
+                <SwapContainer />
+              </>
+            </ContentContextProvider>
           </SwapProvider>
         )}
       </Grid>

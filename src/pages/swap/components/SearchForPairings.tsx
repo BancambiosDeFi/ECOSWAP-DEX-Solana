@@ -106,6 +106,7 @@ export default function SearchForPairingsComponent({ type }) {
 
   return (
     <Paper
+      role="isExistSearchComponent"
       className={classes.paperStyle}
       sx={{
         p: '2px 4px',

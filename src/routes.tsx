@@ -12,6 +12,7 @@ import PoolListPage from './srm-pages/pools/PoolListPage';
 import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
 import WithdrawPage from './pages/withdraw';
+import TradingPage from './pages/trade';
 
 export function Routes() {
   return (
@@ -46,6 +47,9 @@ export function Routes() {
           </Route>
           <Route exact path="/withdraw">
             <WithdrawPage />
+          </Route>
+          <Route exact path="/trade">
+            <TradingPage />
           </Route>
         </Switch>
       </HashRouter>

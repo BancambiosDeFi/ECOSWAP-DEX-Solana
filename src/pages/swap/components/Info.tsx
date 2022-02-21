@@ -16,10 +16,8 @@ import {
 
 const useStyles = makeStyles(() => ({
   infoLabel: {
-    marginTop: '20px',
-    marginBottom: '20px',
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'left',
     alignItems: 'center',
   },
   infoButton: {
@@ -30,7 +28,6 @@ const useStyles = makeStyles(() => ({
   infoLabelIcon: {
     color: 'white',
     position: 'relative',
-    top: '-3px',
   },
 }));
 
@@ -47,9 +44,20 @@ export function InfoLabel() {
 
   return (
     <div className={styles.infoLabel}>
-      <Typography color="textSecondary" style={{ fontSize: '14px', color: 'white' }}>
+      <Typography
+        style={{
+          fontFamily: 'Saira',
+          fontSize: '16px',
+          fontStyle: 'normal',
+          fontWeight: 800,
+          lineHeight: '40px',
+          letterSpacing: '0em',
+          textAlign: 'center',
+          color: '#FFFFFF',
+        }}
+      >
         {fair !== undefined && toTokenInfo && fromTokenInfo
-          ? `1 ${toTokenInfo.symbol} = ${fair.toFixed(fromMintInfo?.decimals)} ${
+          ? `1 ${toTokenInfo.symbol} ≈ ${fair.toFixed(fromMintInfo?.decimals)} ${
               fromTokenInfo.symbol
             }`
           : `-`}

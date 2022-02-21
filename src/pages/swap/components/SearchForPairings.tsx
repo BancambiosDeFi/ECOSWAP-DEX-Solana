@@ -1,14 +1,16 @@
-import * as React from 'react';
+import React from 'react';
+import { PublicKey } from '@solana/web3.js';
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import { Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
+
+import { useSwapContext } from '@serum/swap-ui';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 import { ReactComponent as ArrowRightIcon } from '../../../assets/icons/arrowRight.svg';
 import { ReactComponent as PolygonIcon } from '../../../assets/icons/polygon.svg';
-import SolanaImg from '../../../srm-assets/solana.png';
-import StepImg from '../../../srm-assets/step.png';
+import { useContentContext } from '../ContentContext';
 
 const useStyles = makeStyles(theme => ({
   paperStyle: ({ isInputFocus }: any) => ({
@@ -92,6 +94,7 @@ const useStyles = makeStyles(theme => ({
 export default function SearchForPairingsComponent({ type }) {
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const classes = useStyles({ isInputFocus });
+  const { pairs } = useContentContext();
 
   const handleFocus = () => {
     setInputFocus(!isInputFocus);
@@ -121,10 +124,10 @@ export default function SearchForPairingsComponent({ type }) {
         onBlur={handleFocus}
         disableClearable
         className={classes.inputBase}
-        options={swap}
+        options={pairs}
         fullWidth
         popupIcon={<PolygonIcon />}
-        getOptionLabel={option => option.from + ' to ' + option.to}
+        getOptionLabel={option => option.from.symbol + ' to ' + option.to.symbol}
         classes={{
           paper: classes.paper,
           // popper: classes.popper,
@@ -132,55 +135,7 @@ export default function SearchForPairingsComponent({ type }) {
           listbox: classes.listBox,
           popupIndicator: classes.popupIcon,
         }}
-        renderOption={(props, option) => (
-          <List
-            style={{
-              maxWidth: '500px',
-              height: '75px',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-            component="li"
-            {...props}
-          >
-            <Box
-              width="105"
-              style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}
-            >
-              <img loading="lazy" width="51" src={option.fromImg} alt="" />
-              <Typography
-                style={{
-                  paddingLeft: '9px',
-                  fontFamily: '"Saira", sans-serif',
-                  fontSize: '24px',
-                  fontWeight: 700,
-                  color: 'white',
-                }}
-              >
-                {option.from}
-              </Typography>
-            </Box>
-            <ArrowRightIcon />
-            <Box
-              width="105"
-              style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}
-            >
-              <img loading="lazy" width="51" src={option.toImg} alt="" />
-              <Typography
-                style={{
-                  paddingLeft: '9px',
-                  fontFamily: '"Saira", sans-serif',
-                  fontSize: '24px',
-                  fontWeight: 700,
-                  color: 'white',
-                }}
-              >
-                {option.to}
-              </Typography>
-            </Box>
-          </List>
-        )}
+        renderOption={(props, option) => <ListItem props={props} option={option} />}
         renderInput={params => (
           <TextField
             {...params}
@@ -196,102 +151,69 @@ export default function SearchForPairingsComponent({ type }) {
   );
 }
 
-interface SwapType {
-  from: string;
-  fromImg: string;
-  to: string;
-  toImg: string;
-}
+function ListItem({ props, option }) {
+  const [errorDownloading, setErrorDownloading] = useState(false);
+  const { setFromMint, setToMint } = useSwapContext();
 
-const swap: readonly SwapType[] = [
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'SToP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SooOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-];
+  return (
+    <List
+      style={{
+        maxWidth: '500px',
+        height: '75px',
+        display: errorDownloading ? 'none' : 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+      component="li"
+      onClickCapture={() => {
+        const fromMint = new PublicKey(option.from.address);
+        const toMint = new PublicKey(option.to.address);
+        setFromMint(fromMint);
+        setToMint(toMint);
+      }}
+      {...props}
+    >
+      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+        <img
+          loading="lazy"
+          width="51"
+          src={option.fromImg}
+          alt=""
+          onError={() => setErrorDownloading(true)}
+        />
+        <Typography
+          style={{
+            paddingLeft: '9px',
+            fontFamily: '"Saira", sans-serif',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: 'white',
+          }}
+        >
+          {option.from.symbol}
+        </Typography>
+      </Box>
+      <ArrowRightIcon />
+      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+        <img
+          loading="lazy"
+          width="51"
+          src={option.toImg}
+          alt=""
+          onError={() => setErrorDownloading(true)}
+        />
+        <Typography
+          style={{
+            paddingLeft: '9px',
+            fontFamily: '"Saira", sans-serif',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: 'white',
+          }}
+        >
+          {option.to.symbol}
+        </Typography>
+      </Box>
+    </List>
+  );
+}

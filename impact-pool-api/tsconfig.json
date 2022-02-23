@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es5",                          
+    "module": "commonjs",                    
+    "lib": ["es6"],                     
+    "declaration": true,
+    "outDir": "./dist",                          
+    "rootDir": "src",
+    "strict": true,         
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "sourceMap": true,
+  },
+  "exclude": ["node_modules", "dist","docs"]
+}

@@ -7,6 +7,9 @@ import { useWallet } from '../../components/wallet/wallet';
 import WalletConnectSwap from '../../components/wallet/WalletConnectSwap';
 import ButtonComponent from '../../srm-components/Button/Button';
 import { ReactComponent as InfoIcon } from '../../assets/icons/info-icon.svg';
+// import { getImpactPoolStatisticCommand } from '../../../../impact-contract/impact-pool-cli/src/commands';
+import { ImpactPool } from 'impact-pool-api';
+import { Connection, PublicKey } from '@solana/web3.js';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -55,13 +58,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const network = 'https://api.testnet.solana.com';
+const contractAddress = '9bwnTPfjh9fVmJpe6zPEFQ1NiKyuDYyA4H5UFrzYGCVR';
+const tokenAddress = '4p3pmKHnaAQnUs9MpkbXgw6E6YRT4X35YEW3W3yWGfzt';
+const signer = 'FeoRru9dKQzpctSZUkqnqn8UtkkyqPkUkMXzdBNTEQh';
+const importName = 'KEKPOG';
+
 export default function WithdrawPage() {
   const styles = useStyles();
   const { connected } = useWallet();
   const [withdrawValue, setWithdrawValue] = useState<string>('500 USDC');
 
-  const withdrawTransactionCall = () => {
-    console.log('withdrawTransactionCall');
+  const withdrawTransactionCall = async () => {
+    // console.log('withdrawTransactionCall...');
+    console.log(ImpactPool);
+
+    const impactPool = new ImpactPool(
+      new Connection(network),
+      new PublicKey(contractAddress),
+      new PublicKey(tokenAddress),
+      new PublicKey(signer),
+      importName,
+    );
+    console.log('Impact pool = ', impactPool);
+
+    const statistics = await impactPool.getImpactPoolStatistics();
+    console.log('statistics = ', statistics);
   };
 
   const buttonComponent = connected ? (

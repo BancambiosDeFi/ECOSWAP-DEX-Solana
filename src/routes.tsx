@@ -11,6 +11,7 @@ import PoolListPage from './srm-pages/pools/PoolListPage';
 // import { getTradePageUrl } from './srm-utils/markets';
 import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
+import TradingViewPage from './pages/trading-view';
 
 export function Routes() {
   return (
@@ -42,6 +43,9 @@ export function Routes() {
           </Route>
           <Route exact path="/swap">
             <SwapPage />
+          </Route>
+          <Route exact path="/trading-view">
+            <TradingViewPage />
           </Route>
         </Switch>
       </HashRouter>

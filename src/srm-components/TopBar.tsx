@@ -1,9 +1,10 @@
-import { InfoCircleOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Col, Menu, Popover, Row, Select } from 'antd';
+import { Menu } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Connection } from '@solana/web3.js';
+import { Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import logo from '../srm-assets/logo.png';
 import { useWallet } from '../components/wallet/wallet';
 import { ENDPOINTS, useConnectionConfig } from '../srm-utils/connection';
@@ -11,11 +12,9 @@ import { EndpointInfo } from '../srm-utils/types';
 import { notify } from '../srm-utils/notifications';
 import WalletConnect from '../components/wallet/WalletConnect';
 import { getTradePageUrl } from '../srm-utils/markets';
-import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
-import Settings from './Settings';
 
 const Wrapper = styled.div`
-  background-color: #0d1017;
+  background-color: #04030a;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -25,14 +24,29 @@ const Wrapper = styled.div`
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
-  color: #2abdd2;
+  color: #0156ff !important;
   font-weight: bold;
   cursor: pointer;
   img {
-    height: 30px;
+    height: 56px;
     margin-right: 8px;
   }
 `;
+const useStyles = makeStyles(theme => ({
+  headerItem: {
+    'fontFamily': 'Saira',
+    'fontStyle': 'normal',
+    'fontWeight': '800',
+    'fontSize': '16px',
+    'lineHeight': '250%',
+    '&:hover': {
+      color: '#0156ff !important',
+    },
+    '&:selected': {
+      color: '#0156ff !important',
+    },
+  },
+}));
 
 const EXTERNAL_LINKS = {
   '/learn': 'https://docs.projectserum.com/trade-on-serum-dex/trade-on-serum-dex-1',
@@ -53,6 +67,7 @@ export default function TopBar() {
   const [testingConnection, setTestingConnection] = useState(false);
   const location = useLocation();
   const history = useHistory();
+  const classes = useStyles();
 
   const handleClick = useCallback(
     e => {
@@ -119,159 +134,97 @@ export default function TopBar() {
 
   return (
     <>
-      <CustomClusterEndpointDialog
-        visible={addEndpointVisible}
-        testingConnection={testingConnection}
-        onAddCustomEndpoint={onAddCustomEndpoint}
-        onClose={() => setAddEndpointVisible(false)}
-      />
-      <Wrapper role="isExistHeaderComponent">
-        <LogoWrapper onClick={() => history.push(tradePageUrl)}>
-          <img src={logo} alt="" />
-          {'SERUM'}
-        </LogoWrapper>
-        <Menu
-          mode="horizontal"
-          onClick={handleClick}
-          selectedKeys={[location.pathname]}
-          style={{
-            borderBottom: 'none',
-            backgroundColor: 'transparent',
-            display: 'flex',
-            alignItems: 'flex-end',
-            flex: 1,
-          }}
+      <Wrapper
+        style={{
+          height: '95px',
+          background: '#04030A',
+          display: 'flex',
+          alignItems: 'flex-end',
+          width: '100%',
+        }}
+      >
+        <LogoWrapper
+          style={{ marginLeft: '100px', paddingBottom: '10px' }}
+          onClick={() => history.push(tradePageUrl)}
         >
-          <Menu.Item key={tradePageUrl} style={{ margin: '0 10px 0 20px' }}>
-            TRADE
-          </Menu.Item>
-          {
-            <Menu.Item key="/swap" style={{ margin: '0 10px' }}>
-              <a href="/#/swap" rel="noopener noreferrer">
-                SWAP
-              </a>
-            </Menu.Item>
-          }
-          {connected && location.pathname === '/balances' && (
-            <Menu.Item key="/balances" style={{ margin: '0 10px' }}>
-              BALANCES
-            </Menu.Item>
-          )}
-          {connected && location.pathname === '/orders' && (
-            <Menu.Item key="/orders" style={{ margin: '0 10px' }}>
-              ORDERS
-            </Menu.Item>
-          )}
-          {connected && location.pathname === '/convert' && (
-            <Menu.Item key="/convert" style={{ margin: '0 10px' }}>
-              CONVERT
-            </Menu.Item>
-          )}
-          {location.pathname === '/list-new-market' && (
-            <Menu.Item key="/list-new-market" style={{ margin: '0 10px' }}>
-              ADD MARKET
-            </Menu.Item>
-          )}
-          {
-            <Menu.SubMenu
-              key={1}
-              title="LEARN"
-              onTitleClick={() => window.open(EXTERNAL_LINKS['/learn'], '_blank')}
-              style={{ margin: '0 0px 0 10px' }}
-            >
-              <Menu.Item key="/add-market">
-                <a href={EXTERNAL_LINKS['/add-market']} target="_blank" rel="noopener noreferrer">
-                  Adding a market
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/wallet-support">
-                <a
-                  href={EXTERNAL_LINKS['/wallet-support']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Supported wallets
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/dex-list">
-                <a href={EXTERNAL_LINKS['/dex-list']} target="_blank" rel="noopener noreferrer">
-                  DEX list
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/developer-resources">
-                <a
-                  href={EXTERNAL_LINKS['/developer-resources']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Developer resources
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/explorer">
-                <a href={EXTERNAL_LINKS['/explorer']} target="_blank" rel="noopener noreferrer">
-                  Solana block explorer
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/srm-faq">
-                <a href={EXTERNAL_LINKS['/srm-faq']} target="_blank" rel="noopener noreferrer">
-                  SRM FAQ
-                </a>
-              </Menu.Item>
-            </Menu.SubMenu>
-          }
-        </Menu>
+          <img src={logo} alt="" />
+        </LogoWrapper>
         <div
           style={{
+            flex: 1,
             display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
             alignItems: 'center',
-            paddingRight: 5,
           }}
-        ></div>
-        <div>
-          <Row align="middle" style={{ paddingLeft: 5, paddingRight: 5 }} gutter={16}>
-            <Col>
-              <PlusCircleOutlined
-                style={{ color: '#2abdd2' }}
-                onClick={() => setAddEndpointVisible(true)}
-              />
-            </Col>
-            <Col>
-              <Popover content={endpoint} placement="bottomRight" title="URL" trigger="hover">
-                <InfoCircleOutlined style={{ color: '#2abdd2' }} />
-              </Popover>
-            </Col>
-            <Col>
-              <Select
-                onSelect={setEndpoint}
-                value={endpoint}
-                style={{ marginRight: 8, width: '150px' }}
-              >
-                {availableEndpoints.map(({ name, endpoint }) => (
-                  <Select.Option value={endpoint} key={endpoint}>
-                    {name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Col>
-          </Row>
-        </div>
-        {connected && (
-          <div>
-            <Popover
-              content={<Settings autoApprove={wallet?.autoApprove} />}
-              placement="bottomRight"
-              title="Settings"
-              trigger="click"
+        >
+          <Menu
+            mode="horizontal"
+            onClick={handleClick}
+            selectedKeys={[location.pathname]}
+            style={{
+              borderBottom: 'none',
+              backgroundColor: 'transparent',
+              flex: 1,
+              justifyContent: 'flex-end',
+              paddingBottom: '16px',
+            }}
+          >
+            <Menu.Item key="/home" className={classes.headerItem}>
+              Home
+            </Menu.Item>
+            <Menu.Item key="/swap" className={classes.headerItem}>
+              Stableswap
+            </Menu.Item>
+            <Menu.Item key={tradePageUrl} className={classes.headerItem}>
+              Alphatrade
+            </Menu.Item>
+            <Menu.Item key="/catapult" className={classes.headerItem}>
+              Catapult
+            </Menu.Item>
+            <Menu.Item key="/nft" className={classes.headerItem}>
+              NFT
+            </Menu.Item>
+            <Menu.Item key="/tokenSale" className={classes.headerItem}>
+              Token Sale
+            </Menu.Item>
+          </Menu>
+          {connected && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                paddingBottom: '16px',
+                justifyContent: 'space-between',
+                marginRight: '10px',
+              }}
             >
-              <Button style={{ marginRight: 8 }}>
-                <SettingOutlined />
-                Settings
-              </Button>
-            </Popover>
+              <Typography
+                style={{
+                  fontStyle: 'normal',
+                  fontWeight: 'bold',
+                  fontSize: '30.6667px',
+                  lineHeight: '46px',
+                  paddingRight: '10px',
+                }}
+              >
+                🌏
+              </Typography>
+              <Typography
+                style={{
+                  fontStyle: 'normal',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  lineHeight: '46px',
+                }}
+              >
+                $215
+              </Typography>
+            </div>
+          )}
+          <div style={{ marginRight: '100px', paddingBottom: '9px' }}>
+            <WalletConnect />
           </div>
-        )}
-        <div>
-          <WalletConnect />
         </div>
       </Wrapper>
     </>

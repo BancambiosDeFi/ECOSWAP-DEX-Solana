@@ -19,6 +19,24 @@ export const getAllRaydiumPoolKeys = async (
   return await Liquidity.fetchAllPoolKeys(connection);
 };
 
+export const getRaydiumAllPoolKeysFetcher = (connection: Connection, maxAttempts = 0) => {
+  let attempt = 0;
+
+  return async function fetchPoolKeys(): Promise<LiquidityPoolKeysV4[]> {
+    return Liquidity.fetchAllPoolKeys(connection)
+      .then(result => result)
+      .catch(() => {
+        if (attempt === maxAttempts) {
+          // TODO: add notification about error
+          throw new Error('Can not fetch pool keys from Raydium at the time');
+        }
+        attempt += 1;
+
+        return fetchPoolKeys();
+      });
+  };
+};
+
 export const getRaydiumPoolInfo = async ({
   connection,
   poolKeys,

@@ -1,14 +1,17 @@
-import * as React from 'react';
+import React, { useState, useCallback } from 'react';
+import { PublicKey } from '@solana/web3.js';
 import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
-import { useState } from 'react';
 import { Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
+
+import { useTokenMap, useSwapContext } from '@serum/swap-ui';
+import { getRaydiumAllPoolKeysFetcher } from '../../../utils/raydiumRequests';
+import { useConnection } from '../../../srm-utils/connection';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 import { ReactComponent as ArrowRightIcon } from '../../../assets/icons/arrowRight.svg';
 import { ReactComponent as PolygonIcon } from '../../../assets/icons/polygon.svg';
-import SolanaImg from '../../../srm-assets/solana.png';
-import StepImg from '../../../srm-assets/step.png';
 
 const useStyles = makeStyles(theme => ({
   paperStyle: ({ isInputFocus }: any) => ({
@@ -54,8 +57,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: '5px',
     padding: '30px',
     width: '600px',
-    // display: 'flex',
-    // alignItems: 'center !important',
     justifyContent: 'center !important',
   },
   listBox: {
@@ -87,22 +88,98 @@ const useStyles = makeStyles(theme => ({
     height: '20px',
     margin: '20px 0px 20px 20px',
   },
+  loaderWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  loader: {
+    '&&': {
+      color: 'rgb(127, 70, 251)',
+    },
+  },
 }));
+
+const REQUIRED_PAIRS_QTY = 120;
+
+interface TokenPair {
+  from: {
+    symbol: string;
+    address: string;
+  };
+  fromImg?: string;
+  to: {
+    symbol: string;
+    address: string;
+  };
+  toImg?: string;
+}
 
 export default function SearchForPairingsComponent({ type }) {
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const classes = useStyles({ isInputFocus });
+  const [pairs, setPairs] = useState<TokenPair[]>([]);
+  const [loader, setLoader] = useState<boolean>(false);
+  const connection = useConnection();
+  const tokenMap = useTokenMap();
 
   const handleFocus = () => {
     setInputFocus(!isInputFocus);
   };
 
   const PopperMy = function (props) {
-    return <Popper {...props} style={{ position: 'relative', left: 417 }} />;
+    return (
+      <Popper
+        {...props}
+        style={{
+          position: 'relative',
+          left: 417,
+        }}
+      />
+    );
   };
+
+  const fetchPairs = useCallback(async () => {
+    const numberOfRetries = 3;
+    const fetchPoolKeys = getRaydiumAllPoolKeysFetcher(connection, numberOfRetries);
+
+    setLoader(true);
+    try {
+      const poolKeys = await fetchPoolKeys();
+      const requiredQtyOfPoolKeys = poolKeys.slice(0, REQUIRED_PAIRS_QTY);
+      const fetchedPairs = requiredQtyOfPoolKeys
+        .reduce((swapPairs: TokenPair[], poolKey) => {
+          const fromToken = tokenMap.get(poolKey.baseMint.toString());
+          const toToken = tokenMap.get(poolKey.quoteMint.toString());
+          if (fromToken && toToken) {
+            swapPairs.push({
+              from: {
+                symbol: fromToken?.symbol,
+                address: fromToken?.address,
+              },
+              fromImg: fromToken?.logoURI,
+              to: {
+                symbol: toToken?.symbol,
+                address: toToken?.address,
+              },
+              toImg: toToken?.logoURI,
+            });
+          }
+
+          return swapPairs;
+        }, [])
+        .filter(pair => pair.fromImg && pair.toImg);
+
+      setLoader(false);
+      setPairs(fetchedPairs);
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+    }
+  }, [connection]);
 
   return (
     <Paper
+      role="isExistSearchComponent"
       className={classes.paperStyle}
       sx={{
         p: '2px 4px',
@@ -121,66 +198,27 @@ export default function SearchForPairingsComponent({ type }) {
         onBlur={handleFocus}
         disableClearable
         className={classes.inputBase}
-        options={swap}
+        options={pairs}
         fullWidth
+        onOpen={() => {
+          if (!pairs.length) {
+            fetchPairs();
+          }
+        }}
+        loading={loader}
+        loadingText={<CircularProgress className={classes.loader} />}
+        // noOptionsText="noOptionsText..."
         popupIcon={<PolygonIcon />}
-        getOptionLabel={option => option.from + ' to ' + option.to}
+        getOptionLabel={option => option.from.symbol + ' to ' + option.to.symbol}
         classes={{
           paper: classes.paper,
           // popper: classes.popper,
           input: classes.inputBase,
           listbox: classes.listBox,
           popupIndicator: classes.popupIcon,
+          loading: classes.loaderWrap,
         }}
-        renderOption={(props, option) => (
-          <List
-            style={{
-              maxWidth: '500px',
-              height: '75px',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-            component="li"
-            {...props}
-          >
-            <Box
-              width="105"
-              style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}
-            >
-              <img loading="lazy" width="51" src={option.fromImg} alt="" />
-              <Typography
-                style={{
-                  paddingLeft: '9px',
-                  fontFamily: '"Saira", sans-serif',
-                  fontSize: '24px',
-                  fontWeight: 700,
-                  color: 'white',
-                }}
-              >
-                {option.from}
-              </Typography>
-            </Box>
-            <ArrowRightIcon />
-            <Box
-              width="105"
-              style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}
-            >
-              <img loading="lazy" width="51" src={option.toImg} alt="" />
-              <Typography
-                style={{
-                  paddingLeft: '9px',
-                  fontFamily: '"Saira", sans-serif',
-                  fontSize: '24px',
-                  fontWeight: 700,
-                  color: 'white',
-                }}
-              >
-                {option.to}
-              </Typography>
-            </Box>
-          </List>
-        )}
+        renderOption={(props, option) => <ListItem props={props} option={option} />}
         renderInput={params => (
           <TextField
             {...params}
@@ -196,102 +234,70 @@ export default function SearchForPairingsComponent({ type }) {
   );
 }
 
-interface SwapType {
-  from: string;
-  fromImg: string;
-  to: string;
-  toImg: string;
-}
+function ListItem({ props, option }) {
+  const [errorDownloading, setErrorDownloading] = useState(false);
+  const { setFromMint, setToMint } = useSwapContext();
 
-const swap: readonly SwapType[] = [
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'SToP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SooOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: StepImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-  {
-    from: 'SOL',
-    fromImg: SolanaImg,
-    to: 'STEP',
-    toImg: SolanaImg,
-  },
-];
+  return (
+    <List
+      style={{
+        maxWidth: '500px',
+        height: '75px',
+        display: errorDownloading ? 'none' : 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+      component="li"
+      onClickCapture={() => {
+        const fromMint = new PublicKey(option.from.address);
+        const toMint = new PublicKey(option.to.address);
+        setFromMint(fromMint);
+        setToMint(toMint);
+      }}
+      key={`${option.from.symbol}/${option.to.symbol}`}
+      {...props}
+    >
+      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+        <img
+          loading="lazy"
+          width="51"
+          src={option.fromImg}
+          alt=""
+          onError={() => setErrorDownloading(true)}
+        />
+        <Typography
+          style={{
+            paddingLeft: '9px',
+            fontFamily: '"Saira", sans-serif',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: 'white',
+          }}
+        >
+          {option.from.symbol}
+        </Typography>
+      </Box>
+      <ArrowRightIcon />
+      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+        <img
+          loading="lazy"
+          width="51"
+          src={option.toImg}
+          alt=""
+          onError={() => setErrorDownloading(true)}
+        />
+        <Typography
+          style={{
+            paddingLeft: '9px',
+            fontFamily: '"Saira", sans-serif',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: 'white',
+          }}
+        >
+          {option.to.symbol}
+        </Typography>
+      </Box>
+    </List>
+  );
+}

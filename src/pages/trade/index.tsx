@@ -3,9 +3,11 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { Grid } from '@mui/material';
+import { PagesTransitionButton } from '../../components/PagesTransitionButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    position: 'relative',
     minHeight: '100vh',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
@@ -23,7 +25,9 @@ export default function TradingPage() {
         justifyContent="center"
         alignItems="center"
         className={styles.root}
-      ></Grid>
+      >
+        <PagesTransitionButton location={'trade'} />
+      </Grid>
     </BasicLayout>
   );
 }

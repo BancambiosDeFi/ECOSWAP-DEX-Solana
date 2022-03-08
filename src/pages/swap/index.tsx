@@ -10,6 +10,7 @@ import BasicLayout from '../../srm-components/BasicLayout';
 import { NotifyingProvider } from './Provider';
 import SwapContainer from './components/SwapContainer';
 import SearchForPairingsComponent from './components/SearchForPairings';
+import { PagesTransitionButton } from '../../components/PagesTransitionButton';
 
 // App illustrating the use of the Swap component.
 //
@@ -25,6 +26,7 @@ import SearchForPairingsComponent from './components/SearchForPairings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    position: 'relative',
     minHeight: '100vh',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
@@ -100,6 +102,7 @@ export default function SwapPage() {
         {tokenList && (
           <SwapProvider provider={provider} tokenList={tokenList as any}>
             <>
+              <PagesTransitionButton location={'swap'} />
               <SearchForPairingsComponent type={'none'} />
               <SwapContainer />
             </>

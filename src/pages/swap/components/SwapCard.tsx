@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material';
@@ -289,9 +289,23 @@ export function SwapTokenForm({
 function SwapButton() {
   // const styles = useStyles();
   const { onSwap, canSwap } = useOnSwap();
+  const { connected } = useWallet();
 
-  if (canSwap) {
-    return <ButtonComponent type={'swap'} title={'Swap'} onClick={onSwap} isIconVisible={false} />;
+  useEffect(() => {
+    console.log('Swap button component...');
+    console.log('canSwap =', canSwap);
+  }, [canSwap]);
+
+  if (connected) {
+    return (
+      <ButtonComponent
+        type={'swap'}
+        title={'Swap'}
+        onClick={onSwap}
+        disable={!canSwap}
+        isIconVisible={false}
+      />
+    );
   } else {
     return <WalletConnectSwap />;
   }

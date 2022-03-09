@@ -57,6 +57,10 @@ const SwapButton = styled(Button)(({ theme }) => ({
     background: 'linear-gradient(266.19deg, #F337F8 -9.56%, #9F5AE5 102.3%)',
     boxShadow: '0px 0px 16px #9F5AE5',
   },
+  '&:disabled': {
+    color: '#FFFFFF',
+    opacity: '0.5',
+  },
 }));
 
 const DoneButton = styled(Button)(({ theme }) => ({

@@ -11,6 +11,6 @@ export default function WalletConnectSwap() {
       title={'Connect Wallet'}
       onClick={connected ? disconnect : connect}
       isIconVisible={false}
-    ></ButtonComponent>
+    />
   );
 }

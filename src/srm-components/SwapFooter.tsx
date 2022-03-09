@@ -15,6 +15,7 @@ const footerElements = [
 export const SwapFooter = () => {
   return (
     <Footer
+      role="isExistFooterComponent"
       style={{
         height: '59px',
         background: '#1A1B1C',

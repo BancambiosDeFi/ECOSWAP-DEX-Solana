@@ -13,6 +13,7 @@ import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
 import WithdrawPage from './pages/withdraw';
 import TradingPage from './pages/trade';
+import TradingViewPage from './pages/trading-view';
 
 export function Routes() {
   return (
@@ -50,6 +51,9 @@ export function Routes() {
           </Route>
           <Route exact path="/trade">
             <TradingPage />
+          </Route>
+          <Route exact path="/trading-view">
+            <TradingViewPage />
           </Route>
         </Switch>
       </HashRouter>

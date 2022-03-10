@@ -5,6 +5,7 @@ import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material
 import { makeStyles } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
+import { TokenIcon } from './TokenIcon';
 import {
   useSwapContext,
   useTokenMap,
@@ -21,7 +22,7 @@ import { useWallet } from '../../../components/wallet/wallet';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    borderRadius: theme.spacing(2),
+    borderRadius: '0 20px 20px 0 !important',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#35363A !important',
     width: '435px',
@@ -156,7 +157,7 @@ export default function SwapCard({
     connected && fromAmount && toAmount ? <SwapSettingsContainer /> : null;
 
   return (
-    <Card sx={{ margin: '20px 0' }} className={styles.card} style={containerStyle}>
+    <Card className={styles.card} style={containerStyle}>
       <div style={contentStyle}>
         <Typography className={styles.title}>From</Typography>
         <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
@@ -185,7 +186,6 @@ export function SwitchButton() {
 
 function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { fromMint, setFromMint, fromAmount, setFromAmount } = useSwapContext();
-
   return (
     <SwapTokenForm
       from
@@ -201,7 +201,6 @@ function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[
 
 function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { toMint, setToMint, toAmount, setToAmount } = useSwapContext();
-
   return (
     <SwapTokenForm
       from={false}
@@ -320,50 +319,6 @@ function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }
       <TokenIcon mint={mint} style={{ width: theme.spacing(4) }} />
       <TokenName mint={mint} style={{ fontSize: 20, fontWeight: 700, paddingTop: 4 }} />
       <ExpandMore />
-    </div>
-  );
-}
-
-export function TokenIcon({
-  mint,
-  style,
-  className = '',
-  onError,
-}: {
-  mint: PublicKey;
-  style?: any;
-  className?: string;
-  onError?: any;
-}) {
-  const tokenMap = useTokenMap();
-  const tokenInfo = tokenMap.get(mint.toString());
-  const styles = useStyles();
-
-  if (!tokenInfo?.logoURI) {
-    onError(true);
-
-    return null;
-  }
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-      }}
-    >
-      <img
-        alt="Logo"
-        style={style}
-        src={tokenInfo?.logoURI}
-        className={styles.tokenIcon}
-        onError={() => {
-          if (onError) {
-            onError(true);
-          }
-        }}
-      />
     </div>
   );
 }

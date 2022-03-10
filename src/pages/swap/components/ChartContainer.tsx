@@ -3,7 +3,8 @@ import { TinyArea } from '@ant-design/plots';
 import { makeStyles } from '@mui/styles';
 import { useTokenMap } from '@serum/swap-ui';
 import { Box, Typography } from '@mui/material';
-import { TokenIcon, TokenName } from './SwapCard';
+import { TokenName } from './SwapCard';
+import { TokenIcon } from './TokenIcon';
 import { PublicKey } from '@solana/web3.js';
 import { getQuotesHistorical } from '../../../services/api';
 import moment from 'moment';
@@ -16,7 +17,7 @@ interface ChartProps {
 }
 
 const useStyles = makeStyles(theme => ({
-  wrapper: {
+  wrapper: ({ swapType }: any) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'left',
@@ -24,12 +25,13 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     height: '85px',
     maxWidth: '435px',
-    borderRadius: theme.spacing(2.5),
+    borderRadius: '20px',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     boxSizing: 'border-box',
     backgroundColor: '#35363A !important',
     padding: '10px 16px',
-  },
+    marginTop: swapType === SwapType.from ? '40px' : 0,
+  }),
   tokenWrapper: {
     width: '100%',
     height: '100%',
@@ -95,7 +97,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType }) => {
-  const styles = useStyles();
+  const styles = useStyles({ swapType });
   const tokenMap = useTokenMap();
   const requestDelay = swapType === SwapType.from ? 0 : 2000;
   const tokenInfo = tokenMap.get(mint.toString());

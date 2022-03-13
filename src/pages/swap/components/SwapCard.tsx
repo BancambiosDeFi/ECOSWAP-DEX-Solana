@@ -5,8 +5,7 @@ import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material
 import { makeStyles } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
-import { TokenIcon } from "./TokenIcon"
-
+import { TokenIcon } from './TokenIcon';
 import {
   useSwapContext,
   useTokenMap,
@@ -23,7 +22,7 @@ import { useWallet } from '../../../components/wallet/wallet';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    borderRadius: theme.spacing(2),
+    borderRadius: '0 20px 20px 0 !important',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#35363A !important',
     width: '435px',
@@ -158,7 +157,7 @@ export default function SwapCard({
     connected && fromAmount && toAmount ? <SwapSettingsContainer /> : null;
 
   return (
-    <Card sx={{ margin: '20px 0' }} className={styles.card} style={containerStyle}>
+    <Card className={styles.card} style={containerStyle}>
       <div style={contentStyle}>
         <Typography className={styles.title}>From</Typography>
         <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />

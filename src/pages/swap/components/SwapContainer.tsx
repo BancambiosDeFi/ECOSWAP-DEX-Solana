@@ -20,7 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const SwapContainer: React.FC = () => {
+interface ChartProps {
+  location: string;
+}
+
+const SwapContainer: React.FC<ChartProps> = ({ location }) => {
   const styles = useStyles();
   const { fromMint, toMint } = useSwapContext();
   const { connected } = useWallet();
@@ -29,16 +33,16 @@ const SwapContainer: React.FC = () => {
     <>
       {connected ? (
         <>
-          <ChartContainer mint={fromMint} swapType={SwapType.from} />
+          <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
           <Box className={styles.root}>
-            <PagesTransitionButton location={'swap'} />
+            <PagesTransitionButton location={location} />
             <SwapCard />
           </Box>
-          <ChartContainer mint={toMint} swapType={SwapType.to} />
+          <ChartContainer mint={toMint} swapType={SwapType.to} location={location} />
         </>
       ) : (
         <Box className={styles.root}>
-          <PagesTransitionButton location={'swap'} />
+          <PagesTransitionButton location={location} />
           <SwapCard />
         </Box>
       )}

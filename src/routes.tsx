@@ -12,7 +12,7 @@ import PoolListPage from './srm-pages/pools/PoolListPage';
 import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
 import WithdrawPage from './pages/withdraw';
-import TradingPage from './pages/trade';
+// import TradingPage from './pages/trade';
 import TradingViewPage from './pages/trading-view';
 
 export function Routes() {
@@ -48,9 +48,6 @@ export function Routes() {
           </Route>
           <Route exact path="/withdraw">
             <WithdrawPage />
-          </Route>
-          <Route exact path="/trade">
-            <TradingPage />
           </Route>
           <Route exact path="/trading-view">
             <TradingViewPage />

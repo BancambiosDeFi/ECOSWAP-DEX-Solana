@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 export const PagesTransitionButton: React.FC<ChartProps> = ({ location }) => {
   const styles = useStyles();
   const history = useHistory();
-  const backToPage = location === 'swap' ? '/trade' : '/swap';
+  const backToPage = location === 'swap' ? '/trading-view' : '/swap';
 
   const handleClick = () => {
     history.push(backToPage);

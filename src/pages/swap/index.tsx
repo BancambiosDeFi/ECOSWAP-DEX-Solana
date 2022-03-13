@@ -26,7 +26,7 @@ import SearchForPairingsComponent from './components/SearchForPairings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: '100vh',
+    minHeight: '70vh',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },
@@ -101,8 +101,8 @@ export default function SwapPage() {
         {tokenList && (
           <SwapProvider provider={provider} tokenList={tokenList as any}>
             <>
-              <SearchForPairingsComponent type={'none'} />
-              <SwapContainer />
+              <SearchForPairingsComponent type={'none'} width={'600'} />
+              <SwapContainer location={'swap'} />
             </>
           </SwapProvider>
         )}

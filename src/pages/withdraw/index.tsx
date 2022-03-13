@@ -10,7 +10,7 @@ import { ReactComponent as InfoIcon } from '../../assets/icons/info-icon.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: '100vh',
+    minHeight: '70vh',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },

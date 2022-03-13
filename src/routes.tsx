@@ -46,16 +46,14 @@ export function Routes() {
           <Route exact path="/swap">
             <SwapPage />
           </Route>
-<<<<<<< src/routes.tsx
           <Route exact path="/withdraw">
             <WithdrawPage />
           </Route>
           <Route exact path="/trade">
             <TradingPage />
-=======
+          </Route>
           <Route exact path="/trading-view">
             <TradingViewPage />
->>>>>>> src/routes.tsx
           </Route>
         </Switch>
       </HashRouter>

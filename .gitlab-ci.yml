@@ -92,7 +92,7 @@ build:
     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_REG_URL}
   script:
     - docker build
-        --build-arg APP_ENV_ARG="prod"
+        --build-arg APP_ENV_ARG="main"
       -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
     - docker rmi -f $IMAGE_NAME

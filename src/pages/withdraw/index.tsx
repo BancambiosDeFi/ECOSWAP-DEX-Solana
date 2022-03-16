@@ -13,7 +13,6 @@ import { converterBNtoString, getImpactPool, getNetwork } from '../../utils';
 import { WithdrawFromPool } from 'impact-pool-api/dist/schema';
 import ClaimWithdrawModal from '../../components/ClaimWithdrawModal';
 import H3Text from '../../components/typography/H3Text';
-import BN from 'bn.js';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

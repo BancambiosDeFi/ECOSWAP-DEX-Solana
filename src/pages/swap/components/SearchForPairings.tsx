@@ -114,13 +114,15 @@ interface TokenPair {
   toImg?: string;
 }
 
-export default function SearchForPairingsComponent({ type }) {
+export default function SearchForPairingsComponent({ type, width }) {
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const classes = useStyles({ isInputFocus });
   const [pairs, setPairs] = useState<TokenPair[]>([]);
   const [loader, setLoader] = useState<boolean>(false);
   const connection = useConnection();
   const tokenMap = useTokenMap();
+  const widthComponent = width === 'auto' ? '430' : 600;
+  const marginComponent = width === 'auto' ? '18px' : '0px';
 
   const handleFocus = () => {
     setInputFocus(!isInputFocus);
@@ -185,10 +187,11 @@ export default function SearchForPairingsComponent({ type }) {
         p: '2px 4px',
         display: 'flex !important',
         alignItems: 'center !important',
-        width: 600,
+        width: widthComponent,
         height: 60,
         borderRadius: '20px',
         background: '#35363A',
+        margin: marginComponent,
       }}
     >
       <SearchIcon className={classes.searchIcon} />

@@ -17,7 +17,7 @@ import BN from 'bn.js';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: '100vh',
+    minHeight: '70vh',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },

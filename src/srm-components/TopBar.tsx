@@ -176,6 +176,9 @@ export default function TopBar() {
             <Menu.Item key="/swap" className={classes.headerItem}>
               Stableswap
             </Menu.Item>
+            <Menu.Item key="/staking" className={classes.headerItem}>
+              Staking
+            </Menu.Item>
             <Menu.Item key={tradePageUrl} className={classes.headerItem}>
               Alphatrade
             </Menu.Item>

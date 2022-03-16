@@ -49,6 +49,10 @@ export async function getAssociatedTokenAddress(
   mint: PublicKey,
   owner: PublicKey,
 ): Promise<PublicKey> {
+  // console.log('owner = ', owner);
+  // console.log('mint = ', mint);
+  // console.log('programId = ', programId);
+  // console.log('associatedProgramId = ', associatedProgramId);
   return (
     await PublicKey.findProgramAddress(
       [owner.toBuffer(), programId.toBuffer(), mint.toBuffer()],

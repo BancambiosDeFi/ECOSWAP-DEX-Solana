@@ -1,0 +1,14 @@
+#IDE
+.idea
+
+storage
+node_modules
+*.map
+
+dist/
+
+src\.ts/protos\.d\.ts
+package\-lock\.json
+
+# OS X
+.DS_Store

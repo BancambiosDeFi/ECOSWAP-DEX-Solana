@@ -78,7 +78,6 @@ export function WalletProvider({ children }) {
     if (wallet) {
       wallet.on('connect', () => {
         if (wallet?.publicKey) {
-          console.log('connected');
           localStorage.removeItem('feeDiscountKey');
           setConnected(true);
 

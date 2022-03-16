@@ -286,14 +286,14 @@ export function SwapTokenForm({
 }
 
 function SwapButton() {
-  // const styles = useStyles();
   const { onSwap, canSwap } = useOnSwap();
   const { connected } = useWallet();
 
-  useEffect(() => {
-    console.log('Swap button component...');
-    console.log('canSwap =', canSwap);
-  }, [canSwap]);
+  // useEffect(() => {
+  // console.log('Swap button component...');
+  // console.log('canSwap =', canSwap);
+  // console.log('onSwap =', onSwap);
+  // }, [canSwap]);
 
   if (connected) {
     return (

@@ -58,8 +58,9 @@ export class ImpactPool implements IImpactPool {
     private programId: PublicKey,
     private mint: PublicKey,
     private creator: PublicKey,
+    private signer: PublicKey,
     private impactName: string
-  ) {}
+  ) { }
 
   async CreateImpactPool(
     amountLamorts: BN,
@@ -67,7 +68,7 @@ export class ImpactPool implements IImpactPool {
   ): Promise<Transaction> {
     const { pubkey: tokenAccountPubkey } =
       await this.getAssociatedTokenAccountContext(
-        this.creator,
+        this.signer,
         validateAccountExist
       );
     const { seed: tokenPoolSeed, pubkey: tokenPoolPubkey } =
@@ -82,8 +83,8 @@ export class ImpactPool implements IImpactPool {
       );
 
     const createTokenPool = SystemProgram.createAccountWithSeed({
-      fromPubkey: this.creator,
-      basePubkey: this.creator,
+      fromPubkey: this.signer,
+      basePubkey: this.signer,
       newAccountPubkey: tokenPoolPubkey,
       lamports: lamportsForTokenPool,
       space: AccountLayout.span,
@@ -94,13 +95,13 @@ export class ImpactPool implements IImpactPool {
       TOKEN_PROGRAM_ID,
       this.mint,
       tokenPoolPubkey,
-      this.creator
+      this.signer
     );
     const transferToTokenPool = Token.createTransferInstruction(
       TOKEN_PROGRAM_ID,
       tokenAccountPubkey,
       tokenPoolPubkey,
-      this.creator,
+      this.signer,
       [],
       new u64(amountLamorts.toString())
     );
@@ -111,8 +112,8 @@ export class ImpactPool implements IImpactPool {
       );
 
     const createImpactPool = SystemProgram.createAccountWithSeed({
-      fromPubkey: this.creator,
-      basePubkey: this.creator,
+      fromPubkey: this.signer,
+      basePubkey: this.signer,
       newAccountPubkey: impactPoolPubkey,
       lamports: lamportsForImpactPool,
       space: ImpactPoolAccount.space,
@@ -126,7 +127,7 @@ export class ImpactPool implements IImpactPool {
 
     const createImpactPoolTransaction = new TransactionInstruction({
       keys: [
-        { pubkey: this.creator, isSigner: true, isWritable: true },
+        { pubkey: this.signer, isSigner: true, isWritable: true },
         { pubkey: impactPoolPubkey, isSigner: false, isWritable: true },
         {
           pubkey: tokenPoolPubkey,
@@ -158,7 +159,7 @@ export class ImpactPool implements IImpactPool {
   ): Promise<Transaction> {
     const { pubkey: tokenAccountPubkey } =
       await this.getAssociatedTokenAccountContext(
-        this.creator,
+        this.signer,
         validateAccountExist
       );
 
@@ -172,7 +173,7 @@ export class ImpactPool implements IImpactPool {
 
     const transferInstruction = new TransactionInstruction({
       keys: [
-        { pubkey: this.creator, isSigner: true, isWritable: false },
+        { pubkey: this.signer, isSigner: true, isWritable: false },
         { pubkey: tokenAccountPubkey, isSigner: false, isWritable: true },
         { pubkey: tokenPoolPubkey, isSigner: false, isWritable: true },
         { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
@@ -190,41 +191,30 @@ export class ImpactPool implements IImpactPool {
     receiverPubkey: PublicKey,
     withdrawFromPoolInstruction: WithdrawFromPool
   ): Promise<Transaction> {
-    const { pubkey: tokenAccountPubkey } =
-      await this.getAssociatedTokenAccountContext(
-        receiverPubkey,
-        validateAccountExist
-      );
 
-    const { pubkey: impactPoolPubkey } =
+    const { pubkey: impactPoolPubkey } = //4
       await this.getImpactPoolAccountContext(validateAccountExist);
-
-    const impactPool = await this.getImpactPool();
-    if (!impactPool.token_pool) throw "";
-    const { pubkey: impactPubkey } = await this.getImpactAccountContext(
-      impactPool.token_pool,
+    const { pubkey: recieverTokenPubkey } = await this.getAssociatedTokenAccountContext(
       receiverPubkey,
-      validateAccountExist
-    );
-
+      validateAccountExist)
+    const impactPool = await this.getImpactPool();
+    if (impactPool.token_pool === undefined)
+      throw Error("Token pool is not initialized");
+    const tokenPoolPubkey = impactPool.token_pool; //3
     const [pda, bumpSeed] = await PublicKey.findProgramAddress(
       [impactPoolPubkey.toBuffer()],
       this.programId
     );
 
-    const tokenPoolPubkey = impactPool.token_pool;
-    if (tokenPoolPubkey === undefined)
-      throw Error("Vesting type does not have token pool");
 
     const instance = new Instruction(withdrawFromPoolInstruction);
     const instructionData = serialize(schemas, instance);
-
     const withdrawInstruction = new TransactionInstruction({
       keys: [
-        { pubkey: impactPoolPubkey, isSigner: false, isWritable: true },
-        { pubkey: impactPubkey, isSigner: false, isWritable: true },
-        { pubkey: pda, isSigner: false, isWritable: false },
-        { pubkey: tokenAccountPubkey, isSigner: false, isWritable: true },
+        { pubkey: this.signer, isSigner: true, isWritable: false }, //singner
+        { pubkey: recieverTokenPubkey, isSigner: false, isWritable: true }, // tra
+        { pubkey: pda, isSigner: false, isWritable: false }, //pda
+        { pubkey: impactPoolPubkey, isSigner: false, isWritable: false },
         { pubkey: tokenPoolPubkey, isSigner: false, isWritable: true },
         { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
       ],
@@ -323,7 +313,6 @@ export class ImpactPool implements IImpactPool {
     if (validation !== null) {
       validation(account, name);
     }
-
     return {
       seed,
       pubkey,
@@ -344,10 +333,13 @@ export class ImpactPool implements IImpactPool {
   }
 
   async getImpactPoolStatistics(): Promise<ImpactPoolStatistics> {
+
     const impactPool = await this.getImpactPool();
     const { pubkey: tokenPoolPubkey } = await this.getTokenPoolAccountContext(
       validateAccountExist
     );
+    const { pubkey: impactPoolPubkey } = 
+    await this.getImpactPoolAccountContext(validateAccountExist);
     const tokensInTokenPool = await this.connection.getTokenAccountBalance(
       tokenPoolPubkey
     );
@@ -366,6 +358,7 @@ export class ImpactPool implements IImpactPool {
       impactPool.administrator,
       impactPool.is_initialized,
       impactPool.token_pool,
+      impactPoolPubkey,
       new BN(tokensInTokenPool.value.amount)
     );
   }

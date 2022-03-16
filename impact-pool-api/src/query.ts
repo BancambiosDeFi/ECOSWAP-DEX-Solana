@@ -11,6 +11,7 @@ export class ImpactPoolStatistics {
     public administrator: PublicKey,
     public is_initialized: boolean,
     public token_pool: PublicKey,
+    public impact_pool_address: PublicKey,
     public tokensInTokenPool: BN
   ) {}
 
@@ -24,8 +25,7 @@ export class ImpactPoolStatistics {
       `Token pool: ${this.token_pool.toString()}\n` +
       `Tokens in token pool: ${tokensInTokenPool}\n` +
       `IS initialized: ${this.administrator.toString()}\n` +
-      `Token pool: ${this.token_pool.toString()}\n` +
-      `Tokens in token pool: ${tokensInTokenPool}\n` 
+      `Impact pool address: ${this.impact_pool_address.toString()}\n` 
     );
   }
 }

@@ -1,7 +1,6 @@
-import BN from 'bn.js';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { ImpactPool } from 'impact-pool-api';
-// const bigNumber = require('bignumber.js');
+import BN from 'bn.js';
 
 const network: string = process.env.REACT_APP_NETWORK as string;
 const pubKey: string = process.env.REACT_APP_IMPACT_PROGRAM_ID as string;
@@ -16,21 +15,17 @@ export const getPubKey = (): string => {
   return pubKey;
 };
 
-export const getImpactPool = (impactName: string): ImpactPool => {
-  console.log('network =', network);
-  console.log('Program ID =', pubKey);
-  console.log('mint =', mint);
-  console.log('creator =', creator);
+export const getImpactPool = (payer: PublicKey, impactName: string): ImpactPool => {
   return new ImpactPool(
     new Connection(network),
     new PublicKey(pubKey),
     new PublicKey(mint),
     new PublicKey(creator),
+    payer,
     impactName,
   );
 };
 
-// export const converterBN = (number: { toString: () => string }): string =>
-//   new bigNumber(number.toString())
-//     // .dividedBy(LAMPORTS_PER_SOL)
-//     .toString();
+export const converterBNtoString = (value: BN): string => {
+  return value.div(new BN(process.env.REACT_APP_LAMPORTS_PER_SOL as string)).toString();
+};

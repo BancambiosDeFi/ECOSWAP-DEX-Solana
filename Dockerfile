@@ -16,6 +16,8 @@ RUN set -x && \
     yarn install && \
     yarn --version && \
     yarn prebuild && \
+    npm i -g npm && \
+    npm --version && \
     yarn postbuild
 
 # yarn build

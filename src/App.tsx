@@ -11,6 +11,12 @@ import { PreferencesProvider } from './srm-utils/preferences';
 import { ReferrerProvider } from './srm-utils/referrer';
 import { theme } from './srm-styles/mainTheme';
 
+declare global {
+  interface Window {
+    solana: any;
+  }
+}
+
 export default function App() {
   return (
     <ThemeProvider theme={theme}>

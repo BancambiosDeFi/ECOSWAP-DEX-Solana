@@ -8,11 +8,13 @@ import ListNewMarketPage from './srm-pages/ListNewMarketPage';
 import NewPoolPage from './srm-pages/pools/NewPoolPage';
 import PoolPage from './srm-pages/pools/PoolPage';
 import PoolListPage from './srm-pages/pools/PoolListPage';
+import StakingPage from './pages/staking';
+// import StakingPage from '../src/pages/staking/StakingPage';
 // import { getTradePageUrl } from './srm-utils/markets';
 import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
 import WithdrawPage from './pages/withdraw';
-// import TradingPage from './pages/trade';
+import TradingPage from './pages/trade';
 import TradingViewPage from './pages/trading-view';
 
 export function Routes() {
@@ -49,6 +51,13 @@ export function Routes() {
           <Route exact path="/withdraw">
             <WithdrawPage />
           </Route>
+          <Route exact path="/trade">
+            <TradingPage />
+          </Route>
+          <Route exact path="/staking">
+            <StakingPage />
+          </Route>
+
           <Route exact path="/trading-view">
             <TradingViewPage />
           </Route>

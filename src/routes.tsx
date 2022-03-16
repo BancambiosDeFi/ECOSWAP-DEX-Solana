@@ -50,9 +50,6 @@ export function Routes() {
           <Route exact path="/withdraw">
             <WithdrawPage />
           </Route>
-          <Route exact path="/trade">
-            <TradingPage />
-          </Route>
           <Route exact path="/staking">
             <StakingPage />
           </Route>

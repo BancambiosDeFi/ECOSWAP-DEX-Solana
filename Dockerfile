@@ -1,4 +1,4 @@
-FROM node:14-alpine AS build
+FROM node:12.20.1-alpine AS build
 ENV HOME /opt/srm-dex-fe
 
 ARG APP_ENV_ARG
@@ -15,7 +15,6 @@ RUN set -x && \
     npm install -g lerna && \
     yarn install && \
     yarn --version && \
-    sleep 100000 && \
     yarn prebuild && \
     yarn postbuild
 

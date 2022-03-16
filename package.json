@@ -63,8 +63,6 @@
     "predeploy": "git pull --ff-only && yarn && yarn build",
     "deploy": "gh-pages -d build",
     "start": "craco start",
-    "prebuild": "cp -r impact-pool-api .. && cd ../impact-pool-api && yarn install",
-    "postbuild": "npm link ../impact-pool-api",
     "build": "craco build",
     "build:serum": "cd serum && yarn && yarn build",
     "test": "craco test",

@@ -10,7 +10,6 @@ import { getQuotesHistorical } from '../../../services/api';
 import moment from 'moment';
 import { SwapType } from '../../../types';
 import { AxiosResponse } from 'axios';
-import { relative } from 'path';
 
 interface ChartProps {
   mint: PublicKey;

@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import BasicLayout from '../../srm-components/BasicLayout';
-import { Box, Card, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Grid, Typography } from '@mui/material';
 import { useWallet } from '../../components/wallet/wallet';
 import WalletConnectSwap from '../../components/wallet/WalletConnectSwap';
 import ButtonComponent from '../../srm-components/Button/Button';
-import { ReactComponent as InfoIcon } from '../../assets/icons/info-icon.svg';
+import { ImpactPool } from 'impact-pool-api';
+import { ImpactPoolStatistics } from 'impact-pool-api/dist/query';
+import { Connection } from '@solana/web3.js';
+import { converterBNtoString, getImpactPool, getNetwork } from '../../utils';
+import { WithdrawFromPool } from 'impact-pool-api/dist/schema';
+import ClaimWithdrawModal from '../../components/ClaimWithdrawModal';
+import H3Text from '../../components/typography/H3Text';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -57,67 +63,183 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function WithdrawPage() {
   const styles = useStyles();
-  const { connected } = useWallet();
-  const [withdrawValue, setWithdrawValue] = useState<string>('500 USDC');
+  const { connected, wallet } = useWallet();
+  const [withdrawValue, setWithdrawValue] = useState<string>('');
+  const [connection, setConnection] = useState<Connection>();
+  const [impactPool, setImpactPool] = useState<ImpactPool>();
+  const [impactPoolData, setImpactPoolData] = useState<ImpactPoolStatistics>();
+  const [open, setOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingStatistics, setIsLoadingStatistics] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isClaimDisable, setIsClaimDisable] = useState<boolean>(true);
+  const [isClaimed, setIsClaimed] = useState<boolean>(false);
 
   const withdrawTransactionCall = () => {
-    console.log('withdrawTransactionCall');
+    setOpen(true);
+    setIsLoading(true);
+
+    wallet &&
+      connected &&
+      connection &&
+      impactPool &&
+      impactPool
+        .WithdrawFromPool(
+          wallet.publicKey,
+          new WithdrawFromPool(impactPoolData?.tokensInTokenPool!),
+        )
+        .then(transaction => {
+          connection
+            .getRecentBlockhash('confirmed')
+            .then(({ blockhash }) => {
+              transaction.recentBlockhash = blockhash;
+              transaction.feePayer = wallet.publicKey;
+
+              window.solana
+                .signAndSendTransaction(transaction)
+                .then((sign: { signature: string }) => {
+                  connection
+                    .confirmTransaction(sign.signature, 'finalized')
+                    .then(signature => {
+                      console.log('signature = ', signature);
+                      setIsClaimed(true);
+                      setIsLoading(false);
+                      setIsError(false);
+                      setErrorMessage('');
+                    })
+                    .catch(e => {
+                      console.log('signature', e);
+                      setErrorMessage(e.message);
+                      setIsError(true);
+                    });
+                })
+                .catch((e: any) => {
+                  console.log('test == ', e);
+                  setErrorMessage(e.message);
+                  setIsError(true);
+                });
+            })
+            .catch(e => {
+              console.log('hash', e);
+              setErrorMessage(e.message);
+              setIsError(true);
+            });
+        })
+        .catch(e => {
+          console.log('withdrawFromPool', e);
+          setErrorMessage(e.message);
+          setIsError(true);
+        });
   };
 
-  const buttonComponent = connected ? (
-    <ButtonComponent
-      type={'swap'}
-      title={'Claim all'}
-      onClick={withdrawTransactionCall}
-      isIconVisible={false}
-    />
+  const handleClose = () => {
+    if (!isLoading || isError) {
+      setOpen(false);
+      setIsError(false);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      wallet &&
+      connected &&
+      connection &&
+      impactPool &&
+      impactPoolData &&
+      Number(withdrawValue) > 0
+    ) {
+      setIsClaimDisable(false);
+    } else {
+      setIsClaimDisable(true);
+    }
+  }, [wallet, connected, connection, impactPool, impactPoolData, withdrawValue]);
+
+  useEffect(() => {
+    if (wallet?.publicKey && connected) {
+      setConnection(new Connection(getNetwork()));
+      setImpactPool(getImpactPool(wallet.publicKey, 'USDT_TESTNET_ZWEI'));
+    }
+  }, [wallet, connected]);
+
+  useEffect(() => {
+    if (impactPool) {
+      setIsLoadingStatistics(true);
+
+      wallet &&
+        connected &&
+        impactPool
+          .getImpactPoolStatistics()
+          .then(data => {
+            setImpactPoolData(data);
+            setWithdrawValue(converterBNtoString(data?.tokensInTokenPool));
+            setIsLoadingStatistics(false);
+          })
+          .catch((error: Error) => {
+            setIsLoadingStatistics(false);
+            console.log('getImpactPoolStatistics error === ', error);
+          });
+    }
+  }, [wallet, connected, impactPool, isClaimed]);
+
+  const valueComponent =
+    withdrawValue && !isLoadingStatistics ? (
+      <Typography className={styles.withdrawValue}>{withdrawValue}</Typography>
+    ) : (
+      <>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <CircularProgress style={{ color: 'rgb(183,82,230)' }} thickness={6} size={40} />
+        </Box>
+      </>
+    );
+
+  const contentComponent = connected ? (
+    <>
+      <Box className={styles.withdrawInfo}>
+        <Typography className={styles.withdrawTitle}>Funds available for withdrawal:</Typography>
+        {valueComponent}
+      </Box>
+      <ButtonComponent
+        disable={isClaimDisable || isClaimed}
+        type={'swap'}
+        title={'Claim all'}
+        onClick={withdrawTransactionCall}
+        isIconVisible={false}
+      />
+    </>
   ) : (
-    <WalletConnectSwap />
+    <>
+      <H3Text style={{ marginBottom: '10px' }} text={'Connect wallet to withdraw impact funds'} />
+      <WalletConnectSwap />
+    </>
   );
 
   return (
-    <BasicLayout>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        className={styles.root}
-      >
-        <Card className={styles.withdrawWrapper}>
-          {/*<Box className={styles.withdrawInfo}>*/}
-          {/*  <Box className={styles.swapInfoLeftSide} key={index}>*/}
-          {/*    <Typography className={styles.swapInfoText}>{option.label}</Typography>*/}
-          {/*    <IconButton*/}
-          {/*        className={infoIconStyle}*/}
-          {/*        size="small"*/}
-          {/*        aria-describedby={popoverId}*/}
-          {/*        onClick={handleInfoButtonClick}*/}
-          {/*        id={option.id}*/}
-          {/*    >*/}
-          {/*      <InfoIcon />*/}
-          {/*    </IconButton>*/}
-          {/*  </Box>*/}
-          {/*</Box>*/}
-          {/*<Box className={styles.swapInfoSideBlock}>*/}
-          {/*  <Typography className={styles.swapInfoText}>{slippageTolerance}%</Typography>*/}
-          {/*  <Typography className={styles.swapInfoText}>BX Pool</Typography>*/}
-          {/*  <Typography className={styles.swapInfoText}>*/}
-          {/*    {minimumReceived} {toTokenSymbol}*/}
-          {/*  </Typography>*/}
-          {/*  <Typography className={styles.swapInfoText}>*/}
-          {/*    {priceImpact ? priceImpact + '%' : '-'}*/}
-          {/*  </Typography>*/}
-          {/*</Box>*/}
-          <Box className={styles.withdrawInfo}>
-            <Typography className={styles.withdrawTitle}>
-              Funds available for withdrawal:
-            </Typography>
-            <Typography className={styles.withdrawValue}>{withdrawValue}</Typography>
-          </Box>
-          {buttonComponent}
-        </Card>
-      </Grid>
-    </BasicLayout>
+    <>
+      <ClaimWithdrawModal
+        {...{ open, isError, errorMessage, isLoading, handleClose }}
+        wallet={wallet?.publicKey.toString()!}
+      />
+      <BasicLayout>
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          className={styles.root}
+        >
+          <Card className={styles.withdrawWrapper}>{contentComponent}</Card>
+        </Grid>
+      </BasicLayout>
+    </>
   );
 }

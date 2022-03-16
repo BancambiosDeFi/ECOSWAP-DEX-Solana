@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "@solana/spl-token": "^0.1.8",
+    "@solana/web3.js": "^1.31.0",
+    "@solvei/borsh": "^0.0.20",
+    "@types/bignumber.js": "^5.0.0",
+    "bignumber.js": "^9.0.2",
+    "bn.js": "^5.2.0",
+    "borsh": "^0.7.0",
+    "reflect-metadata": "^0.1.13"
+  },
+  "name": "impact-pool-api",
+  "version": "1.0.0",
+  "main": "dist/impact-pool.js",
+  "types": "dist/impact-pool.d.ts",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

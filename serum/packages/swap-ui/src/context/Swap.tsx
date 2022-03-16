@@ -195,33 +195,33 @@ export function useCanSwap(): boolean {
   const fair = useSwapFair();
   const route = useRouteVerbose(fromMint, toMint);
   if (route === null) {
-    console.log("Route doesn't exist");
+    // console.log("Route doesn't exist");
     return false;
   }
-  console.log('useCanSwap checking...');
+  // console.log('useCanSwap checking...');
 
   if (fromWallet !== undefined && fromWallet !== null) {
-    console.log('1 - From wallet exists. ');
+    // console.log('1 - From wallet exists. ');
   }
 
   if (fair !== undefined && fair > 0) {
-    console.log('2 - Fair price is defined.');
+    // console.log('2 - Fair price is defined.');
   }
 
   if (fromMint.equals(toMint) === false) {
-    console.log('3 - Mints are distinct.');
+    // console.log('3 - Mints are distinct.');
   }
 
   if (swapClient.program.provider.wallet.publicKey !== null) {
-    console.log('4 - Wallet is connected.');
+    // console.log('4 - Wallet is connected.');
   }
 
   if (fromAmount > 0 && toAmount > 0) {
-    console.log('5 - Trade amounts greater than zero.');
+    // console.log('5 - Trade amounts greater than zero.');
   }
 
   if (route !== null) {
-    console.log('6 - Trade route exists.');
+    // console.log('6 - Trade route exists.');
   }
 
   if (
@@ -230,9 +230,9 @@ export function useCanSwap(): boolean {
       .get(fromMint.toString())
       ?.tags?.includes(SPL_REGISTRY_WORM_TAG) !== undefined
   ) {
-    console.log(
-      '7 - Wormhole <-> native markets must have the wormhole token as the *from* address since they are one-sided markets.',
-    );
+    // console.log(
+    // '7 - Wormhole <-> native markets must have the wormhole token as the *from* address since they are one-sided markets.',
+    // );
   }
   if (
     route.kind !== 'wormhole-sollet' ||
@@ -240,9 +240,9 @@ export function useCanSwap(): boolean {
       .get(fromMint.toString())
       ?.tags?.includes(SPL_REGISTRY_SOLLET_TAG) !== undefined
   ) {
-    console.log(
-      "8 - Wormhole <-> sollet markets must have the sollet token as the *from* address since they're one sided markets.",
-    );
+    // console.log(
+    //   "8 - Wormhole <-> sollet markets must have the sollet token as the *from* address since they're one sided markets.",
+    // );
   }
 
   return (
@@ -292,6 +292,11 @@ export function useReferral(fromMarket?: Market): PublicKey | undefined {
       return undefined;
     }
 
+    // console.log('ASSOCIATED_TOKEN_PROGRAM_ID = ', ASSOCIATED_TOKEN_PROGRAM_ID);
+    // console.log('TOKEN_PROGRAM_ID = ', TOKEN_PROGRAM_ID);
+    // console.log('fromMarket.quoteMintAddress = ', fromMarket.quoteMintAddress);
+    // console.log('referral = ', referral);
+
     return Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
@@ -337,26 +342,32 @@ export function useOnSwap() {
 
   // Click handler.
   const sendSwapTransaction = async () => {
+    // console.log('sendSwapTransaction ...');
     if (!fromMintInfo || !toMintInfo) {
+      console.log('if !fromMintInfo || !toMintInfo');
       throw new Error('Unable to calculate mint decimals');
     }
     if (!fair) {
+      // console.log('if !fair');
       throw new Error('Invalid fair');
     }
     if (!quoteMint || !quoteMintInfo) {
+      // console.log('if !quoteMint || !quoteMintInfo');
       throw new Error('Quote mint not found');
     }
 
+    // console.log('before amount');
     const amount = new BN(fromAmount * 10 ** fromMintInfo.decimals);
     const isSol = fromMint.equals(SOL_MINT) || toMint.equals(SOL_MINT);
     const wrappedSolAccount = isSol ? Keypair.generate() : undefined;
 
+    // console.log('before txs');
     // Build the swap.
     const txs = await (async () => {
+      // console.log('txs ...');
       if (!fromMarket) {
         throw new Error('Market undefined');
       }
-
       const minExchangeRate = {
         rate: new BN((10 ** toMintInfo.decimals * FEE_MULTIPLIER) / fair)
           .muln(100 - slippage)
@@ -382,7 +393,9 @@ export function useOnSwap() {
         ? toWallet.publicKey
         : undefined;
 
-      return await swapClient.swapTxs({
+      // console.log('before serumTransaction');
+
+      const serumTransaction = await swapClient.swapTxs({
         fromMint,
         toMint,
         quoteMint,
@@ -400,6 +413,12 @@ export function useOnSwap() {
         // Auto close newly created open orders accounts.
         close: isClosingNewAccounts,
       });
+
+      // console.log('after serumTransaction');
+
+      // console.log('serumTransaction = ', serumTransaction);
+
+      return serumTransaction;
     })();
 
     // If swapping SOL, then insert a wrap/unwrap instruction.

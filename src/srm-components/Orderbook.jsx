@@ -1,12 +1,12 @@
 import { Col, Row } from 'antd';
 import React, { useRef, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { useMarket, useOrderbook, useMarkPrice } from '../srm-utils/markets';
 import { isEqual, getDecimalCount } from '../srm-utils/utils';
 import { useInterval } from '../srm-utils/useInterval';
-import FloatingElement from './layout/FloatingElement';
 import usePrevious from '../srm-utils/usePrevious';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import FloatingElement from './layout/FloatingElement';
 
 const Title = styled.div`
   color: rgba(255, 255, 255, 1);
@@ -93,11 +93,13 @@ export default function Orderbook({ smallScreen, depth = 7, onPrice, onSize }) {
         cumulativeSize,
         sizePercent: Math.round((cumulativeSize / (totalSize || 1)) * 100),
       });
+
       return cumulative;
     }, []);
     if (backwards) {
       cumulative = cumulative.reverse();
     }
+
     return cumulative;
   }
 
@@ -154,6 +156,7 @@ const OrderbookRow = React.memo(
           element.current?.classList.remove('flash'),
         250,
       );
+
       return () => clearTimeout(id);
     }, [price, size]);
 

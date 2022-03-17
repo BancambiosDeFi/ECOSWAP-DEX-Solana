@@ -1,14 +1,16 @@
 import React from 'react';
-import { ChartContainer } from './ChartContainer';
-import SwapCard from './SwapCard';
+// eslint-disable-next-line import/no-unresolved
 import { useSwapContext } from '@serum/swap-ui';
-import { SwapType } from '../../../types';
-import { useWallet } from '../../../components/wallet/wallet';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { SwapType } from '../../../types';
+import { useWallet } from '../../../components/wallet/wallet';
 import { PagesTransitionButton } from '../../../components/PagesTransitionButton';
+import SwapCard from './SwapCard';
+import { ChartContainer } from './ChartContainer';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',

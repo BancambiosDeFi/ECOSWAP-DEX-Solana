@@ -10,5 +10,6 @@ export interface WalletAdapter {
   signAllTransactions: (transaction: Transaction[]) => Promise<Transaction[]>;
   connect: () => any;
   disconnect: () => any;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   on<T>(event: string, fn: () => void): this;
 }

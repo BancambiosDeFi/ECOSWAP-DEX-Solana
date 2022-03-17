@@ -157,6 +157,7 @@ export default function StandaloneBalancesDisplay() {
           usdtRef,
         });
       } catch (e) {
+        // @ts-ignore
         console.log('Error auto settling funds: ' + e.message);
 
         return;
@@ -177,7 +178,7 @@ export default function StandaloneBalancesDisplay() {
   ];
 
   return (
-    <FloatingElement style={{ flex: 1, paddingTop: 10 }}>
+    <FloatingElement /* style={{ flex: 1, paddingTop: 10 }} */>
       {formattedBalances.map(([currency, balances, baseOrQuote, mint], index) => (
         <React.Fragment key={index}>
           <Divider style={{ borderColor: 'white' }}>

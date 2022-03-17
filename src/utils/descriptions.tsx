@@ -1,6 +1,7 @@
 export const getSlippageToleranceDescription = (): string => {
   return (
     'Slippage Tolerance is the pricing difference between the price at the confirmation ' +
+    // eslint-disable-next-line max-len
     'time and the actual price of the transaction users are willing to accept when swapping on AMMs. ' +
     'Slippage tolerance is set as a percentage of the total swap value.'
   );

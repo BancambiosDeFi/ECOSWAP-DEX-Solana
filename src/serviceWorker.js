@@ -58,6 +58,7 @@ function registerValidSW(swUrl, config) {
     .then(registration => {
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
+        // eslint-disable-next-line eqeqeq
         if (installingWorker == null) {
           return;
         }
@@ -106,6 +107,7 @@ function checkValidServiceWorker(swUrl, config) {
       const contentType = response.headers.get('content-type');
       if (
         response.status === 404 ||
+        // eslint-disable-next-line eqeqeq
         (contentType != null && contentType.indexOf('javascript') === -1)
       ) {
         // No service worker found. Probably a different app. Reload the page.

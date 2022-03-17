@@ -37,6 +37,7 @@ export function ConnectionProvider({ children }) {
   // is empty after opening its first time, preventing subsequent subscriptions from receiving responses.
   // This is a hack to prevent the list from every getting empty
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const id = connection.onAccountChange(new Account().publicKey, () => {});
 
     return () => {
@@ -53,6 +54,7 @@ export function ConnectionProvider({ children }) {
   }, [connection]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const id = sendConnection.onAccountChange(new Account().publicKey, () => {});
 
     return () => {
@@ -159,7 +161,6 @@ export function useAccountInfo(
         --currentItem.count;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cacheKey]);
   const previousInfoRef = useRef<AccountInfo<Buffer> | null | undefined>(null);
   if (

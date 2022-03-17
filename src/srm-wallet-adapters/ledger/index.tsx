@@ -72,6 +72,7 @@ export class LedgerWalletAdapter extends EventEmitter implements WalletAdapter {
     } catch (error) {
       notify({
         message: 'Ledger Error',
+        // @ts-ignore
         description: error.message,
       });
       await this.disconnect();

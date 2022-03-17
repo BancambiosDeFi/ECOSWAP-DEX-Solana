@@ -150,6 +150,7 @@ export default function Row({
         padding: '1px',
         borderRadius: '18px',
         background:
+          // eslint-disable-next-line max-len
           'linear-gradient(232deg, rgba(243,55,248,1) 0%, rgba(203,72,239,1) 50%, rgba(159,90,229,1) 100%)',
       }}
     >

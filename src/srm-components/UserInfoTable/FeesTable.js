@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col, Typography, Tag } from 'antd';
+// eslint-disable-next-line import/no-unresolved
 import { TokenInstructions, getFeeRates } from '@serum/serum';
 import { useFeeDiscountKeys } from '../../srm-utils/markets';
 import DataTable from '../layout/DataTable';

@@ -9,6 +9,7 @@ interface ChartProps {
   location: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useStyles = makeStyles(theme => ({
   wrapper: {
     display: 'flex',

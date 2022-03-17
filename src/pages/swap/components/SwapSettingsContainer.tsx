@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import { makeStyles, styled } from '@mui/styles';
 import {
@@ -9,12 +10,16 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { InfoLabel } from './Info';
-import { SettingsOutlined as SettingsIcon } from '@mui/icons-material';
-import { CachedOutlined as UpdateIcon } from '@mui/icons-material';
-import SlippageToleranceSettings from './SlippageToleranceSettings';
-import SwapSettingsInfo from './SwapSettingsInfo';
+// eslint-disable-next-line prettier/prettier
+import {
+  SettingsOutlined as SettingsIcon,
+  CachedOutlined as UpdateIcon,
+} from '@mui/icons-material';
 import NumberFormat from 'react-number-format';
+import { LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
+// eslint-disable-next-line import/no-unresolved
+import { useMint, useSwapContext, useTokenMap } from '@serum/swap-ui';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   convertToBN,
   convertToPercent,
@@ -24,8 +29,6 @@ import {
   getPriceImpact,
   getRaydiumPoolInfo,
 } from '../../../utils/raydiumRequests';
-import { LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
-import { useMint, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { useConnection } from '../../../srm-utils/connection';
 import {
   getEcoContributionDescription,
@@ -35,7 +38,9 @@ import {
   getSwapPoolDescription,
 } from '../../../utils/descriptions';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
-import CloseIcon from '@mui/icons-material/Close';
+import SwapSettingsInfo from './SwapSettingsInfo';
+import SlippageToleranceSettings from './SlippageToleranceSettings';
+import { InfoLabel } from './Info';
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -166,6 +171,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   '& .MuiToggleButtonGroup-grouped': {
     'width': '35px',
@@ -221,6 +227,7 @@ const StyledTextField = styled(TextField)({
   },
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledPopover = styled(Popover)(({ theme }) => ({
   '& .MuiPopover-paper': {
     width: 'fit-content',
@@ -316,16 +323,24 @@ const SwapSettingsContainer: React.FC = () => {
             const amountIn = createTokenAmount(
               createToken(
                 fromMint.toString(),
-                fromMintInfo?.decimals!,
-                fromTokenInfo?.symbol!,
+                // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                fromMintInfo?.decimals,
+                // @ts-ignore
+                fromTokenInfo?.symbol,
                 fromTokenInfo?.name,
               ),
-              convertToBN(fromAmount * Math.pow(10, fromMintInfo?.decimals!)),
+              // @ts-ignore
+              convertToBN(fromAmount * Math.pow(10, fromMintInfo?.decimals)),
             );
             const currencyOut = createToken(
+              // @ts-ignore
               toMint.toString(),
-              toMintInfo?.decimals!,
-              toTokenInfo?.symbol!,
+              // @ts-ignore
+              toMintInfo?.decimals,
+              // @ts-ignore
+              toTokenInfo?.symbol,
+              // @ts-ignore
               toTokenInfo?.name,
             );
             const slippage = convertToPercent(Number(slippageTolerance) * 10, 1000);
@@ -346,8 +361,11 @@ const SwapSettingsContainer: React.FC = () => {
           });
       } else {
         console.error(
-          `Price Impact ERROR: "${fromTokenInfo?.symbol!}-${toTokenInfo?.symbol!}" or ` +
-            `"${toTokenInfo?.symbol!}-${fromTokenInfo?.symbol!}" Raydium liquidity pool doesn't exist!`,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          `Price Impact ERROR: "${fromTokenInfo?.symbol}-${toTokenInfo?.symbol}" or ` +
+            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            `"${toTokenInfo?.symbol}-${fromTokenInfo?.symbol}" Raydium liquidity pool doesn't exist!`,
         );
         setPriceImpact('');
       }
@@ -420,7 +438,11 @@ const SwapSettingsContainer: React.FC = () => {
 
   const swapInfoBlock = !isSettings ? (
     <SwapSettingsInfo
-      toTokenSymbol={toTokenInfo?.symbol!}
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // @ts-ignore
+      toTokenSymbol={toTokenInfo?.symbol}
       infoIconStyle={styles.infoIcon}
       {...{
         slippageTolerance,

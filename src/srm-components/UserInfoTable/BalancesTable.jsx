@@ -38,6 +38,7 @@ export default function BalancesTable({
         description: e.message,
         type: 'error',
       });
+
       return;
     }
     onSettleSuccess && onSettleSuccess();
@@ -88,6 +89,7 @@ export default function BalancesTable({
       ),
     },
   ].filter(x => x);
+
   return (
     <DataTable
       emptyLabel="No balances"

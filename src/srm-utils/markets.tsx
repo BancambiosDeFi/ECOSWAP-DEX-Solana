@@ -77,6 +77,7 @@ export function useAllMarkets() {
         } catch (e) {
           notify({
             message: 'Error loading all market',
+            // @ts-ignore
             description: e.message,
             type: 'error',
           });
@@ -254,6 +255,7 @@ export function MarketProvider({ marketAddress, setMarketAddress, children }) {
       .catch(e =>
         notify({
           message: 'Error loading market',
+          // @ts-ignore
           description: e.message,
           type: 'error',
         }),
@@ -905,6 +907,7 @@ export function useUnmigratedDeprecatedMarkets() {
         console.log('Failed loading market', marketInfo.name, e);
         notify({
           message: 'Error loading market',
+          // @ts-ignore
           description: e.message,
           type: 'error',
         });
@@ -976,6 +979,7 @@ export function useGetOpenOrdersForDeprecatedMarkets(): {
         console.log('Failed loading open orders', market.address.toBase58(), e);
         notify({
           message: `Error loading open orders for deprecated ${marketName}`,
+          // @ts-ignore
           description: e.message,
           type: 'error',
         });

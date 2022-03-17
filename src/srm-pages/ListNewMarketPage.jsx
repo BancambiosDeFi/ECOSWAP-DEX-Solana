@@ -95,6 +95,7 @@ export default function ListNewMarketPage() {
       console.warn(e);
       notify({
         message: 'Error listing new market',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

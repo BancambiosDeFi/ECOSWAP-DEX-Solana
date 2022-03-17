@@ -131,6 +131,7 @@ export default function NewPoolPage() {
       console.warn(e);
       notify({
         message: 'Error creating new pool',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

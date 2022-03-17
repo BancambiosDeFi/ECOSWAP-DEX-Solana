@@ -255,6 +255,7 @@ export default function TradeForm({
       console.warn(e);
       notify({
         message: 'Error placing order',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

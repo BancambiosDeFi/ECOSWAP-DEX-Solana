@@ -100,6 +100,7 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
       console.warn(e);
       notify({
         message: 'Error ' + (tab === 'create' ? 'creating' : 'redeeming') + ' pool tokens',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

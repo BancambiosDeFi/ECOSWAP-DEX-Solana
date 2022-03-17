@@ -49,6 +49,7 @@ export default function OpenOrderTable({
     } catch (e) {
       notify({
         message: 'Error cancelling order',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

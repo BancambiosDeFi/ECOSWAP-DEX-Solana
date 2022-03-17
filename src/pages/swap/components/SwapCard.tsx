@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
+import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
+import ButtonComponent from '../../../srm-components/Button/Button';
+import { useWallet } from '../../../components/wallet/wallet';
 import { TokenIcon } from './TokenIcon';
+// eslint-disable-next-line import/order
 import {
   useSwapContext,
   useTokenMap,
@@ -13,12 +17,10 @@ import {
   useOwnedTokenAccount,
   useOnSwap,
   useSwappableTokens,
+  // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
-import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
-import ButtonComponent from '../../../srm-components/Button/Button';
 import TokenDialog from './TokenDialog';
 import SwapSettingsContainer from './SwapSettingsContainer';
-import { useWallet } from '../../../components/wallet/wallet';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -186,6 +188,7 @@ export function SwitchButton() {
 
 function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { fromMint, setFromMint, fromAmount, setFromAmount } = useSwapContext();
+  // eslint-disable-next-line padding-line-between-statements
   return (
     <SwapTokenForm
       from
@@ -201,6 +204,7 @@ function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[
 
 function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { toMint, setToMint, toAmount, setToAmount } = useSwapContext();
+  // eslint-disable-next-line padding-line-between-statements
   return (
     <SwapTokenForm
       from={false}
@@ -255,7 +259,6 @@ export function SwapTokenForm({
       <div className={styles.swapTokenSelectorContainer}>
         <TokenButton mint={mint} onClick={() => setShowTokenDialog(true)} />
         <Typography color="textSecondary" className={styles.balanceContainer}>
-          {/* {tokenAccount && mintAccount ? `Balance: ${balance?.toFixed(mintAccount.decimals)}` : `-`} */}
           {from && !!balance ? (
             <span className={styles.maxButton} onClick={() => setAmount(balance)}>
               MAX

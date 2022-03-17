@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { TinyArea } from '@ant-design/plots';
 import { makeStyles } from '@mui/styles';
+// eslint-disable-next-line import/no-unresolved
 import { useTokenMap } from '@serum/swap-ui';
 import { Box, Typography } from '@mui/material';
+import { PublicKey } from '@solana/web3.js';
+import moment from 'moment';
+import { AxiosResponse } from 'axios';
+import { getQuotesHistorical } from '../../../services/api';
+import { SwapType } from '../../../types';
 import { TokenName } from './SwapCard';
 import { TokenIcon } from './TokenIcon';
-import { PublicKey } from '@solana/web3.js';
-import { getQuotesHistorical } from '../../../services/api';
-import moment from 'moment';
-import { SwapType } from '../../../types';
-import { AxiosResponse } from 'axios';
 
 interface ChartProps {
   mint: PublicKey;
@@ -111,7 +112,9 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location 
     const endTime = moment().toISOString();
     const startTime = moment().subtract(1, 'months').toISOString();
 
-    return await getQuotesHistorical(tokenInfo?.symbol!, startTime, endTime);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // @ts-ignore
+    return await getQuotesHistorical(tokenInfo?.symbol, startTime, endTime);
   };
 
   const getPercentageChange = (previousPrice: number, newPrice: number): number => {
@@ -129,6 +132,7 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location 
       getTokenHistoricalQuotes().then(response => {
         const reducedQuotesArray = response.data.reduce((history, exchange) => {
           history.push(+Number(exchange.rate).toFixed(5));
+
           return history;
         }, []);
         setHistoricalQuotes(reducedQuotesArray);
@@ -142,6 +146,7 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location 
         }
       });
     }, requestDelay);
+
     return () => clearTimeout(apiRequestTimer);
   }, [mint]);
 

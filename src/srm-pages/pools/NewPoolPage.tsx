@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AutoComplete, Button, Form, Input, Switch, Tooltip, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';
+// eslint-disable-next-line import/no-unresolved
 import { PoolTransactions } from '@serum/pool';
 import BN from 'bn.js';
 import { useConnection } from '../../srm-utils/connection';

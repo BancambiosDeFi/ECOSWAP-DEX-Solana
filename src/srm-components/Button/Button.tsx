@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { FC } from 'react';
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -11,6 +12,7 @@ export interface ButtonProps {
   disable?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ConnectSwapButton = styled(Button)(({ theme }) => ({
   'height': '64px',
   'width': '100%',
@@ -34,6 +36,7 @@ const ConnectSwapButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SwapButton = styled(Button)(({ theme }) => ({
   'height': '64px',
   'width': '100%',
@@ -63,6 +66,7 @@ const SwapButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DoneButton = styled(Button)(({ theme }) => ({
   'height': '100%',
   'width': '100%',
@@ -70,6 +74,7 @@ const DoneButton = styled(Button)(({ theme }) => ({
   'maxWidth': '169px',
   'color': '#FFFFFF',
   'background':
+    // eslint-disable-next-line max-len
     'linear-gradient(black, black) padding-box, linear-gradient(266.19deg, #EC26F5 -9.56%, #9F5AE5 102.3%) border-box',
   'borderRadius': '17px',
   'border': '2px solid transparent',
@@ -83,11 +88,13 @@ const DoneButton = styled(Button)(({ theme }) => ({
   'textAlign': 'center',
   '&:hover': {
     background:
+      // eslint-disable-next-line max-len
       'linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) padding-box, linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) border-box',
     boxShadow: '0px 0px 16px #9F5AE5',
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LaunchTheAppButton = styled(Button)(({ theme }) => ({
   'height': '100%',
   'width': '100%',
@@ -95,6 +102,7 @@ const LaunchTheAppButton = styled(Button)(({ theme }) => ({
   'maxWidth': '602px',
   'color': '#FFFFFF',
   'background':
+    // eslint-disable-next-line max-len
     'linear-gradient(black, black) padding-box, linear-gradient(266.19deg, #EC26F5 -9.56%, #9F5AE5 102.3%) border-box',
   'borderRadius': '20px',
   'border': '2px solid transparent',
@@ -108,11 +116,13 @@ const LaunchTheAppButton = styled(Button)(({ theme }) => ({
   'textAlign': 'center',
   '&:hover': {
     background:
+      // eslint-disable-next-line max-len
       'linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) padding-box, linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) border-box',
     boxShadow: '0px 0px 16px #9F5AE5',
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SubscribeButton = styled(Button)(({ theme }) => ({
   'height': '100%',
   'width': '100%',
@@ -129,6 +139,7 @@ const SubscribeButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ConnectButton = styled(Button)(({ theme }) => ({
   'height': '100%',
   'width': '100%',
@@ -156,6 +167,7 @@ const ButtonComponent: FC<ButtonProps> = ({
   type,
   title,
   onClick,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isIconVisible = true,
   disable = false,
 }) => {

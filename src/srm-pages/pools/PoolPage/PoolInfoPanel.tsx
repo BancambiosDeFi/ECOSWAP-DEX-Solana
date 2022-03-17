@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import { getPoolBasket, PoolInfo } from '@serum/pool';
 import React from 'react';
 import { Typography } from 'antd';

@@ -6,6 +6,7 @@ import Wallet from '@project-serum/sol-wallet-adapter';
 import { ConfirmOptions, Connection } from '@solana/web3.js';
 import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
 
+// eslint-disable-next-line import/no-unresolved
 import SwapProvider from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { NotifyingProvider } from './NotifyingProvider';
@@ -46,6 +47,7 @@ export default function SwapPage() {
     const network = 'https://solana-api.projectserum.com';
     const wallet = new Wallet('https://www.sollet.io', network);
     const connection = new Connection(network, opts.preflightCommitment);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const provider = new NotifyingProvider(connection, wallet, opts, (tx, err) => {
       // if (err) {
       //   enqueueSnackbar(`Error: ${err.toString()}`, {

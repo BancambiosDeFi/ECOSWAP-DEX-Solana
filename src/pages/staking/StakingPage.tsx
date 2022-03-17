@@ -135,7 +135,7 @@ const options = [
 
 export default function StakingPage() {
   const styles = useStyles();
-  const [checkedOption, setCheckedOption] = useState({ });
+  const [checkedOption, setCheckedOption] = useState({});
 
   const setPeriod = useCallback(
     data => {

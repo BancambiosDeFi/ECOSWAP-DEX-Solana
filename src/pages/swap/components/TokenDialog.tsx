@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
+// eslint-disable-next-line import/no-unresolved
 import { useTokenMap } from '@serum/swap-ui';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 
@@ -274,6 +275,7 @@ function CommonBases({ commonBaseTokens, onClick }) {
       <div className={styles.commonBaseList}>
         {commonBaseTokens.map(tokenInfo => {
           const mint = new PublicKey(tokenInfo.address);
+
           return (
             <div className={styles.commonBaseToken} onClick={() => onClick(mint)}>
               <TokenIcon mint={mint} styles={styles.tokenIconSmall} />

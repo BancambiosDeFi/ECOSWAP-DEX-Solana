@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Tooltip, Typography } from 'antd';
-import { notify } from '../srm-utils/notifications';
+import styled from 'styled-components';
+// eslint-disable-next-line import/no-unresolved
 import { MARKETS } from '@serum/serum';
+import { notify } from '../srm-utils/notifications';
 import { useConnection } from '../srm-utils/connection';
 import FloatingElement from '../srm-components/layout/FloatingElement';
-import styled from 'styled-components';
 import { useWallet } from '../components/wallet/wallet';
 import { listMarket } from '../srm-utils/send';
 import { useMintInput } from '../srm-components/useMintInput';
@@ -36,7 +37,8 @@ export default function ListNewMarketPage() {
         )
       </Text>
     </Text>,
-    'The base token is the token being traded. For example, the base token of a BTC/USDT market is BTC.',
+    'The base token is the token being traded. For example, ' +
+      'the base token of a BTC/USDT market is BTC.',
   );
   const [quoteMintInput, quoteMintInfo] = useMintInput(
     'quoteMint',
@@ -52,7 +54,8 @@ export default function ListNewMarketPage() {
         )
       </Text>
     </Text>,
-    'The quote token is the token used to price trades. For example, the quote token of a BTC/USDT market is USDT.',
+    'The quote token is the token used to price trades. For example' +
+      ', the quote token of a BTC/USDT market is USDT.',
   );
   const [lotSize, setLotSize] = useState('1');
   const [tickSize, setTickSize] = useState('0.01');
@@ -118,7 +121,12 @@ export default function ListNewMarketPage() {
           {quoteMintInput}
           <Form.Item
             label={
-              <Tooltip title="Smallest allowed order size. For a BTC/USDT market, this would be in units of BTC.">
+              <Tooltip
+                title={
+                  `Smallest allowed order size.` +
+                  `For a BTC/USDT market, this would be in units of BTC.`
+                }
+              >
                 Minimum Order Size <Text type="secondary">(Lot size in e.g. BTC)</Text>
               </Tooltip>
             }
@@ -139,7 +147,12 @@ export default function ListNewMarketPage() {
           </Form.Item>
           <Form.Item
             label={
-              <Tooltip title="Smallest amount by which prices can move. For a BTC/USDT market, this would be in units of USDT.">
+              <Tooltip
+                title={
+                  `Smallest amount by which prices can move. ` +
+                  `For a BTC/USDT market, this would be in units of USDT.`
+                }
+              >
                 Tick Size <Text type="secondary">(Price increment in e.g. USDT)</Text>
               </Tooltip>
             }

@@ -82,17 +82,14 @@ export default function TradeForm({
 
   useEffect(() => {
     setChangeOrderRef && setChangeOrderRef(doChangeOrder);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setChangeOrderRef]);
 
   useEffect(() => {
     baseSize && price && onSliderChange(sizeFraction);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [side]);
 
   useEffect(() => {
     updateSizeFraction();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [price, baseSize]);
 
   useEffect(() => {

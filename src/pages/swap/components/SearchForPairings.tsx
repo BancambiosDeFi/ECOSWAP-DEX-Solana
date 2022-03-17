@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 
+// eslint-disable-next-line import/no-unresolved
 import { useTokenMap, useSwapContext } from '@serum/swap-ui';
 import { getRaydiumAllPoolKeysFetcher } from '../../../utils/raydiumRequests';
 import { useConnection } from '../../../srm-utils/connection';
@@ -13,9 +14,11 @@ import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 import { ReactComponent as ArrowRightIcon } from '../../../assets/icons/arrowRight.svg';
 import { ReactComponent as PolygonIcon } from '../../../assets/icons/polygon.svg';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useStyles = makeStyles(theme => ({
   paperStyle: ({ isInputFocus }: any) => ({
     background:
+      // eslint-disable-next-line max-len
       'linear-gradient(#35363A, #35363A) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #EC26F5 102.3%) border-box !important',
     border: isInputFocus ? '3px solid transparent' : 'none',
   }),
@@ -114,6 +117,7 @@ interface TokenPair {
   toImg?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function SearchForPairingsComponent({ type, width }) {
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const classes = useStyles({ isInputFocus });

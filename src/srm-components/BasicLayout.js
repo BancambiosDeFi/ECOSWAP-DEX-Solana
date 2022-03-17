@@ -1,8 +1,8 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
-import { useReferrer } from '../srm-utils/referrer';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
+import { useReferrer } from '../srm-utils/referrer';
 import { notify } from '../srm-utils/notifications';
 import { SwapFooter } from './SwapFooter';
 import TopBar from './TopBar';

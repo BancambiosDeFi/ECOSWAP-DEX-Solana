@@ -62,7 +62,8 @@ input[type=number]:focus::-webkit-inner-spin-button {
 .ant-table-container table > thead > tr:first-child th {
   border-bottom: none;
 }
-.ant-divider-horizontal.ant-divider-with-text::before, .ant-divider-horizontal.ant-divider-with-text::after {
+.ant-divider-horizontal.ant-divider-with-text::before, 
+.ant-divider-horizontal.ant-divider-with-text::after {
   border-top: 1px solid #434a59 !important;
 }
 .ant-layout {

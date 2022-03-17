@@ -1,8 +1,8 @@
 import { Box, CircularProgress } from '@mui/material';
 import React from 'react';
-import ModalWrapper from './ModalWrapper';
 import FmdBadIcon from '@mui/icons-material/FmdBad';
 import ButtonComponent from '../srm-components/Button/Button';
+import ModalWrapper from './ModalWrapper';
 import SubtitleText from './typography/SubtitleText';
 import SmallText from './typography/SmallText';
 

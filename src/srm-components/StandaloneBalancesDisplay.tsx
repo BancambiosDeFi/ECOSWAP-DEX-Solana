@@ -117,6 +117,7 @@ export default function StandaloneBalancesDisplay() {
     } catch (e) {
       notify({
         message: 'Error settling funds',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

@@ -65,6 +65,7 @@ function PauseUnpauseTab({ poolInfo }: TabParams) {
     } catch (e) {
       notify({
         message: 'Error pausing pool',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });
@@ -85,6 +86,7 @@ function PauseUnpauseTab({ poolInfo }: TabParams) {
     } catch (e) {
       notify({
         message: 'Error unpausing pool',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });
@@ -454,6 +456,7 @@ function useOnSubmitHandler(
     } catch (e) {
       notify({
         message: `Error ${description}`,
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

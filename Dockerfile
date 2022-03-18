@@ -14,12 +14,16 @@ COPY . $HOME/
 RUN set -x && \
     npm install -g lerna && \
     yarn install && \
-    yarn --version
+    yarn --version && \
+    yarn prebuild && \
+    npm i -g npm && \
+    npm --version && \
+    yarn postbuild
 
 # yarn build
 RUN set -x && \
-    # cp $HOME/.env.$APP_ENV $HOME/.env && \
-    # cat $HOME/.env && \
+    cp $HOME/.env.$APP_ENV $HOME/.env && \
+    cat $HOME/.env && \
     yarn build:serum && \
     yarn build && \
     ls -la $HOME/build

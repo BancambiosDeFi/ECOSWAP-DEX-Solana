@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Row, Select, Typography } from 'antd';
 import styled from 'styled-components';
+// eslint-disable-next-line import/no-unresolved
 import { Orderbook } from '@serum/serum';
 import { SwapOutlined } from '@ant-design/icons';
 import {
@@ -73,7 +74,8 @@ export default function ConvertForm() {
       );
     if (!marketInfo) {
       console.warn(
-        `Could not find market info for market names ${fromToken}/${toToken} or ${toToken}/${fromToken}`,
+        `Could not find market info for market ` +
+          `names ${fromToken}/${toToken} or ${toToken}/${fromToken}`,
       );
       notify({
         message: 'Invalid market',
@@ -87,7 +89,7 @@ export default function ConvertForm() {
   };
 
   return (
-    <FloatingElement style={{ maxWidth: 500 }}>
+    <FloatingElement /*style={{ maxWidth: 500 }}*/>
       <Title level={3}>Convert</Title>
       {!connected && (
         <Row justify="center">
@@ -207,6 +209,7 @@ function ConvertFormSubmit({
       console.warn(e);
       notify({
         message: 'Error placing order',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });
@@ -266,6 +269,7 @@ function ConvertFormSubmit({
       console.warn(e);
       notify({
         message: 'Error placing order',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

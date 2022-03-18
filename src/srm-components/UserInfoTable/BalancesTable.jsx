@@ -34,9 +34,11 @@ export default function BalancesTable({
     } catch (e) {
       notify({
         message: 'Error settling funds',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });
+
       return;
     }
     onSettleSuccess && onSettleSuccess();
@@ -87,6 +89,7 @@ export default function BalancesTable({
       ),
     },
   ].filter(x => x);
+
   return (
     <DataTable
       emptyLabel="No balances"

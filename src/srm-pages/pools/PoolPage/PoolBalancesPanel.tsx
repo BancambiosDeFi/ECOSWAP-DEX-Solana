@@ -1,8 +1,10 @@
+// eslint-disable-next-line import/no-unresolved
 import { PoolInfo } from '@serum/pool';
 import React from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { Button, Spin, Tabs } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
+// eslint-disable-next-line import/no-unresolved
 import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
 import { useAccountInfo } from '../../../srm-utils/connection';
 import { parseTokenAccountData, parseTokenMintData } from '../../../srm-utils/tokens';

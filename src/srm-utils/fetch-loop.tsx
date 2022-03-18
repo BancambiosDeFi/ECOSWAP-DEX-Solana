@@ -209,7 +209,6 @@ export function useAsyncData<T = any>(
     globalLoops.addListener(listener);
 
     return () => globalLoops.removeListener(listener);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cacheKey, refreshInterval]);
 
   if (!cacheKey) {

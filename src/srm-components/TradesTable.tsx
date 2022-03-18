@@ -20,7 +20,7 @@ export default function PublicTrades({ smallScreen }) {
 
   return (
     <FloatingElement
-      style={
+    /* style={
         smallScreen
           ? { flex: 1 }
           : {
@@ -28,7 +28,7 @@ export default function PublicTrades({ smallScreen }) {
               minHeight: '270px',
               maxHeight: 'calc(70vh - 700px)',
             }
-      }
+      } */
     >
       <Title>Recent Market trades</Title>
       <SizeTitle>

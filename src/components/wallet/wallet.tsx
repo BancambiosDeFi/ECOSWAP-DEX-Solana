@@ -46,13 +46,13 @@ export function WalletProvider({ children }) {
     [providerUrl],
   );
 
+  // eslint-disable-next-line prefer-const
   let [wallet, setWallet] = useState<WalletAdapter | undefined>(undefined);
 
   useEffect(() => {
     if (provider) {
       const updateWallet = () => {
         // hack to also update wallet synchronously in case it disconnects
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         wallet = new (provider.adapter || Wallet)(providerUrl, endpoint) as WalletAdapter;
         setWallet(wallet);
       };
@@ -122,6 +122,7 @@ export function WalletProvider({ children }) {
       setAutoConnect(false);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
   }, [wallet, autoConnect]);
 

@@ -1,10 +1,12 @@
-import React from "react"
+import React from 'react';
 import { PublicKey } from '@solana/web3.js';
+// eslint-disable-next-line import/no-unresolved
 import { useTokenMap } from '@serum/swap-ui';
 
 export function TokenIcon({
   mint,
   style,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   className = '',
   onError,
 }: {
@@ -18,6 +20,7 @@ export function TokenIcon({
 
   if (!tokenInfo?.logoURI) {
     onError(true);
+
     return null;
   }
 

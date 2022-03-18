@@ -1,17 +1,18 @@
-import BalancesTable from './BalancesTable';
-import OpenOrderTable from './OpenOrderTable';
 import React from 'react';
 import { Tabs, Typography } from 'antd';
-import FillsTable from './FillsTable';
 import FloatingElement from '../layout/FloatingElement';
-import FeesTable from './FeesTable';
 import { useOpenOrders, useBalances, useMarket } from '../../srm-utils/markets';
+import BalancesTable from './BalancesTable';
+import OpenOrderTable from './OpenOrderTable';
+import FillsTable from './FillsTable';
+import FeesTable from './FeesTable';
 
 const { Paragraph } = Typography;
 const { TabPane } = Tabs;
 
 export default function Index() {
   const { market } = useMarket();
+
   return (
     <FloatingElement style={{ flex: 1, paddingTop: 20 }}>
       <Typography>

@@ -1,17 +1,17 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import {DialogContent, Typography} from "@mui/material";
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import { DialogContent, Typography } from '@mui/material';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
+  '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
-      background: "#35363A",
+    background: '#35363A',
   },
-  "& .MuiDialogActions-root": {
+  '& .MuiDialogActions-root': {
     padding: theme.spacing(1),
   },
 }));
@@ -29,9 +29,9 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
     <DialogTitle
       sx={{
         m: 0,
-        padding: "16px 16px 16px 16px",
-          alignItems: "center",
-          background: "#35363A",
+        padding: '16px 16px 16px 16px',
+        alignItems: 'center',
+        background: '#35363A',
       }}
     >
       {children}
@@ -40,10 +40,10 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
           aria-label="close"
           onClick={onClose}
           sx={{
-            position: "absolute",
+            position: 'absolute',
             right: 10,
             top: 10,
-            color: "#FFFFFF",
+            color: '#FFFFFF',
           }}
         >
           <CloseIcon />
@@ -60,17 +60,12 @@ interface CustomizedDialogsProps {
   children: React.ReactElement;
 }
 
-const ModalWrapper: React.FC<CustomizedDialogsProps> = ({
-  open,
-  title,
-  handleClose,
-  children,
-}) => {
+const ModalWrapper: React.FC<CustomizedDialogsProps> = ({ open, title, handleClose, children }) => {
   return (
     <div>
       <BootstrapDialog
         PaperProps={{
-          sx: { height: { xs: "55%", md: 400 }, width: { xs: "none", md: 600 } },
+          sx: { height: { xs: '55%', md: 400 }, width: { xs: 'none', md: 600 } },
         }}
         fullWidth
         maxWidth="sm"
@@ -78,16 +73,17 @@ const ModalWrapper: React.FC<CustomizedDialogsProps> = ({
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <BootstrapDialogTitle
-          id="customized-dialog-title"
-          onClose={handleClose}
-        >
-            <div><Typography variant={"h2"} align={"center"}>{title}</Typography></div>
+        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+          <div>
+            <Typography variant={'h2'} align={'center'}>
+              {title}
+            </Typography>
+          </div>
         </BootstrapDialogTitle>
         <DialogContent
           sx={{
-            display: "flex",
-            justifyContent: "center",
+            display: 'flex',
+            justifyContent: 'center',
             // alignItems: "center",
           }}
         >

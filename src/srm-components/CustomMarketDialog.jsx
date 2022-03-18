@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, Modal, Row, Typography } from 'antd';
+import { PublicKey } from '@solana/web3.js';
+// eslint-disable-next-line import/no-unresolved
+import { Market, MARKETS, TOKEN_MINTS } from '@serum/serum';
+import { LoadingOutlined } from '@ant-design/icons';
 import { notify } from '../srm-utils/notifications';
 import { isValidPublicKey } from '../srm-utils/utils';
-import { PublicKey } from '@solana/web3.js';
-import { Market, MARKETS, TOKEN_MINTS } from '@serum/serum';
 import { useAccountInfo, useConnection } from '../srm-utils/connection';
-import { LoadingOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -31,6 +32,7 @@ export default function CustomMarketDialog({ visible, onAddCustomMarket, onClose
   useEffect(() => {
     if (!wellFormedMarketId || !programId) {
       resetLabels();
+
       return;
     }
     setLoadingMarket(true);
@@ -43,7 +45,6 @@ export default function CustomMarketDialog({ visible, onAddCustomMarket, onClose
         setMarket(null);
       })
       .finally(() => setLoadingMarket(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connection, marketId, programId]);
 
   const resetLabels = () => {
@@ -81,6 +82,7 @@ export default function CustomMarketDialog({ visible, onAddCustomMarket, onClose
         message: 'Please fill in all fields with valid values',
         type: 'error',
       });
+
       return;
     }
 

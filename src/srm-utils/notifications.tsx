@@ -1,33 +1,27 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { notification } from 'antd';
-import Link from '../srm-components/Link';
 
 export function notify({
   message,
   description,
   txid,
-  type = 'info',
-  placement = 'bottomLeft',
+  type,
+  placement = 'topRight',
 }: {
   message: string;
   description?: string | JSX.Element;
   txid?: string;
-  type?: string;
+  type: 'error' | 'success' | 'info';
   placement?: string;
 }) {
-  if (txid) {
-    description = (
-      <Link external to={'https://solscan.io/tx/' + txid} style={{ color: '#0000ff' }}>
-        View transaction {txid.slice(0, 8)}...{txid.slice(txid.length - 8)}
-      </Link>
-    );
-  }
   notification[type]({
-    message: <span style={{ color: 'black' }}>{message}</span>,
-    description: <span style={{ color: 'black', opacity: 0.5 }}>{description}</span>,
-    placement,
+    message: message,
+    description: <span style={{ color: '#fff' }}>{description}</span>,
     style: {
-      backgroundColor: 'white',
+      padding: '25px',
+      border: '1px solid #0156FF',
+      borderRadius: '8px',
+      backgroundColor: '#0A0C0E',
     },
   });
 }

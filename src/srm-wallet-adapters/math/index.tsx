@@ -58,6 +58,7 @@ export class MathWalletAdapter extends EventEmitter implements WalletAdapter {
     if (!this._provider) {
       window.open('https://mathwallet.org/', '_blank');
       notify({
+        type: 'error',
         message: 'Math Wallet Error',
         description: 'Please install mathwallet',
       });

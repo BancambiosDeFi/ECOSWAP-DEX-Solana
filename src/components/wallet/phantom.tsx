@@ -73,8 +73,9 @@ export class PhantomWalletAdapter extends EventEmitter implements WalletAdapter 
     if (!this._provider) {
       window.open('https://phantom.app/', '_blank');
       notify({
-        message: 'Connection Error',
-        description: 'Please install Phantom wallet',
+        type: 'error',
+        message: 'Connect wallet failed!',
+        description: 'Wallet connection error',
       });
 
       return;

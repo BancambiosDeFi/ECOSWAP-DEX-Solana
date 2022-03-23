@@ -6,7 +6,6 @@ export function notify({
   description,
   txid,
   type,
-  placement = 'topRight',
 }: {
   message: string;
   description?: string | JSX.Element;
@@ -15,6 +14,7 @@ export function notify({
   placement?: string;
 }) {
   notification[type]({
+    placement: 'topRight',
     message: message,
     description: <span style={{ color: '#fff' }}>{description}</span>,
     style: {

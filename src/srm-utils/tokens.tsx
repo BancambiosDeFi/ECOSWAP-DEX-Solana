@@ -1,6 +1,8 @@
 import * as BufferLayout from 'buffer-layout';
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+// eslint-disable-next-line import/no-unresolved
 import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
+// eslint-disable-next-line import/no-unresolved
 import { TOKEN_MINTS } from '@serum/serum';
 import tuple from 'immutable-tuple';
 import BN from 'bn.js';
@@ -118,7 +120,6 @@ export function useMintToTickers(): { [mint: string]: string } {
 
   return useMemo(() => {
     return Object.fromEntries(TOKEN_MINTS.map(mint => [mint.address.toBase58(), mint.name]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customMarkets.length]);
 }
 

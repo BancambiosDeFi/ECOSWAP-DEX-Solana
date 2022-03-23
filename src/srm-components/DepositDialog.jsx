@@ -31,6 +31,7 @@ export default function DepositDialog({ onClose, baseOrQuote }) {
   if (!coinMint) {
     return null;
   }
+
   return (
     <Modal title={depositCoin} visible={!!coinMint} onOk={onClose} onCancel={onClose}>
       <div style={{ paddingTop: '20px' }}>

@@ -101,6 +101,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
     '&.Mui-selected': {
       background:
+        // eslint-disable-next-line max-len
         'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, rgba(236, 38, 245, 1), rgba(1, 86, 255, 1)) border-box',
       borderRadius: '8px',
       border: '2px solid transparent',
@@ -147,12 +148,14 @@ const StyledTextField = styled(TextField)({
     },
     '&:hover': {
       background:
+        // eslint-disable-next-line max-len
         'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, rgba(236, 38, 245, 1), rgba(1, 86, 255, 1)) border-box',
       borderRadius: '8px',
       border: '2px solid transparent',
     },
     '&.Mui-focused': {
       background:
+        // eslint-disable-next-line max-len
         'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, rgba(236, 38, 245, 1), rgba(1, 86, 255, 1)) border-box',
       borderRadius: '8px',
       border: '2px solid transparent',

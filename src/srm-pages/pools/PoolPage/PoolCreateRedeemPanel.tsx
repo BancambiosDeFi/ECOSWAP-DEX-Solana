@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import { getPoolBasket, PoolInfo, PoolTransactions } from '@serum/pool';
 import React, { useMemo, useState } from 'react';
 import { Button, Input, Spin, Tabs, Typography } from 'antd';
@@ -100,6 +101,7 @@ function CreateRedeemTab({ poolInfo, mintInfo, tab }: CreateRedeemInnerPanel) {
       console.warn(e);
       notify({
         message: 'Error ' + (tab === 'create' ? 'creating' : 'redeeming') + ' pool tokens',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });

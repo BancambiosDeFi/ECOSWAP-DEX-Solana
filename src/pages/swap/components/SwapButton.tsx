@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { Connection, PublicKey } from '@solana/web3.js';
+// eslint-disable-next-line import/no-unresolved
 import { useOnSwap } from '@serum/swap-ui';
 import { useWallet } from '../../../components/wallet/wallet';
-import { Connection, PublicKey } from '@solana/web3.js';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { getNetwork } from '../../../utils';
 import ButtonComponent from '../../../srm-components/Button/Button';
 import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
@@ -24,7 +25,6 @@ const tokenExistErrorMessage =
   'exchange and replenish your USDT token balance.';
 
 const SwapButton: React.FC<SwapButtonProps> = ({
-  slippageTolerance,
   ecoImpactType,
   ecoImpactValue,
   setOpen,
@@ -33,7 +33,7 @@ const SwapButton: React.FC<SwapButtonProps> = ({
   setIsError,
   setErrorMessage,
 }) => {
-  const { onSwap, canSwap } = useOnSwap();
+  const { canSwap } = useOnSwap();
   const { connected, wallet } = useWallet();
   const [connection, setConnection] = useState<Connection>();
 
@@ -41,8 +41,12 @@ const SwapButton: React.FC<SwapButtonProps> = ({
     Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       new PublicKey(process.env.REACT_APP_USDT_TOKEN_ADDRESS!),
-      wallet?.publicKey!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // @ts-ignore
+      wallet?.publicKey,
     )
       .then(tokenAddress => {
         connection
@@ -50,8 +54,8 @@ const SwapButton: React.FC<SwapButtonProps> = ({
           .then(tokenBalance => {
             if (
               !tokenBalance.value.uiAmount ||
-              tokenBalance.value.uiAmount! <= 0 ||
-              (ecoImpactType === '$' && tokenBalance.value.uiAmount! < Number(ecoImpactValue))
+              tokenBalance.value.uiAmount <= 0 ||
+              (ecoImpactType === '$' && tokenBalance.value.uiAmount < Number(ecoImpactValue))
             ) {
               setIsError(true);
               setErrorMessage(tokenExistErrorMessage);
@@ -59,7 +63,7 @@ const SwapButton: React.FC<SwapButtonProps> = ({
             setIsLoading(true);
             setOpen(true);
           })
-          .catch(e => {
+          .catch(() => {
             setErrorMessage(tokenExistErrorMessage);
             setIsError(true);
             setOpen(true);

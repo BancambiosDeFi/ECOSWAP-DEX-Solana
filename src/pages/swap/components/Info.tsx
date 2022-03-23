@@ -12,6 +12,7 @@ import {
   useRoute,
   useMarketName,
   useBbo,
+  // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
 
 const useStyles = makeStyles(() => ({
@@ -159,6 +160,7 @@ function InfoDetails() {
 function MarketRoute({ market }: { market: PublicKey }) {
   const marketName = useMarketName(market);
   const bbo = useBbo(market);
+
   return (
     <div
       style={{

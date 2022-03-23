@@ -74,8 +74,7 @@ stand-01-develop:
 # ---
 
 # --- commit main
-# build-k8s
-build:
+build-k8s:
   stage: build
   before_script:
     - apk add binutils curl
@@ -92,7 +91,7 @@ build:
     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_REG_URL}
   script:
     - docker build
-        --build-arg APP_ENV_ARG="prod"
+        --build-arg APP_ENV_ARG="main"
       -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
     - docker rmi -f $IMAGE_NAME
@@ -101,8 +100,7 @@ build:
   tags:
     - bc-exchange-gitlab-runner-01
 
-# k8s-prod:
-stand:
+k8s-prod:
   stage: deploy
   image:
     name: dtzar/helm-kubectl:latest
@@ -129,8 +127,7 @@ stand:
   tags:
     - bc-exchange-gitlab-runner-01
 
-# k8s-rollback:
-rollback:
+k8s-rollback:
   stage: deploy
   image:
     name: dtzar/helm-kubectl:latest

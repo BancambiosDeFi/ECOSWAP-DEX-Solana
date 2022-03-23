@@ -393,7 +393,7 @@ export function useOnSwap() {
         ? toWallet.publicKey
         : undefined;
 
-      console.log('before serumTransaction');
+      // console.log('before serumTransaction');
 
       const serumTransaction = await swapClient.swapTxs({
         fromMint,
@@ -415,7 +415,7 @@ export function useOnSwap() {
       });
 
       // console.log('after serumTransaction');
-      //
+
       // console.log('serumTransaction = ', serumTransaction);
 
       return serumTransaction;

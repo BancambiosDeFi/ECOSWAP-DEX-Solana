@@ -21,6 +21,7 @@ export function removeChart(chartId) {
 }
 
 export function saveChart(chartData) {
+  // eslint-disable-next-line prefer-const
   let { content, ...info } = chartData;
   if (!info.id) {
     info.id = 'chart' + Math.floor(Math.random() * 1e8);
@@ -71,6 +72,7 @@ export function removeStudyTemplate({ name }) {
   localStorage.setItem(STUDIES_KEY, JSON.stringify(studies));
   localStorage.removeItem(STUDIES_KEY + '.' + name);
 
+  // @ts-ignore
   return new Promise(resolve => resolve());
 }
 
@@ -82,7 +84,7 @@ export function saveStudyTemplate({ content, ...info }) {
   localStorage.setItem(STUDIES_KEY, JSON.stringify(studies));
   localStorage.setItem(STUDIES_KEY + '.' + info.name, content);
 
-  return new Promise(resolve => resolve());
+  return new Promise<void>(resolve => resolve());
 }
 
 export function getStudyTemplateContent({ name }) {

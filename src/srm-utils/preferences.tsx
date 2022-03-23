@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+// eslint-disable-next-line import/no-unresolved
 import { Market } from '@serum/serum';
 import { useWallet } from '../components/wallet/wallet';
 import { sleep, useLocalStorageState } from './utils';
@@ -42,6 +43,7 @@ export function PreferencesProvider({ children }) {
           markets: [...markets.values()],
         });
       } catch (e) {
+        // @ts-ignore
         console.log('Error auto settling funds: ' + e.message);
 
         return;
@@ -73,6 +75,7 @@ export function PreferencesProvider({ children }) {
           addToMarketsMap(marketInfo.address.toString(), market);
           await sleep(1000);
         } catch (e) {
+          // @ts-ignore
           console.log('Error fetching market: ' + e.message);
         }
       }

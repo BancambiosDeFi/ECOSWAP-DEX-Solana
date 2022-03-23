@@ -5,12 +5,15 @@ import {
   Orderbook,
   TOKEN_MINTS,
   TokenInstructions,
+  // eslint-disable-next-line import/no-unresolved
 } from '@serum/serum';
 import { PublicKey } from '@solana/web3.js';
 import React, { useContext, useEffect, useState } from 'react';
 import tuple from 'immutable-tuple';
 import BN from 'bn.js';
+// eslint-disable-next-line import/no-unresolved
 import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
+// eslint-disable-next-line import/no-unresolved
 import { Order } from '@serum/serum/lib/market';
 import { useWallet } from '../components/wallet/wallet';
 import {
@@ -77,6 +80,7 @@ export function useAllMarkets() {
         } catch (e) {
           notify({
             message: 'Error loading all market',
+            // @ts-ignore
             description: e.message,
             type: 'error',
           });
@@ -134,6 +138,7 @@ export function useUnmigratedOpenOrdersAccounts() {
             ),
         );
       } catch (e) {
+        // @ts-ignore
         console.log('Error loading deprecated markets', programId?.toBase58(), e.message);
       }
     }
@@ -226,7 +231,6 @@ export function MarketProvider({ marketAddress, setMarketAddress, children }) {
         setMarketAddress(DEFAULT_MARKET.address.toBase58());
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [market, setMarket] = useState<Market | null>();
@@ -254,6 +258,7 @@ export function MarketProvider({ marketAddress, setMarketAddress, children }) {
       .catch(e =>
         notify({
           message: 'Error loading market',
+          // @ts-ignore
           description: e.message,
           type: 'error',
         }),
@@ -905,6 +910,7 @@ export function useUnmigratedDeprecatedMarkets() {
         console.log('Failed loading market', marketInfo.name, e);
         notify({
           message: 'Error loading market',
+          // @ts-ignore
           description: e.message,
           type: 'error',
         });
@@ -976,6 +982,7 @@ export function useGetOpenOrdersForDeprecatedMarkets(): {
         console.log('Failed loading open orders', market.address.toBase58(), e);
         notify({
           message: `Error loading open orders for deprecated ${marketName}`,
+          // @ts-ignore
           description: e.message,
           type: 'error',
         });

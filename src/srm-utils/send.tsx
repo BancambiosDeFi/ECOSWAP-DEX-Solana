@@ -21,7 +21,9 @@ import {
   parseInstructionErrorResponse,
   TOKEN_MINTS,
   TokenInstructions,
+  // eslint-disable-next-line import/no-unresolved
 } from '@serum/serum';
+// eslint-disable-next-line import/no-unresolved
 import { Order } from '@serum/serum/lib/market';
 import { struct } from 'superstruct';
 import { WalletAdapter } from '../components/wallet/types';
@@ -31,6 +33,7 @@ import { getDecimalCount, sleep } from './utils';
 import { notify } from './notifications';
 
 export async function createTokenAccountTransaction({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   connection,
   wallet,
   mintPublicKey,
@@ -735,6 +738,7 @@ export async function sendSignedTransaction({
   try {
     await awaitTransactionSignatureConfirmation(txid, timeout, connection);
   } catch (err) {
+    // @ts-ignore
     if (err.timeout) {
       throw new Error('Timed out awaiting confirmation on transaction');
     }

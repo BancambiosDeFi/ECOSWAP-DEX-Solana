@@ -32,6 +32,7 @@ const LogoWrapper = styled.div`
     margin-right: 8px;
   }
 `;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useStyles = makeStyles(theme => ({
   headerItem: {
     'fontFamily': 'Saira',
@@ -60,10 +61,14 @@ const EXTERNAL_LINKS = {
 };
 
 export default function TopBar() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { connected, wallet } = useWallet();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { endpoint, endpointInfo, setEndpoint, availableEndpoints, setCustomEndpoints } =
     useConnectionConfig();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [addEndpointVisible, setAddEndpointVisible] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [testingConnection, setTestingConnection] = useState(false);
   const location = useLocation();
   const history = useHistory();
@@ -78,6 +83,7 @@ export default function TopBar() {
     [history],
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onAddCustomEndpoint = (info: EndpointInfo) => {
     const existingEndpoint = availableEndpoints.some(e => e.endpoint === info.endpoint);
     if (existingEndpoint) {
@@ -175,6 +181,9 @@ export default function TopBar() {
             </Menu.Item>
             <Menu.Item key="/swap" className={classes.headerItem}>
               Stableswap
+            </Menu.Item>
+            <Menu.Item key="/staking" className={classes.headerItem}>
+              Staking
             </Menu.Item>
             <Menu.Item key={tradePageUrl} className={classes.headerItem}>
               Alphatrade

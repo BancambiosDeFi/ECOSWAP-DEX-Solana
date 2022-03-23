@@ -24,6 +24,7 @@ interface AnchorWallet {
 // as notifications in the parent app.
 export class NotifyingProvider extends Provider {
   // Function to call whenever the provider sends a transaction;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onTransaction: (tx: TransactionSignature | undefined, err?: Error) => void;
 
   constructor(
@@ -45,11 +46,13 @@ export class NotifyingProvider extends Provider {
     try {
       const txSig = await super.send(tx, signers, opts);
       this.onTransaction(txSig);
+
       return txSig;
     } catch (err) {
       if (err instanceof Error || err === undefined) {
         this.onTransaction(undefined, err);
       }
+
       return '';
     }
   }
@@ -63,11 +66,13 @@ export class NotifyingProvider extends Provider {
       txSigs.forEach(sig => {
         this.onTransaction(sig);
       });
+
       return txSigs;
     } catch (err) {
       if (err instanceof Error || err === undefined) {
         this.onTransaction(undefined, err);
       }
+
       return [];
     }
   }

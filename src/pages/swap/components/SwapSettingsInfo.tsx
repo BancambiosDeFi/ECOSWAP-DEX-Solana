@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, IconButton, Typography } from '@mui/material';
@@ -14,6 +15,7 @@ interface SwapSettingsProps {
   infoIconStyle: string;
 }
 
+// @ts-ignore
 const useStyles = makeStyles(theme => ({
   swapInfoWrapper: {
     width: '100%',

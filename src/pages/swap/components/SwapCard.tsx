@@ -5,18 +5,20 @@ import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material
 import { makeStyles } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
+import { useWallet } from '../../../components/wallet/wallet';
+import SwapConfirmationModal from '../../../components/SwapConfirmationModal';
 import { TokenIcon } from './TokenIcon';
+// eslint-disable-next-line import/order
 import {
   useSwapContext,
   useTokenMap,
   useMint,
   useOwnedTokenAccount,
   useSwappableTokens,
+  // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
 import TokenDialog from './TokenDialog';
 import SwapSettingsContainer from './SwapSettingsContainer';
-import { useWallet } from '../../../components/wallet/wallet';
-import SwapConfirmationModal from '../../../components/SwapConfirmationModal';
 import SwapButton from './SwapButton';
 
 const useStyles = makeStyles(theme => ({
@@ -192,7 +194,8 @@ export default function SwapCard({
       <SwapConfirmationModal
         {...{ open, isError, errorMessage, isLoading, handleClose, startSwapTransaction }}
         transactionLink={
-          '38qrvPdFxoehysCiD6xZF1cviV3sRaDJRhcdBtv6KBfs4CoHhDGrQEEXzyyhmxs6Ayz2STr3KXZ9JvQVMXACP892?cluster=testnet'
+          '38qrvPdFxoehysCiD6xZF1cviV3sRaDJRhcdBtv6KBfs4CoHhDGrQEEXzyyhmxs6Ayz2STr3KXZ9JvQ' +
+          'VMXACP892?cluster=testnet'
         }
       />
       <Card className={styles.card} style={containerStyle}>
@@ -236,6 +239,7 @@ export function SwitchButton() {
 
 function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { fromMint, setFromMint, fromAmount, setFromAmount } = useSwapContext();
+  // eslint-disable-next-line padding-line-between-statements
   return (
     <SwapTokenForm
       from
@@ -251,6 +255,7 @@ function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[
 
 function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { toMint, setToMint, toAmount, setToAmount } = useSwapContext();
+  // eslint-disable-next-line padding-line-between-statements
   return (
     <SwapTokenForm
       from={false}
@@ -305,7 +310,6 @@ export function SwapTokenForm({
       <div className={styles.swapTokenSelectorContainer}>
         <TokenButton mint={mint} onClick={() => setShowTokenDialog(true)} />
         <Typography color="textSecondary" className={styles.balanceContainer}>
-          {/* {tokenAccount && mintAccount ? `Balance: ${balance?.toFixed(mintAccount.decimals)}` : `-`} */}
           {from && !!balance ? (
             <span className={styles.maxButton} onClick={() => setAmount(balance)}>
               MAX

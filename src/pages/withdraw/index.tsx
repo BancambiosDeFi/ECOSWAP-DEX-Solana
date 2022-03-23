@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import BasicLayout from '../../srm-components/BasicLayout';
 import { Box, Card, CircularProgress, Grid, Typography } from '@mui/material';
-import { useWallet } from '../../components/wallet/wallet';
-import WalletConnectSwap from '../../components/wallet/WalletConnectSwap';
-import ButtonComponent from '../../srm-components/Button/Button';
 import { ImpactPool } from 'impact-pool-api';
 import { ImpactPoolStatistics } from 'impact-pool-api/dist/query';
 import { Connection } from '@solana/web3.js';
-import { converterBNtoString, getImpactPool, getNetwork } from '../../utils';
 import { WithdrawFromPool } from 'impact-pool-api/dist/schema';
+import BasicLayout from '../../srm-components/BasicLayout';
+import { useWallet } from '../../components/wallet/wallet';
+import WalletConnectSwap from '../../components/wallet/WalletConnectSwap';
+import ButtonComponent from '../../srm-components/Button/Button';
+import { converterBNtoString, getImpactPool, getNetwork } from '../../utils';
 import ClaimWithdrawModal from '../../components/ClaimWithdrawModal';
 import H3Text from '../../components/typography/H3Text';
 
@@ -87,7 +87,10 @@ export default function WithdrawPage() {
       impactPool
         .WithdrawFromPool(
           wallet.publicKey,
-          new WithdrawFromPool(impactPoolData?.tokensInTokenPool!),
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+          // @ts-ignore
+          new WithdrawFromPool(impactPoolData?.tokensInTokenPool),
         )
         .then(transaction => {
           connection
@@ -227,7 +230,10 @@ export default function WithdrawPage() {
     <>
       <ClaimWithdrawModal
         {...{ open, isError, errorMessage, isLoading, handleClose }}
-        wallet={wallet?.publicKey.toString()!}
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // @ts-ignore
+        wallet={wallet?.publicKey.toString()}
       />
       <BasicLayout>
         <Grid

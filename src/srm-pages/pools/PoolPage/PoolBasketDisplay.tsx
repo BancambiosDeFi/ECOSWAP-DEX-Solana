@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import { Basket, PoolInfo } from '@serum/pool';
 import React from 'react';
 import BN from 'bn.js';

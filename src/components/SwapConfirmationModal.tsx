@@ -1,11 +1,11 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
-import ModalWrapper from './ModalWrapper';
+import { styled } from '@mui/material/styles';
 import FmdBadIcon from '@mui/icons-material/FmdBad';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import ButtonComponent from '../srm-components/Button/Button';
 import SubtitleText from './typography/SubtitleText';
 import SmallText from './typography/SmallText';
-import { styled } from '@mui/material/styles';
+import ModalWrapper from './ModalWrapper';
 
 interface CreateInvestorAccountModalProps {
   handleClose: () => void;

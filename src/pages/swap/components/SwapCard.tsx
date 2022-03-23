@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material';
@@ -11,14 +11,13 @@ import {
   useTokenMap,
   useMint,
   useOwnedTokenAccount,
-  useOnSwap,
   useSwappableTokens,
 } from '@serum/swap-ui';
-import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
-import ButtonComponent from '../../../srm-components/Button/Button';
 import TokenDialog from './TokenDialog';
 import SwapSettingsContainer from './SwapSettingsContainer';
 import { useWallet } from '../../../components/wallet/wallet';
+import SwapConfirmationModal from '../../../components/SwapConfirmationModal';
+import SwapButton from './SwapButton';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -152,24 +151,75 @@ export default function SwapCard({
   const { swappableTokens: tokenList } = useSwappableTokens();
   const { fromAmount, toAmount } = useSwapContext();
   const { connected } = useWallet();
+  const [ecoImpactType, setEcoImpactType] = useState<string>('$');
+  const [ecoImpactValue, setEcoImpactValue] = useState<string>('0.5');
+  const [slippageTolerance, setSlippageTolerance] = useState<string>('0.1');
+  const [open, setOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const handleClose = () => {
+    if (!isLoading || isError) {
+      setOpen(false);
+      setIsError(false);
+      setIsLoading(false);
+    }
+  };
+
+  const startSwapTransaction = () => {
+    setIsLoading(true);
+    setIsError(false);
+    setErrorMessage('');
+  };
 
   const swapSettingsContainer =
-    connected && fromAmount && toAmount ? <SwapSettingsContainer /> : null;
+    connected && fromAmount && toAmount ? (
+      <SwapSettingsContainer
+        {...{
+          slippageTolerance,
+          setSlippageTolerance,
+          ecoImpactType,
+          setEcoImpactType,
+          ecoImpactValue,
+          setEcoImpactValue,
+        }}
+      />
+    ) : null;
 
   return (
-    <Card className={styles.card} style={containerStyle}>
-      <div style={contentStyle}>
-        <Typography className={styles.title}>From</Typography>
-        <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
-        <div className={styles.switchBlock}>
-          <Typography className={styles.switchTitle}>To (Estimate)</Typography>
-          <SwitchButton />
+    <>
+      <SwapConfirmationModal
+        {...{ open, isError, errorMessage, isLoading, handleClose, startSwapTransaction }}
+        transactionLink={
+          '38qrvPdFxoehysCiD6xZF1cviV3sRaDJRhcdBtv6KBfs4CoHhDGrQEEXzyyhmxs6Ayz2STr3KXZ9JvQVMXACP892?cluster=testnet'
+        }
+      />
+      <Card className={styles.card} style={containerStyle}>
+        <div style={contentStyle}>
+          <Typography className={styles.title}>From</Typography>
+          <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
+          <div className={styles.switchBlock}>
+            <Typography className={styles.switchTitle}>To (Estimate)</Typography>
+            <SwitchButton />
+          </div>
+          <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
+          {swapSettingsContainer}
+          <SwapButton
+            {...{
+              slippageTolerance,
+              ecoImpactType,
+              ecoImpactValue,
+              setOpen,
+              isLoading,
+              setIsLoading,
+              setIsError,
+              setErrorMessage,
+            }}
+          />
         </div>
-        <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
-        {swapSettingsContainer}
-        <SwapButton />
-      </div>
-    </Card>
+      </Card>
+    </>
   );
 }
 
@@ -283,31 +333,6 @@ export function SwapTokenForm({
       />
     </div>
   );
-}
-
-function SwapButton() {
-  const { onSwap, canSwap } = useOnSwap();
-  const { connected } = useWallet();
-
-  // useEffect(() => {
-  // console.log('Swap button component...');
-  // console.log('canSwap =', canSwap);
-  // console.log('onSwap =', onSwap);
-  // }, [canSwap]);
-
-  if (connected) {
-    return (
-      <ButtonComponent
-        type={'swap'}
-        title={'Swap'}
-        onClick={onSwap}
-        disable={!canSwap}
-        isIconVisible={false}
-      />
-    );
-  } else {
-    return <WalletConnectSwap />;
-  }
 }
 
 function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }) {

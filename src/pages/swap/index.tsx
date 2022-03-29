@@ -12,6 +12,7 @@ import BasicLayout from '../../srm-components/BasicLayout';
 import { NotifyingProvider } from './NotifyingProvider';
 import SwapContainer from './components/SwapContainer';
 import SearchForPairingsComponent from './components/SearchForPairings';
+import DobleButton from './components/DobleButton';
 
 // App illustrating the use of the Swap component.
 //
@@ -103,6 +104,7 @@ export default function SwapPage() {
         {tokenList && (
           <SwapProvider provider={provider} tokenList={tokenList as any}>
             <>
+              <DobleButton />
               <SearchForPairingsComponent type={'none'} width={'600'} />
               <SwapContainer location={'swap'} />
             </>

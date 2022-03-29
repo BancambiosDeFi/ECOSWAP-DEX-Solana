@@ -38,11 +38,14 @@ const useStyles = makeStyles(() => ({
   },
   dialogWrapper: {
     '&&': {
-      backgroundColor: '#35363A',
-      borderRadius: '20px',
+      backgroundColor: '#040506',
+      position: 'absolute',
+      top: '100px',
       width: '390px',
-      height: '660px',
+      maxHeight: '660px',
       padding: '40px',
+      border: '1px solid #0156FF',
+      borderRadius: '8px',
     },
   },
   dialogContent: {

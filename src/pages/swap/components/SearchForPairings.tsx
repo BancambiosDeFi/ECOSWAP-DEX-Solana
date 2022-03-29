@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   paperStyle: ({ isInputFocus }: any) => ({
     background:
       // eslint-disable-next-line max-len
-      'linear-gradient(#35363A, #35363A) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #EC26F5 102.3%) border-box !important',
+      'linear-gradient(#202124, #202124) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #EC26F5 102.3%) border-box !important',
     border: isInputFocus ? '3px solid transparent' : 'none',
   }),
   inputBase: {
@@ -55,8 +55,9 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     left: '-317px',
     color: 'white',
-    borderRadius: '40px !important',
-    background: '#35363A !important',
+    border: '1px solid #0156FF',
+    borderRadius: '8px',
+    background: '#0A0C0E !important',
     marginTop: '5px',
     padding: '30px',
     width: '600px',
@@ -193,8 +194,8 @@ export default function SearchForPairingsComponent({ type, width }) {
         alignItems: 'center !important',
         width: widthComponent,
         height: 60,
-        borderRadius: '20px',
-        background: '#35363A',
+        borderRadius: '8px',
+        background: '#202124',
         margin: marginComponent,
       }}
     >

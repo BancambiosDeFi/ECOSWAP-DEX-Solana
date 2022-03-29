@@ -174,7 +174,6 @@ export default function App() {
               <div className={styles.tableBoxOne}>
                 <ChartComponent></ChartComponent>
               </div>
-
               <div className={styles.tableBoxTwo}>
                 <SearchForPairingsComponent type={'none'} width={'auto'} />
                 <SwapContainer location={'trade'} />

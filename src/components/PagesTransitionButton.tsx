@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '20px 0 0 20px',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     boxSizing: 'border-box',
-    backgroundColor: '#35363A !important',
+    backgroundColor: '#202124 !important',
     marginRight: '4px',
   },
 }));

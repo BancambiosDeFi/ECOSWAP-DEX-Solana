@@ -147,11 +147,12 @@ export function WalletProvider({ children }) {
       >
         <div
           style={{
-            background: '#5b5f67',
+            background: '#0A0C0E',
             width: 'auto',
             height: 'auto',
             margin: '0px auto',
-            borderRadius: '7px',
+            border: '1px solid #0156FF',
+            borderRadius: '8px',
             padding: '16px',
           }}
         >

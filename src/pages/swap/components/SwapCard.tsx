@@ -24,9 +24,10 @@ import SwapSettingsContainer from './SwapSettingsContainer';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    borderRadius: '0 20px 20px 0 !important',
+    borderRadius: '8px !important',
+    border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    backgroundColor: '#35363A !important',
+    backgroundColor: '#0A0C0E !important',
     width: '435px',
     height: '100%',
     padding: '26px 16px',
@@ -102,11 +103,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: '20px !important',
   },
   swapTokenFormContainer: {
-    borderRadius: theme.spacing(2),
+    borderRadius: '8px',
     display: 'flex',
     justifyContent: 'space-between',
     padding: theme.spacing(1),
-    backgroundColor: '#202023 !important',
+    backgroundColor: '#202124 !important',
     color: 'white',
     textTransform: 'uppercase',
   },

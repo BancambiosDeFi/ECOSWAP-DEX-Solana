@@ -211,7 +211,7 @@ const StyledTextField = styled(TextField)({
     marginLeft: '9px',
     marginRight: '5px',
     background:
-      'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, rgba(0, 255, 102, 1), rgba(1, 86, 255, 1)) border-box',
+      'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, #EC26F5, #0156FF ) border-box',
     borderRadius: '8px',
     border: '2px solid transparent',
   },

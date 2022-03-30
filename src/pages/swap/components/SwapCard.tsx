@@ -43,6 +43,16 @@ const useStyles = makeStyles(theme => ({
     color: '#FFFFFF',
     marginBottom: '0px',
   },
+  expires: {
+    fontFamily: 'Saira !important',
+    fontSize: '24px !important',
+    fontWeight: '100 !important',
+    color: '#FFFFFF',
+  },
+  flexTypography: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   switchBlock: {
     position: 'relative',
     display: 'flex',
@@ -162,7 +172,10 @@ export default function SwapCard({
   return (
     <Card className={styles.card} style={containerStyle}>
       <div style={contentStyle}>
-        <Typography className={styles.title}>From</Typography>
+        <div className={styles.flexTypography}>
+          <Typography className={styles.title}>From</Typography>
+          <Typography className={styles.expires}>Expires in **</Typography>
+        </div>
         <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
         <div className={styles.switchBlock}>
           <Typography className={styles.switchTitle}>To (Estimate)</Typography>

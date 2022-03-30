@@ -24,7 +24,7 @@ import SwapSettingsContainer from './SwapSettingsContainer';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    borderRadius: '8px !important',
+    borderRadius: '0 20px 20px 0 !important',
     border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#0A0C0E !important',
@@ -333,7 +333,7 @@ function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }
 
   return (
     <div onClick={onClick} className={styles.tokenButton}>
-      <TokenIcon mint={mint} style={{ width: theme.spacing(4) }} />
+      <TokenIcon mint={mint} />
       <TokenName mint={mint} style={{ fontSize: 20, fontWeight: 700, paddingTop: 4 }} />
       <ExpandMore />
     </div>

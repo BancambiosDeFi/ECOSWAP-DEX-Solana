@@ -14,6 +14,7 @@ import {
   useBbo,
   // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
+import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
 
 const useStyles = makeStyles(() => ({
   infoLabel: {

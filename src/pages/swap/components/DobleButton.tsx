@@ -7,13 +7,13 @@ const TabsStyled = styled.div`
   margin-bottom: 20px;
 `;
 const ButtonTabs = styled.button`
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   cursor: pointer;
   border: none;
   background: ${({ background }) => background};
-  width: 136px;
-  height: 56px;
+  width: 123px;
+  height: 52px;
   border-radius: 12px;
 `;
 
@@ -34,7 +34,7 @@ export default function DoubleButton() {
             onClick={() => setActiveTab(tab.toLocaleLowerCase())}
             background={
               activeTab === tab.toLocaleLowerCase()
-                ? 'linear-gradient(#ec26f5 100%, #9f5ae5 100%)'
+                ? 'linear-gradient(267.38deg, #EC26F5 6.33%, #9F5AE5 108.12%);'
                 : '#202124'
             }
           >

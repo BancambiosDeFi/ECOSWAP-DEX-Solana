@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
-import { Box, List, Popper, TextField, Typography } from '@mui/material';
+import { autocompleteClasses, Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 
 // eslint-disable-next-line import/no-unresolved
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '8px',
     background: '#0A0C0E !important',
     marginTop: '5px',
-    padding: '30px',
+    padding: '15px',
     width: '600px',
     justifyContent: 'center !important',
   },
@@ -249,11 +249,10 @@ function ListItem({ props, option }) {
   return (
     <List
       style={{
-        maxWidth: '500px',
+        width: '100%',
         height: '75px',
-        display: errorDownloading ? 'none' : 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        display: errorDownloading ? 'none' : 'grid',
+        gridTemplateColumns: '2fr 1fr 1fr',
       }}
       component="li"
       onClickCapture={() => {
@@ -268,7 +267,8 @@ function ListItem({ props, option }) {
       <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
         <img
           loading="lazy"
-          width="51"
+          width="45px"
+          height="45px"
           src={option.fromImg}
           alt=""
           onError={() => setErrorDownloading(true)}
@@ -277,7 +277,7 @@ function ListItem({ props, option }) {
           style={{
             paddingLeft: '9px',
             fontFamily: '"Saira", sans-serif',
-            fontSize: '24px',
+            fontSize: '20px',
             fontWeight: 700,
             color: 'white',
           }}
@@ -286,10 +286,10 @@ function ListItem({ props, option }) {
         </Typography>
       </Box>
       <ArrowRightIcon />
-      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'end' }}>
         <img
           loading="lazy"
-          width="51"
+          width="45px"
           src={option.toImg}
           alt=""
           onError={() => setErrorDownloading(true)}
@@ -298,7 +298,7 @@ function ListItem({ props, option }) {
           style={{
             paddingLeft: '9px',
             fontFamily: '"Saira", sans-serif',
-            fontSize: '24px',
+            fontSize: '20px',
             fontWeight: 700,
             color: 'white',
           }}

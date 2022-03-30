@@ -22,7 +22,8 @@ const ConnectSwapButton = styled(Button)(({ theme }) => ({
   'background': 'rgba(1, 86, 255, 0.3)',
   'borderRadius': '8px',
   'border': '3px solid',
-  'borderColor': '#F337F8 #0156FF',
+  'borderColor': '#F337F8',
+  // #0156FF
   'textTransform': 'none',
   'fontFamily': '"Spy Agency", sans-serif',
   'fontSize': '20px',

@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
       top: '100px',
       width: '390px',
       maxHeight: '660px',
-      padding: '40px',
+      padding: '20px',
       border: '1px solid #0156FF',
       borderRadius: '8px',
     },
@@ -53,19 +53,17 @@ const useStyles = makeStyles(() => ({
   },
   dialogList: {
     '&&': {
+      padding: '0',
       display: 'flex',
-      flexWrap: 'wrap',
+      flexDirection: 'column',
       width: '100%',
       boxSizing: 'border-box',
-      padding: '0',
-      marginTop: '-10px',
     },
   },
   dialogListItem: {
     '&&': {
       'display': 'flex',
-      'width': '48%',
-      'padding': '10px 2% 10px 0',
+      'width': '100%',
       'color': '#fff',
 
       '&:hover': {
@@ -102,21 +100,24 @@ const useStyles = makeStyles(() => ({
       },
     },
   },
+  dialogInputBlogTitle: {
+    fontSize: '20px',
+    fontFamily: '"Saira", sans-serif',
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
   dialogTitleInput: {
     '&&': {
-      'position': 'relative',
       'height': '100%',
       'color': '#bdc1c6',
-      'fontWeight': 600,
       'boxSizing': 'border-box',
       'padding': '16px 14px 16px 55px',
       'background': '#1e2022',
-      'borderRadius': '16px',
+      'borderRadius': '8px',
 
       '&::placeholder': {
         fontFamily: '"Saira", sans-serif',
         fontSize: '18px',
-        fontWeight: 700,
         opacity: 1,
         paddingLeft: '15px',
       },
@@ -152,9 +153,10 @@ const useStyles = makeStyles(() => ({
   },
   commonBaseTitle: {
     '&&': {
-      color: '#fff',
-      fontSize: '14px',
-      fontWeight: 800,
+      fontFamily: '"Saira", sans-serif',
+      color: '#AEAEAF',
+      fontSize: '18px',
+      fontWeight: '800',
       marginBottom: '10px',
     },
   },
@@ -162,9 +164,9 @@ const useStyles = makeStyles(() => ({
     '&&': {
       display: 'flex',
       alignItems: 'center',
-      borderRadius: '20px',
+      borderRadius: '8px',
       background: '#707070',
-      padding: '7px 12px',
+      padding: '8px 20px',
       cursor: 'pointer',
     },
   },
@@ -228,20 +230,23 @@ export default function TokenDialog({
         className: styles.dialogWrapper,
       }}
     >
-      <DialogTitle className={styles.dialogTitle}>
-        <TextField
-          className={styles.dialogTitleTextField}
-          placeholder={'Search name'}
-          value={tokenFilter}
-          fullWidth
-          inputProps={{
-            className: styles.dialogTitleInput,
-          }}
-          variant="outlined"
-          onChange={e => setTokenFilter(e.target.value)}
-        />
-        <SearchIcon className={styles.dialogTitleSearchIcon} />
-      </DialogTitle>
+      <div>
+        <h3 className={styles.dialogInputBlogTitle}>Select a Coin</h3>
+        <DialogTitle className={styles.dialogTitle}>
+          <TextField
+            className={styles.dialogTitleTextField}
+            placeholder={'Search name'}
+            value={tokenFilter}
+            fullWidth
+            inputProps={{
+              className: styles.dialogTitleInput,
+            }}
+            variant="outlined"
+            onChange={e => setTokenFilter(e.target.value)}
+          />
+          <SearchIcon className={styles.dialogTitleSearchIcon} />
+        </DialogTitle>
+      </div>
       <DialogActions className={styles.dialogActions}>
         <CommonBases
           commonBaseTokens={commonBaseTokens}
@@ -274,7 +279,7 @@ function CommonBases({ commonBaseTokens, onClick }) {
 
   return (
     <div className={styles.commonBaseWrap}>
-      <span className={styles.commonBaseTitle}>Common bases</span>
+      <span className={styles.commonBaseTitle}>Popular Coin</span>
       <div className={styles.commonBaseList}>
         {commonBaseTokens.map(tokenInfo => {
           const mint = new PublicKey(tokenInfo.address);
@@ -357,13 +362,7 @@ export function TokenIcon({
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-      }}
-    >
+    <div>
       <img
         alt="Logo"
         src={tokenInfo?.logoURI}

@@ -1,7 +1,5 @@
-import React from 'react';
 import { Typography, Link, Popover, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Info } from '@mui/icons-material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import { PublicKey } from '@solana/web3.js';
 import {
@@ -28,8 +26,12 @@ const useStyles = makeStyles(() => ({
     fontSize: '14px',
   },
   infoLabelIcon: {
-    color: 'white',
-    position: 'relative',
+    width: '21px',
+    height: '21px',
+    background: '#202124',
+    transform: 'rotate(90deg)',
+    borderRadius: '50%',
+    padding: '3px',
   },
 }));
 
@@ -79,7 +81,7 @@ function InfoButton() {
         popupState => (
           <div style={{ display: 'flex' }}>
             <IconButton {...bindTrigger(popupState)} className={styles.infoButton}>
-              <Info fontSize="small" className={styles.infoLabelIcon} />
+              <SwitchIcon className={styles.infoLabelIcon} />
             </IconButton>
             <Popover
               {...bindPopover(popupState)}

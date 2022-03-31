@@ -13,6 +13,7 @@ import BasicLayout from '../../srm-components/BasicLayout';
 import { NotifyingProvider } from '../swap/NotifyingProvider';
 import SwapContainer from '../swap/components/SwapContainer';
 import SearchForPairingsComponent from '../swap/components/SearchForPairings';
+import SwapTabs from '../swap/components/SwapTabs';
 import { priceData } from './priceData';
 import { volumeData } from './volumeData';
 
@@ -104,21 +105,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     verticalAlign: 'top',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   tableBoxOne: {
-    display: 'inline-block',
-    width: '54%',
-    paddingRight: '10px',
-    height: '300px',
+    width: '100%',
+    height: '264px',
     // backgroundColor: 'white',
-    position: 'relative',
-    top: '-20px',
   },
   tableBoxTwo: {
-    display: 'inline-block',
-    width: '50%',
-    // backgroundColor: 'red',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  swapTabs: {
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));
 
@@ -175,7 +176,10 @@ export default function App() {
                 <ChartComponent></ChartComponent>
               </div>
               <div className={styles.tableBoxTwo}>
-                <SearchForPairingsComponent type={'none'} width={'auto'} />
+                <div className={styles.swapTabs}>
+                  <SwapTabs />
+                </div>
+                <SearchForPairingsComponent type={'none'} width={'100%'} />
                 <SwapContainer location={'trade'} />
               </div>
             </div>

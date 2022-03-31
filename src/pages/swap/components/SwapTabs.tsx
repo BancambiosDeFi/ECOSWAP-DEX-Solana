@@ -15,9 +15,12 @@ const ButtonTabs = styled.button`
   width: 123px;
   height: 52px;
   border-radius: 12px;
+  &:hover {
+    border: 1px solid #0156ff;
+  }
 `;
 
-export default function DoubleButton() {
+export default function SwapTabs() {
   const [activeTab, setActiveTab] = useState('swap');
   const TabsButtons = ['Swap', 'Liquidity'];
   const tabContent = {

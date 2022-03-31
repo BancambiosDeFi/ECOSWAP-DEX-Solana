@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
       left: '-50px',
       width: 10,
       borderRadius: '8px',
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.3)',
+      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.3) !important',
     },
     '&::-webkit-scrollbar-track': {
       backgroundColor: '#707070',
@@ -252,7 +252,7 @@ function ListItem({ props, option }) {
         width: '100%',
         height: '75px',
         display: errorDownloading ? 'none' : 'grid',
-        gridTemplateColumns: '2fr 1fr 1fr',
+        gridTemplateColumns: '1.5fr 1fr 1fr',
       }}
       component="li"
       onClickCapture={() => {
@@ -277,7 +277,7 @@ function ListItem({ props, option }) {
           style={{
             paddingLeft: '9px',
             fontFamily: '"Saira", sans-serif',
-            fontSize: '20px',
+            fontSize: '24px',
             fontWeight: 700,
             color: 'white',
           }}
@@ -298,7 +298,7 @@ function ListItem({ props, option }) {
           style={{
             paddingLeft: '9px',
             fontFamily: '"Saira", sans-serif',
-            fontSize: '20px',
+            fontSize: '24px',
             fontWeight: 700,
             color: 'white',
           }}

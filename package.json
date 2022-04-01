@@ -6,7 +6,7 @@
   "dependencies": {
     "@ant-design/icons": "4.7.0",
     "@ant-design/plots": "1.0.8",
-    "@craco/craco": "6.4.3",
+    "@craco/craco": "5.9.0",
     "@emotion/react": "11.7.1",
     "@emotion/styled": "11.6.0",
     "@ledgerhq/hw-transport-webusb": "5.41.0",

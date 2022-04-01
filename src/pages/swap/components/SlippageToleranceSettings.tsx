@@ -35,9 +35,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: '#202124',
+    backgroundColor: 'rgba(65, 63, 63, 1)',
     borderRadius: '20px',
-    padding: '10px',
+    padding: '16px 17px 27px 17px',
     marginBottom: '10px',
   },
   closeButton: {
@@ -57,6 +57,7 @@ const useStyles = makeStyles(theme => ({
     fontStyle: 'normal',
     fontWeight: '800 !important',
     fontSize: '16px !important',
+    lineHeight: '40px !important',
     textAlign: 'left',
     color: '#FFFFFF',
   },
@@ -231,19 +232,16 @@ const SlippageToleranceSettings: React.FC<SlippageToleranceProps> = ({
         <CloseIcon fontSize="small" />
       </IconButton>
       <Box className={styles.rowBlock}>
-        <div>
-          <h3 className={styles.titleText}>Exchange Settings</h3>
-          <span className={styles.bodyText}>Slippage Tolerance</span>
-          <IconButton
-            className={infoIconStyle}
-            size="small"
-            aria-describedby={popoverId}
-            onClick={handleInfoButtonClick}
-            id="slippage-tolerance"
-          >
-            <InfoIcon />
-          </IconButton>
-        </div>
+        <Typography className={styles.titleText}>Slippage Tolerance</Typography>
+        <IconButton
+          className={infoIconStyle}
+          size="small"
+          aria-describedby={popoverId}
+          onClick={handleInfoButtonClick}
+          id="slippage-tolerance"
+        >
+          <InfoIcon />
+        </IconButton>
       </Box>
       <Box className={styles.rowBlock}>
         <StyledToggleButtonGroup

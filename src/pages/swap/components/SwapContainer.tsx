@@ -35,11 +35,11 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
     <>
       {connected ? (
         <>
+          <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
           <Box className={styles.root}>
             <PagesTransitionButton location={location} />
             <SwapCard />
           </Box>
-          <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
           <ChartContainer mint={toMint} swapType={SwapType.to} location={location} />
         </>
       ) : (

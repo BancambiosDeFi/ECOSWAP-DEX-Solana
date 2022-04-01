@@ -98,7 +98,7 @@ export async function settleFunds({
     (!baseCurrencyAccount && !quoteCurrencyAccount)
   ) {
     if (sendNotification) {
-      notify({ message: 'Not connected', type: 'error' });
+      notify({ message: 'Not connected' });
     }
 
     return;
@@ -715,7 +715,7 @@ export async function sendSignedTransaction({
   const rawTransaction = signedTransaction.serialize();
   const startTime = getUnixTs();
   if (sendNotification) {
-    notify({ message: sendingMessage, type: 'success' });
+    notify({ message: sendingMessage });
   }
   const txid: TransactionSignature = await connection.sendRawTransaction(rawTransaction, {
     skipPreflight: true,

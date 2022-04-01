@@ -24,15 +24,15 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'left',
     alignItems: 'center',
+    width: '100%',
     height: '85px',
     maxWidth: '468px', // '435px',
     borderRadius: '20px',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     boxSizing: 'border-box',
-    backgroundColor: '#0A0C0E!important',
-    border: '1px solid #0156FF',
+    backgroundColor: '#35363A !important',
     padding: '10px 16px',
-    margin: '5px',
+    marginTop: swapType === SwapType.from ? '40px' : 0,
   }),
   tokenWrapper: {
     width: '100%',
@@ -191,7 +191,7 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location 
     <div style={{ marginLeft: marginComponent, position: 'relative', left: marginLeft }}>
       <Box className={styles.wrapper}>
         <Box className={styles.tokenWrapper}>
-          <TokenIcon mint={mint} style={{ width: '45px' }} />
+          <TokenIcon mint={mint} style={{ width: '32px' }} />
           <Box className={styles.tokenInfoWrapper}>
             <Box className={styles.tokenNameAndDiffWrapper}>
               <TokenName

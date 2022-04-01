@@ -1,5 +1,7 @@
+import React from 'react';
 import { Typography, Link, Popover, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { Info } from '@mui/icons-material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import { PublicKey } from '@solana/web3.js';
 import {
@@ -12,7 +14,6 @@ import {
   useBbo,
   // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
-import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
 
 const useStyles = makeStyles(() => ({
   infoLabel: {
@@ -26,12 +27,8 @@ const useStyles = makeStyles(() => ({
     fontSize: '14px',
   },
   infoLabelIcon: {
-    width: '21px',
-    height: '21px',
-    background: '#202124',
-    transform: 'rotate(90deg)',
-    borderRadius: '50%',
-    padding: '3px',
+    color: 'white',
+    position: 'relative',
   },
 }));
 
@@ -81,7 +78,7 @@ function InfoButton() {
         popupState => (
           <div style={{ display: 'flex' }}>
             <IconButton {...bindTrigger(popupState)} className={styles.infoButton}>
-              <SwitchIcon className={styles.infoLabelIcon} />
+              <Info fontSize="small" className={styles.infoLabelIcon} />
             </IconButton>
             <Popover
               {...bindPopover(popupState)}

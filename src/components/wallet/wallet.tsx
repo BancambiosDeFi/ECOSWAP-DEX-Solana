@@ -80,10 +80,19 @@ export function WalletProvider({ children }) {
         if (wallet?.publicKey) {
           localStorage.removeItem('feeDiscountKey');
           setConnected(true);
+
+          const walletPublicKey = wallet.publicKey.toBase58();
+          const keyToDisplay =
+            walletPublicKey.length > 20
+              ? `${walletPublicKey.substring(0, 7)}.....${walletPublicKey.substring(
+                  walletPublicKey.length - 7,
+                  walletPublicKey.length,
+                )}`
+              : walletPublicKey;
+
           notify({
-            type: 'success',
-            message: 'Wallet connected Successfully',
-            description: 'Your wallet has been connected.',
+            message: 'Wallet update',
+            description: 'Connected to wallet ' + keyToDisplay,
           });
         }
       });
@@ -91,7 +100,6 @@ export function WalletProvider({ children }) {
       wallet.on('disconnect', () => {
         setConnected(false);
         notify({
-          type: 'success',
           message: 'Wallet update',
           description: 'Disconnected from wallet',
         });
@@ -147,12 +155,11 @@ export function WalletProvider({ children }) {
       >
         <div
           style={{
-            background: '#0A0C0E',
+            background: '#5b5f67',
             width: 'auto',
             height: 'auto',
             margin: '0px auto',
-            border: '1px solid #0156FF',
-            borderRadius: '8px',
+            borderRadius: '7px',
             padding: '16px',
           }}
         >

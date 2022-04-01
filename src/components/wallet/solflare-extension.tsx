@@ -79,8 +79,7 @@ export class SolflareExtensionWalletAdapter extends EventEmitter implements Wall
     if (!this._provider) {
       window.open('https://solflare.com/', '_blank');
       notify({
-        type: 'error',
-        message: 'Connect wallet failed!',
+        message: 'Connection Error',
         description: 'Please install Solflare extension',
       });
 

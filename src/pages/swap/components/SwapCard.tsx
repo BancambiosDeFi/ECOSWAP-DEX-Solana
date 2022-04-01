@@ -166,7 +166,7 @@ export default function SwapCard({
   const { connected } = useWallet();
   const [ecoImpactType, setEcoImpactType] = useState<string>('$');
   const [ecoImpactValue, setEcoImpactValue] = useState<string>('0.5');
-  const [slippageTolerance, setSlippageTolerance] = useState<string>('0.1');
+  // const [slippageTolerance, setSlippageTolerance] = useState<string>('0.1');
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -190,8 +190,6 @@ export default function SwapCard({
     connected && fromAmount && toAmount ? (
       <SwapSettingsContainer
         {...{
-          slippageTolerance,
-          setSlippageTolerance,
           ecoImpactType,
           setEcoImpactType,
           ecoImpactValue,
@@ -221,7 +219,6 @@ export default function SwapCard({
           {swapSettingsContainer}
           <SwapButton
             {...{
-              slippageTolerance,
               ecoImpactType,
               ecoImpactValue,
               setOpen,

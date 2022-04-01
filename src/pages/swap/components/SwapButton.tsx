@@ -9,7 +9,6 @@ import ButtonComponent from '../../../srm-components/Button/Button';
 import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
 
 interface SwapButtonProps {
-  slippageTolerance: string;
   ecoImpactType: string;
   ecoImpactValue: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

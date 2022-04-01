@@ -7,6 +7,7 @@ import {
   Transaction,
   SystemProgram,
   Signer,
+  LAMPORTS_PER_SOL,
 } from '@solana/web3.js';
 import {
   Token,
@@ -31,8 +32,10 @@ import {
 } from './TokenList';
 import { useMint, useOwnedTokenAccount } from './Token';
 import { SOL_MINT, WRAPPED_SOL_MINT } from '../utils/pubkeys';
+import { TransferTokens } from 'impact-pool-api/dist/schema';
+import { getImpactPool } from '../../../../../src/utils';
 
-const DEFAULT_SLIPPAGE_PERCENT = 0.5;
+const DEFAULT_SLIPPAGE_PERCENT = 0.1;
 
 export type SwapContext = {
   // Mint being traded from. The user must own these tokens.
@@ -414,10 +417,23 @@ export function useOnSwap() {
         close: isClosingNewAccounts,
       });
 
+      // !!!! Need user wallet !!!!
+      // const impactPool = getImpactPool(wallet.publicKey, 'USDT_TESTNET_ZWEI');
+      const impactPool = getImpactPool(
+        new PublicKey(process.env.REACT_APP_CREATOR as string),
+        'USDT_TESTNET_ZWEI',
+      );
+      // !!!! Need token amount for impact !!!!
+      const impactTransaction = await impactPool.TransferTokens(
+        new TransferTokens(
+          new BN(new BN(amount).muln(+LAMPORTS_PER_SOL).toString()),
+        ),
+      );
+      serumTransaction[serumTransaction.length - 1].tx.add(impactTransaction);
+
       // console.log('after serumTransaction');
 
       // console.log('serumTransaction = ', serumTransaction);
-
       return serumTransaction;
     })();
 

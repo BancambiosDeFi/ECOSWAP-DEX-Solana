@@ -48,8 +48,6 @@ interface CustomProps {
 }
 
 interface SwapSettingsProps {
-  slippageTolerance: string;
-  setSlippageTolerance: React.Dispatch<React.SetStateAction<string>>;
   ecoImpactType: string;
   setEcoImpactType: React.Dispatch<React.SetStateAction<string>>;
   ecoImpactValue: string;
@@ -272,8 +270,6 @@ const NumberFormatCustom = React.forwardRef<NumberFormat<CustomProps>, CustomPro
 );
 
 const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
-  slippageTolerance,
-  setSlippageTolerance,
   ecoImpactType,
   setEcoImpactType,
   ecoImpactValue,
@@ -282,7 +278,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
   const styles = useStyles();
   const [isSettings, setIsSettings] = useState<boolean>(false);
   const [isEcoImpactSettings, setIsEcoImpactSettings] = useState<boolean>(false);
-  const { fromMint, toMint, fromAmount, toAmount } = useSwapContext();
+  const { fromMint, toMint, fromAmount, toAmount, slippage, setSlippage } = useSwapContext();
   const tokenMap = useTokenMap();
   const toTokenInfo = tokenMap.get(toMint.toString());
   const fromTokenInfo = tokenMap.get(fromMint.toString());
@@ -306,7 +302,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
 
   useEffect(() => {
     if (toAmount) {
-      const minReceived = toAmount - toAmount * (Number(slippageTolerance) / 100);
+      const minReceived = toAmount - toAmount * (slippage / 100);
 
       const formattedMinReceived =
         toMintInfo && minReceived
@@ -320,7 +316,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
 
       setMinimumReceived(formattedMinReceived);
     }
-  }, [toAmount, minimumReceived, slippageTolerance, toMintInfo]);
+  }, [toAmount, minimumReceived, slippage, toMintInfo]);
 
   useEffect(() => {
     if (toAmount && toMint && raydiumPoolKeys && fromMintInfo && toMintInfo) {
@@ -356,7 +352,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
               // @ts-ignore
               toTokenInfo?.name,
             );
-            const slippage = convertToPercent(Number(slippageTolerance) * 10, 1000);
+            const slippagePercent = convertToPercent(slippage * 10, 1000);
 
             setPriceImpact(
               getPriceImpact({
@@ -364,7 +360,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
                 poolInfo,
                 amountIn,
                 currencyOut,
-                slippage,
+                slippage: slippagePercent,
               }),
             );
           })
@@ -395,7 +391,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
     fromAmount,
     fromMint,
     fromTokenInfo,
-    slippageTolerance,
+    slippage,
     toTokenInfo,
   ]);
 
@@ -458,7 +454,6 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
       toTokenSymbol={toTokenInfo?.symbol}
       infoIconStyle={styles.infoIcon}
       {...{
-        slippageTolerance,
         minimumReceived,
         priceImpact,
         swapSettingOptions,
@@ -470,7 +465,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
     <SlippageToleranceSettings
       handleClose={handleSettingsClick}
       infoIconStyle={styles.infoIcon}
-      {...{ slippageTolerance, setSlippageTolerance, popoverId, handleInfoButtonClick }}
+      {...{ popoverId, handleInfoButtonClick }}
     />
   );
 

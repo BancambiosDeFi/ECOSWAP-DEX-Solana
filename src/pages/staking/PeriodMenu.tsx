@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { DateRangePicker } from 'materialui-daterange-picker';
+// import { DateRangePicker } from 'materialui-daterange-picker';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
@@ -129,13 +129,13 @@ export default function PeriodMenu({ options, setPeriod, checkedOption }) {
         <MenuItem style={{ position: 'relative' }}>
           {showDataPicker && (
             <div className={styles.rangePicker}>
-              <DateRangePicker
+              {/* <DateRangePicker
                 wrapperClassName={styles.pickerWrapper}
                 definedRanges={[]}
                 open={openRangePicker}
                 toggle={toggleRangePicker}
                 onChange={range => handleChangePeriod(range)}
-              />
+              /> */}
             </div>
           )}
           <Button style={{ paddingLeft: '10px' }} onClick={() => setShowDataPicker(true)}>

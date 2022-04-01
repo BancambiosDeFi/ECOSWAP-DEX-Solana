@@ -5,9 +5,8 @@ import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material
 import { makeStyles } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
-import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
-import ButtonComponent from '../../../srm-components/Button/Button';
 import { useWallet } from '../../../components/wallet/wallet';
+import SwapConfirmationModal from '../../../components/SwapConfirmationModal';
 import { TokenIcon } from './TokenIcon';
 // eslint-disable-next-line import/order
 import {
@@ -15,18 +14,19 @@ import {
   useTokenMap,
   useMint,
   useOwnedTokenAccount,
-  useOnSwap,
   useSwappableTokens,
   // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
 import TokenDialog from './TokenDialog';
 import SwapSettingsContainer from './SwapSettingsContainer';
+import SwapButton from './SwapButton';
 
 const useStyles = makeStyles(theme => ({
   card: {
     borderRadius: '0 20px 20px 0 !important',
+    border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    backgroundColor: '#35363A !important',
+    backgroundColor: '#0A0C0E !important',
     width: '435px',
     height: '100%',
     padding: '26px 16px',
@@ -41,6 +41,16 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     color: '#FFFFFF',
     marginBottom: '0px',
+  },
+  expires: {
+    fontFamily: 'Saira !important',
+    fontSize: '24px !important',
+    fontWeight: '100 !important',
+    color: '#FFFFFF',
+  },
+  flexTypography: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   switchBlock: {
     position: 'relative',
@@ -102,11 +112,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: '20px !important',
   },
   swapTokenFormContainer: {
-    borderRadius: theme.spacing(2),
+    borderRadius: '8px',
     display: 'flex',
     justifyContent: 'space-between',
     padding: theme.spacing(1),
-    backgroundColor: '#202023 !important',
+    backgroundColor: '#202124 !important',
     color: 'white',
     textTransform: 'uppercase',
   },
@@ -154,24 +164,76 @@ export default function SwapCard({
   const { swappableTokens: tokenList } = useSwappableTokens();
   const { fromAmount, toAmount } = useSwapContext();
   const { connected } = useWallet();
+  const [ecoImpactType, setEcoImpactType] = useState<string>('$');
+  const [ecoImpactValue, setEcoImpactValue] = useState<string>('0.5');
+  const [slippageTolerance, setSlippageTolerance] = useState<string>('0.1');
+  const [open, setOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const handleClose = () => {
+    if (!isLoading || isError) {
+      setOpen(false);
+      setIsError(false);
+      setIsLoading(false);
+    }
+  };
+
+  const startSwapTransaction = () => {
+    setIsLoading(true);
+    setIsError(false);
+    setErrorMessage('');
+  };
 
   const swapSettingsContainer =
-    connected && fromAmount && toAmount ? <SwapSettingsContainer /> : null;
+    connected && fromAmount && toAmount ? (
+      <SwapSettingsContainer
+        {...{
+          slippageTolerance,
+          setSlippageTolerance,
+          ecoImpactType,
+          setEcoImpactType,
+          ecoImpactValue,
+          setEcoImpactValue,
+        }}
+      />
+    ) : null;
 
   return (
-    <Card className={styles.card} style={containerStyle}>
-      <div style={contentStyle}>
-        <Typography className={styles.title}>From</Typography>
-        <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
-        <div className={styles.switchBlock}>
-          <Typography className={styles.switchTitle}>To (Estimate)</Typography>
-          <SwitchButton />
+    <>
+      <SwapConfirmationModal
+        {...{ open, isError, errorMessage, isLoading, handleClose, startSwapTransaction }}
+        transactionLink={
+          '38qrvPdFxoehysCiD6xZF1cviV3sRaDJRhcdBtv6KBfs4CoHhDGrQEEXzyyhmxs6Ayz2STr3KXZ9JvQ' +
+          'VMXACP892?cluster=testnet'
+        }
+      />
+      <Card className={styles.card} style={containerStyle}>
+        <div style={contentStyle}>
+          <Typography className={styles.title}>From</Typography>
+          <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
+          <div className={styles.switchBlock}>
+            <Typography className={styles.switchTitle}>To (Estimate)</Typography>
+            <SwitchButton />
+          </div>
+          <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
+          {swapSettingsContainer}
+          <SwapButton
+            {...{
+              slippageTolerance,
+              ecoImpactType,
+              ecoImpactValue,
+              setOpen,
+              isLoading,
+              setIsLoading,
+              setIsError,
+              setErrorMessage,
+            }}
+          />
         </div>
-        <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
-        {swapSettingsContainer}
-        <SwapButton />
-      </div>
-    </Card>
+      </Card>
+    </>
   );
 }
 
@@ -288,38 +350,13 @@ export function SwapTokenForm({
   );
 }
 
-function SwapButton() {
-  const { onSwap, canSwap } = useOnSwap();
-  const { connected } = useWallet();
-
-  // useEffect(() => {
-  // console.log('Swap button component...');
-  // console.log('canSwap =', canSwap);
-  // console.log('onSwap =', onSwap);
-  // }, [canSwap]);
-
-  if (connected) {
-    return (
-      <ButtonComponent
-        type={'swap'}
-        title={'Swap'}
-        onClick={onSwap}
-        disable={!canSwap}
-        isIconVisible={false}
-      />
-    );
-  } else {
-    return <WalletConnectSwap />;
-  }
-}
-
 function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }) {
   const styles = useStyles();
   const theme = useTheme();
 
   return (
     <div onClick={onClick} className={styles.tokenButton}>
-      <TokenIcon mint={mint} style={{ width: theme.spacing(4) }} />
+      <TokenIcon mint={mint} />
       <TokenName mint={mint} style={{ fontSize: 20, fontWeight: 700, paddingTop: 4 }} />
       <ExpandMore />
     </div>

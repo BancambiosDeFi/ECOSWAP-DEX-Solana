@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
-import { Box, List, Popper, TextField, Typography } from '@mui/material';
+import { autocompleteClasses, Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 
 // eslint-disable-next-line import/no-unresolved
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   paperStyle: ({ isInputFocus }: any) => ({
     background:
       // eslint-disable-next-line max-len
-      'linear-gradient(#35363A, #35363A) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #EC26F5 102.3%) border-box !important',
+      'linear-gradient(#202124, #202124) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #EC26F5 102.3%) border-box !important',
     border: isInputFocus ? '3px solid transparent' : 'none',
   }),
   inputBase: {
@@ -55,10 +55,11 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     left: '-317px',
     color: 'white',
-    borderRadius: '40px !important',
-    background: '#35363A !important',
+    border: '1px solid #0156FF',
+    borderRadius: '8px',
+    background: '#0A0C0E !important',
     marginTop: '5px',
-    padding: '30px',
+    padding: '15px',
     width: '600px',
     justifyContent: 'center !important',
   },
@@ -69,7 +70,7 @@ const useStyles = makeStyles(theme => ({
       left: '-50px',
       width: 10,
       borderRadius: '8px',
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.3)',
+      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.3) !important',
     },
     '&::-webkit-scrollbar-track': {
       backgroundColor: '#707070',
@@ -193,8 +194,8 @@ export default function SearchForPairingsComponent({ type, width }) {
         alignItems: 'center !important',
         width: widthComponent,
         height: 60,
-        borderRadius: '20px',
-        background: '#35363A',
+        borderRadius: '8px',
+        background: '#202124',
         margin: marginComponent,
       }}
     >
@@ -248,11 +249,10 @@ function ListItem({ props, option }) {
   return (
     <List
       style={{
-        maxWidth: '500px',
+        width: '100%',
         height: '75px',
-        display: errorDownloading ? 'none' : 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        display: errorDownloading ? 'none' : 'grid',
+        gridTemplateColumns: '1.5fr 1fr 1fr',
       }}
       component="li"
       onClickCapture={() => {
@@ -267,7 +267,8 @@ function ListItem({ props, option }) {
       <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
         <img
           loading="lazy"
-          width="51"
+          width="45px"
+          height="45px"
           src={option.fromImg}
           alt=""
           onError={() => setErrorDownloading(true)}
@@ -285,10 +286,10 @@ function ListItem({ props, option }) {
         </Typography>
       </Box>
       <ArrowRightIcon />
-      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'end' }}>
         <img
           loading="lazy"
-          width="51"
+          width="45px"
           src={option.toImg}
           alt=""
           onError={() => setErrorDownloading(true)}

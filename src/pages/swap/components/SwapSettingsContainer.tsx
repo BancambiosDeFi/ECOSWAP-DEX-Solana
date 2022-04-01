@@ -47,6 +47,15 @@ interface CustomProps {
   name: string;
 }
 
+interface SwapSettingsProps {
+  slippageTolerance: string;
+  setSlippageTolerance: React.Dispatch<React.SetStateAction<string>>;
+  ecoImpactType: string;
+  setEcoImpactType: React.Dispatch<React.SetStateAction<string>>;
+  ecoImpactValue: string;
+  setEcoImpactValue: React.Dispatch<React.SetStateAction<string>>;
+}
+
 const swapSettingOptions = [
   {
     label: 'Slippage Tolerance',
@@ -211,7 +220,7 @@ const StyledTextField = styled(TextField)({
     marginLeft: '9px',
     marginRight: '5px',
     background:
-      'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, rgba(0, 255, 102, 1), rgba(1, 86, 255, 1)) border-box',
+      'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, #EC26F5, #0156FF ) border-box',
     borderRadius: '8px',
     border: '2px solid transparent',
   },
@@ -262,13 +271,17 @@ const NumberFormatCustom = React.forwardRef<NumberFormat<CustomProps>, CustomPro
   },
 );
 
-const SwapSettingsContainer: React.FC = () => {
+const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
+  slippageTolerance,
+  setSlippageTolerance,
+  ecoImpactType,
+  setEcoImpactType,
+  ecoImpactValue,
+  setEcoImpactValue,
+}) => {
   const styles = useStyles();
   const [isSettings, setIsSettings] = useState<boolean>(false);
   const [isEcoImpactSettings, setIsEcoImpactSettings] = useState<boolean>(false);
-  const [ecoImpactType, setEcoImpactType] = useState<string>('$');
-  const [ecoImpactValue, setEcoImpactValue] = useState<string>('0.5');
-  const [slippageTolerance, setSlippageTolerance] = useState<string>('0.1');
   const { fromMint, toMint, fromAmount, toAmount } = useSwapContext();
   const tokenMap = useTokenMap();
   const toTokenInfo = tokenMap.get(toMint.toString());

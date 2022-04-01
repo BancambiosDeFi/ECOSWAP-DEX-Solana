@@ -18,19 +18,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "typeRoots": [
-      "types/",
-      "node_modules/@types"
-    ],
+    "lib": ["dom", "esnext"],
+    "typeRoots": ["types/", "node_modules/@types"],
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "./src/"
-  ],
+  "include": ["./src/"],
   "exclude": [
     "./src/**/*.test.js",
     "node_modules",

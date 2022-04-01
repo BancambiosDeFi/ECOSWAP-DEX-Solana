@@ -47,15 +47,6 @@ interface CustomProps {
   name: string;
 }
 
-interface SwapSettingsProps {
-  slippageTolerance: string;
-  setSlippageTolerance: React.Dispatch<React.SetStateAction<string>>;
-  ecoImpactType: string;
-  setEcoImpactType: React.Dispatch<React.SetStateAction<string>>;
-  ecoImpactValue: string;
-  setEcoImpactValue: React.Dispatch<React.SetStateAction<string>>;
-}
-
 const swapSettingOptions = [
   {
     label: 'Slippage Tolerance',
@@ -271,17 +262,13 @@ const NumberFormatCustom = React.forwardRef<NumberFormat<CustomProps>, CustomPro
   },
 );
 
-const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
-  slippageTolerance,
-  setSlippageTolerance,
-  ecoImpactType,
-  setEcoImpactType,
-  ecoImpactValue,
-  setEcoImpactValue,
-}) => {
+const SwapSettingsContainer: React.FC = () => {
   const styles = useStyles();
   const [isSettings, setIsSettings] = useState<boolean>(false);
   const [isEcoImpactSettings, setIsEcoImpactSettings] = useState<boolean>(false);
+  const [ecoImpactType, setEcoImpactType] = useState<string>('$');
+  const [ecoImpactValue, setEcoImpactValue] = useState<string>('0.5');
+  const [slippageTolerance, setSlippageTolerance] = useState<string>('0.1');
   const { fromMint, toMint, fromAmount, toAmount } = useSwapContext();
   const tokenMap = useTokenMap();
   const toTokenInfo = tokenMap.get(toMint.toString());

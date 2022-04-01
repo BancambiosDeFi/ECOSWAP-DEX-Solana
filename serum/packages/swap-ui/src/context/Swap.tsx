@@ -199,51 +199,51 @@ export function useCanSwap(): boolean {
     return false;
   }
   // console.log('useCanSwap checking...');
-  //
-  // if (fromWallet !== undefined && fromWallet !== null) {
-  //   console.log('1 - From wallet exists. ');
-  // }
-  //
-  // if (fair !== undefined && fair > 0) {
-  //   console.log('2 - Fair price is defined.');
-  // }
-  //
-  // if (fromMint.equals(toMint) === false) {
-  //   console.log('3 - Mints are distinct.');
-  // }
-  //
-  // if (swapClient.program.provider.wallet.publicKey !== null) {
-  //   console.log('4 - Wallet is connected.');
-  // }
-  //
-  // if (fromAmount > 0 && toAmount > 0) {
-  //   console.log('5 - Trade amounts greater than zero.');
-  // }
-  //
-  // if (route !== null) {
-  //   console.log('6 - Trade route exists.');
-  // }
-  //
-  // if (
-  //   route.kind !== 'wormhole-native' ||
-  //   wormholeMap
-  //     .get(fromMint.toString())
-  //     ?.tags?.includes(SPL_REGISTRY_WORM_TAG) !== undefined
-  // ) {
-  //   console.log(
-  //     '7 - Wormhole <-> native markets must have the wormhole token as the *from* address since they are one-sided markets.',
-  //   );
-  // }
-  // if (
-  //   route.kind !== 'wormhole-sollet' ||
-  //   solletMap
-  //     .get(fromMint.toString())
-  //     ?.tags?.includes(SPL_REGISTRY_SOLLET_TAG) !== undefined
-  // ) {
-  //   console.log(
-  //     "8 - Wormhole <-> sollet markets must have the sollet token as the *from* address since they're one sided markets.",
-  //   );
-  // }
+
+  if (fromWallet !== undefined && fromWallet !== null) {
+    // console.log('1 - From wallet exists. ');
+  }
+
+  if (fair !== undefined && fair > 0) {
+    // console.log('2 - Fair price is defined.');
+  }
+
+  if (fromMint.equals(toMint) === false) {
+    // console.log('3 - Mints are distinct.');
+  }
+
+  if (swapClient.program.provider.wallet.publicKey !== null) {
+    // console.log('4 - Wallet is connected.');
+  }
+
+  if (fromAmount > 0 && toAmount > 0) {
+    // console.log('5 - Trade amounts greater than zero.');
+  }
+
+  if (route !== null) {
+    // console.log('6 - Trade route exists.');
+  }
+
+  if (
+    route.kind !== 'wormhole-native' ||
+    wormholeMap
+      .get(fromMint.toString())
+      ?.tags?.includes(SPL_REGISTRY_WORM_TAG) !== undefined
+  ) {
+    // console.log(
+    // '7 - Wormhole <-> native markets must have the wormhole token as the *from* address since they are one-sided markets.',
+    // );
+  }
+  if (
+    route.kind !== 'wormhole-sollet' ||
+    solletMap
+      .get(fromMint.toString())
+      ?.tags?.includes(SPL_REGISTRY_SOLLET_TAG) !== undefined
+  ) {
+    // console.log(
+    //   "8 - Wormhole <-> sollet markets must have the sollet token as the *from* address since they're one sided markets.",
+    // );
+  }
 
   return (
     // From wallet exists.
@@ -344,7 +344,7 @@ export function useOnSwap() {
   const sendSwapTransaction = async () => {
     // console.log('sendSwapTransaction ...');
     if (!fromMintInfo || !toMintInfo) {
-      // console.log('if !fromMintInfo || !toMintInfo');
+      console.log('if !fromMintInfo || !toMintInfo');
       throw new Error('Unable to calculate mint decimals');
     }
     if (!fair) {

@@ -4,8 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { DialogContent } from '@mui/material';
-import H2Text from './typography/H2Text';
+import { DialogContent, Typography } from '@mui/material';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -76,7 +75,9 @@ const ModalWrapper: React.FC<CustomizedDialogsProps> = ({ open, title, handleClo
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           <div>
-            <H2Text text={title} />
+            <Typography variant={'h2'} align={'center'}>
+              {title}
+            </Typography>
           </div>
         </BootstrapDialogTitle>
         <DialogContent

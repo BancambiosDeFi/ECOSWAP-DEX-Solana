@@ -11,6 +11,7 @@ import { getQuotesHistorical } from '../../../services/api';
 import { SwapType } from '../../../types';
 import { TokenName } from './SwapCard';
 import { TokenIcon } from './TokenIcon';
+import { SingleChart } from './SingleChart';
 
 interface ChartProps {
   mint: PublicKey;
@@ -203,6 +204,7 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location 
             </Box>
             {lastPriceComponent}
           </Box>
+          <SingleChart mint={mint} />
         </Box>
         <Box className={styles.chartWrapper}>
           <TinyArea {...config} />

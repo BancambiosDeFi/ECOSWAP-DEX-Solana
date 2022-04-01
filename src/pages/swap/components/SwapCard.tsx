@@ -24,8 +24,9 @@ import SwapButton from './SwapButton';
 const useStyles = makeStyles(theme => ({
   card: {
     borderRadius: '0 20px 20px 0 !important',
+    border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    backgroundColor: '#35363A !important',
+    backgroundColor: '#0A0C0E !important',
     width: '435px',
     height: '100%',
     padding: '26px 16px',
@@ -40,6 +41,16 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     color: '#FFFFFF',
     marginBottom: '0px',
+  },
+  expires: {
+    fontFamily: 'Saira !important',
+    fontSize: '24px !important',
+    fontWeight: '100 !important',
+    color: '#FFFFFF',
+  },
+  flexTypography: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   switchBlock: {
     position: 'relative',
@@ -101,11 +112,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: '20px !important',
   },
   swapTokenFormContainer: {
-    borderRadius: theme.spacing(2),
+    borderRadius: '8px',
     display: 'flex',
     justifyContent: 'space-between',
     padding: theme.spacing(1),
-    backgroundColor: '#202023 !important',
+    backgroundColor: '#202124 !important',
     color: 'white',
     textTransform: 'uppercase',
   },
@@ -345,7 +356,7 @@ function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }
 
   return (
     <div onClick={onClick} className={styles.tokenButton}>
-      <TokenIcon mint={mint} style={{ width: theme.spacing(4) }} />
+      <TokenIcon mint={mint} />
       <TokenName mint={mint} style={{ fontSize: 20, fontWeight: 700, paddingTop: 4 }} />
       <ExpandMore />
     </div>

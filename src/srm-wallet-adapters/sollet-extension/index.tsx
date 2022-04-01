@@ -11,7 +11,8 @@ export function SolletExtensionAdapter(_, network) {
     on: () => {},
     connect: () => {
       notify({
-        message: 'Sollet Extension Error',
+        type: 'error',
+        message: 'Connect wallet failed!',
         description: 'Please install the Sollet Extension for Chrome',
       });
     },

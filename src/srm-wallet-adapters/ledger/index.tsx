@@ -71,6 +71,7 @@ export class LedgerWalletAdapter extends EventEmitter implements WalletAdapter {
       this.emit('connect', this._publicKey);
     } catch (error) {
       notify({
+        type: 'error',
         message: 'Ledger Error',
         // @ts-ignore
         description: error.message,

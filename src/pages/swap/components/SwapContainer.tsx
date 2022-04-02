@@ -7,6 +7,8 @@ import { Box } from '@mui/material';
 import { SwapType } from '../../../types';
 import { useWallet } from '../../../components/wallet/wallet';
 import { PagesTransitionButton } from '../../../components/PagesTransitionButton';
+import { StakingTabs } from '../../../components/StakingTabs';
+import SearchForPairingsComponent from './SearchForPairings';
 import SwapCard from './SwapCard';
 import { ChartContainer } from './ChartContainer';
 
@@ -33,6 +35,8 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
 
   return (
     <>
+      <StakingTabs />
+      <SearchForPairingsComponent type={'none'} width={'600'} />
       {connected ? (
         <>
           <Box className={styles.root}>

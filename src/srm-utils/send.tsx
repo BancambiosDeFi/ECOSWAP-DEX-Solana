@@ -32,6 +32,11 @@ import { getSelectedTokenAccountForMint } from './markets';
 import { getDecimalCount, sleep } from './utils';
 import { notify } from './notifications';
 
+interface Signer {
+  publicKey: PublicKey;
+  secretKey: Uint8Array;
+}
+
 export async function createTokenAccountTransaction({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   connection,
@@ -631,7 +636,7 @@ export async function sendTransaction({
 }: {
   transaction: Transaction;
   wallet: WalletAdapter;
-  signers?: Array<Account>;
+  signers?: Account[] | Signer[];
   connection: Connection;
   sendingMessage?: string;
   sentMessage?: string;
@@ -665,7 +670,7 @@ export async function signTransaction({
 }: {
   transaction: Transaction;
   wallet: WalletAdapter;
-  signers?: Array<Account>;
+  signers?: Array<Account> | Signer[];
   connection: Connection;
 }) {
   transaction.recentBlockhash = (await connection.getRecentBlockhash('max')).blockhash;

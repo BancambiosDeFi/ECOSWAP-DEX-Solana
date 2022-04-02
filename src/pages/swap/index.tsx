@@ -10,21 +10,6 @@ import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registr
 import SwapProvider from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { NotifyingProvider } from './NotifyingProvider';
-import SwapContainer from './components/SwapContainer';
-import SearchForPairingsComponent from './components/SearchForPairings';
-import SwapTabs from './components/SwapTabs';
-
-// App illustrating the use of the Swap component.
-//
-// One needs to just provide an Anchor `Provider` and a `TokenListContainer`
-// to the `Swap` component, and then everything else is taken care of.
-// function App() {
-//   return (
-// <SnackbarProvider maxSnack={5} autoHideDuration={8000}>
-// <AppInner />
-// </SnackbarProvider>
-//   );
-// }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -34,13 +19,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function SwapPage() {
+export default function SwapPage({ children }) {
   const styles = useStyles();
-  //   const { enqueueSnackbar } = useSnackbar();
-  // const [isConnected, setIsConnected] = useState(false);
   const [tokenList, setTokenList] = useState<TokenListContainer | null>(null);
 
-  const [provider, wallet] = useMemo(() => {
+  const [provider] = useMemo(() => {
     const opts: ConfirmOptions = {
       preflightCommitment: 'recent',
       commitment: 'recent',
@@ -50,26 +33,9 @@ export default function SwapPage() {
     const connection = new Connection(network, opts.preflightCommitment);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const provider = new NotifyingProvider(connection, wallet, opts, (tx, err) => {
-      // if (err) {
-      //   enqueueSnackbar(`Error: ${err.toString()}`, {
-      //     variant: 'error',
-      //   });
-      // } else {
-      //   enqueueSnackbar('Transaction sent', {
-      //     variant: 'success',
-      //     action: (
-      //       <Button
-      //         color="inherit"
-      //         component="a"
-      //         target="_blank"
-      //         rel="noopener"
-      //         href={`https://explorer.solana.com/tx/${tx}`}
-      //       >
-      //         View on Solana Explorer
-      //       </Button>
-      //     ),
-      //   });
-      // }
+      if (err) {
+        console.log(err);
+      }
     });
 
     return [provider, wallet];
@@ -78,18 +44,6 @@ export default function SwapPage() {
   useEffect(() => {
     new TokenListProvider().resolve().then(setTokenList);
   }, [setTokenList]);
-
-  // Connect to the wallet.
-  useEffect(() => {
-    wallet.on('connect', () => {
-      //   enqueueSnackbar('Wallet connected', { variant: 'success' });
-      // setIsConnected(true);
-    });
-    wallet.on('disconnect', () => {
-      //   enqueueSnackbar('Wallet disconnected', { variant: 'info' });
-      // setIsConnected(false);
-    });
-  }, [wallet]);
 
   // TODO: change tokenList any type to something meaningful
   return (
@@ -103,11 +57,7 @@ export default function SwapPage() {
       >
         {tokenList && (
           <SwapProvider provider={provider} tokenList={tokenList as any}>
-            <>
-              <SwapTabs />
-              <SearchForPairingsComponent type={'none'} width={'600'} />
-              <SwapContainer location={'swap'} />
-            </>
+            {children}
           </SwapProvider>
         )}
       </Grid>

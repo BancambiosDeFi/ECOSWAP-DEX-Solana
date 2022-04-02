@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { styled, SxProps } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 
 interface TitleProps {
   text: string;

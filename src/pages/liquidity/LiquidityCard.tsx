@@ -29,10 +29,11 @@ import { useConnection } from '../../srm-utils/connection';
 import { sendTransaction } from '../../srm-utils/send';
 import { useWallet } from '../../components/wallet/wallet';
 // import { InfoLabel } from '../swap/components/Info';
-import { SwapFromForm, SwapToForm, SwapButton, SwitchButton } from '../swap/components/SwapCard';
+import { SwapFromForm, SwapToForm, SwitchButton } from '../swap/components/SwapCard';
 import { PoolInfo } from './PoolInfo';
 import { ConfirmationBlock } from './ConfirmationBlock';
 import { InfoLabel } from './InfoLabel';
+import { AddLiquidityButton } from './AddLiquidityButton';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles(() => ({
   },
   card: {
     borderRadius: '20px !important',
+    border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#35363A !important',
     width: '435px',
@@ -292,7 +294,7 @@ export default () => {
             setNotWarn={setNotWarn}
           />
         ) : null}
-        <SwapButton
+        <AddLiquidityButton
           disabled={!isConfirmed || !isPoolExist}
           onClick={onLiquidityAdd}
           title={isPoolExist ? 'Add Liquidity' : 'Pool not found'}

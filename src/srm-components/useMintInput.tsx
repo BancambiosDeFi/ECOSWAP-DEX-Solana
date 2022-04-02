@@ -16,7 +16,7 @@ export interface MintInfo {
 
 export function useMintInput(
   name,
-  label: string | ReactElement,
+  label: ReactElement,
   tooltip?: string | ReactElement,
 ): [ReactElement, MintInfo | null] {
   const [address, setAddress] = useState('');

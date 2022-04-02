@@ -85,6 +85,7 @@ function OpenOrdersAccounts() {
   const openOrdersEntries: Array<[PublicKey, OpenOrders[]]> = useMemo(() => {
     return Array.from(openOrders.entries()).map(([market, oo]) => [new PublicKey(market), oo]);
   }, [openOrders]);
+
   return (
     <TableContainer component={Paper} elevation={0}>
       <Table className={styles.table} aria-label="simple table">
@@ -228,5 +229,6 @@ function toDisplay(mintInfo: MintInfo | undefined | null, value: BN): string {
   if (!mintInfo) {
     return value.toNumber().toString();
   }
+
   return (value.toNumber() / 10 ** mintInfo.decimals).toFixed(mintInfo.decimals);
 }

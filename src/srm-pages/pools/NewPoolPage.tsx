@@ -147,7 +147,11 @@ export default function NewPoolPage() {
         <Title level={4}>Create new pool</Title>
         <Form layout="vertical" onFinish={onSubmit}>
           <Form.Item
-            label={<Tooltip title="Public name of the pool.">Pool Name</Tooltip>}
+            label={
+              <Tooltip title="Public name of the pool.">
+                <>Pool Name</>
+              </Tooltip>
+            }
             name="name"
           >
             <Input value={poolName} onChange={e => setPoolName(e.target.value)} />
@@ -155,7 +159,9 @@ export default function NewPoolPage() {
           <Form.Item
             label={
               <Tooltip title="Address of the pool program.">
-                Program ID <Text type="secondary">(e.g. {DEFAULT_PROGRAM_ID})</Text>
+                <>
+                  Program ID <Text type="secondary">(e.g. {DEFAULT_PROGRAM_ID})</Text>
+                </>
               </Tooltip>
             }
             name="programId"
@@ -170,7 +176,7 @@ export default function NewPoolPage() {
           <Form.Item
             label={
               <Tooltip title="Initial number of pool tokens to mint to your account.">
-                Initial Pool Token Supply
+                <>Initial Pool Token Supply</>
               </Tooltip>
             }
             name="initialSupply"
@@ -201,7 +207,7 @@ export default function NewPoolPage() {
           <Form.Item
             label={
               <Tooltip title="Whether the assets in the pool can be controlled by the pool admin.">
-                Admin Controlled
+                <>Admin Controlled</>
               </Tooltip>
             }
             name="adminControlled"
@@ -217,7 +223,11 @@ export default function NewPoolPage() {
           </Form.Item>
           {adminControlled ? (
             <Form.Item
-              label={<Tooltip title="Address of the pool admin account.">Admin Address</Tooltip>}
+              label={
+                <Tooltip title="Address of the pool admin account.">
+                  <>Admin Address</>
+                </Tooltip>
+              }
             >
               <Input value={adminAddress} onChange={e => setAdminAddress(e.target.value.trim())} />
             </Form.Item>
@@ -279,7 +289,7 @@ function AssetInput({ setInitialAssets, index }) {
       <Form.Item
         label={
           <Tooltip title={<>Initial quantity of token {index + 1} to deposit into the pool.</>}>
-            Token {index + 1} Initial Quantity
+            <>Token {index + 1} Initial Quantity</>
           </Tooltip>
         }
         name={`quantity${index}`}

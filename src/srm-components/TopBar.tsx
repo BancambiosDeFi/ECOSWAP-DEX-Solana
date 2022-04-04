@@ -12,6 +12,7 @@ import { EndpointInfo } from '../srm-utils/types';
 import { notify } from '../srm-utils/notifications';
 import WalletConnect from '../components/wallet/WalletConnect';
 import { getTradePageUrl } from '../srm-utils/markets';
+import UserWalletButton from '../components/wallet/UserWalletButton';
 
 const Wrapper = styled.div`
   background-color: #04030a;
@@ -237,7 +238,7 @@ export default function TopBar() {
             </div>
           )}
           <div style={{ marginRight: '100px', paddingBottom: '9px' }}>
-            <WalletConnect />
+            {!connected ? <WalletConnect /> : <UserWalletButton />}
           </div>
         </div>
       </Wrapper>

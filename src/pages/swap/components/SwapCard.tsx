@@ -304,7 +304,7 @@ export function SwapTokenForm({
     mintAccount && amount
       ? parseFloat(
           amount
-            .toLocaleString('fullwide', {
+            .toLocaleString('en-IN', {
               maximumFractionDigits: mintAccount.decimals,
               useGrouping: false,
             })
@@ -331,7 +331,7 @@ export function SwapTokenForm({
           if (e.target.value === '') {
             setAmount(0);
           }
-          const newValue = parseFloat(e.target.value);
+          const newValue = parseFloat(e.target.value || '0');
           if (!isNaN(newValue)) {
             setAmount(newValue);
           }
@@ -362,7 +362,7 @@ export function SwapTokenForm({
 
 function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }) {
   const styles = useStyles();
-  const theme = useTheme();
+  // const theme = useTheme();
 
   return (
     <div onClick={onClick} className={styles.tokenButton}>

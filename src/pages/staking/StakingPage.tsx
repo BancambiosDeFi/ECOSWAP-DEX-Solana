@@ -101,7 +101,9 @@ export default function StakingPage() {
                 style={{ margin: '0 5px' }}
               />
               <Tooltip title="Delete aaa" placement="top-start">
-                <img src={infoIcon} alt="" />
+                <>
+                  <img src={infoIcon} alt="" />
+                </>
               </Tooltip>
             </Typography>
           </Grid>

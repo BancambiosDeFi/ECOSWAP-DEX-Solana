@@ -22,9 +22,9 @@ Without Docker:
 ```
 npm install -g lerna
 yarn
-yarn build:serum
 yarn prebuild
 yarn postbuild
+yarn build:serum
 yarn start
 ```
 

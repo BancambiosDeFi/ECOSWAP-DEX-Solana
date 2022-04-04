@@ -142,7 +142,6 @@ function SettingsDetails() {
               onClick={() => {
                 if (fair === undefined) {
                   console.error('Fair is undefined');
-
                   return;
                 }
                 if (fairOverride === null) {

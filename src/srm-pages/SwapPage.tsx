@@ -74,7 +74,6 @@ function AppInner() {
       //   });
       // }
     });
-
     return [provider, wallet];
   }, []);
 
@@ -145,13 +144,11 @@ class NotifyingProvider extends Provider {
     try {
       const txSig = await super.send(tx, signers, opts);
       this.onTransaction(txSig);
-
       return txSig;
     } catch (err) {
       if (err instanceof Error || err === undefined) {
         this.onTransaction(undefined, err);
       }
-
       return '';
     }
   }
@@ -165,13 +162,11 @@ class NotifyingProvider extends Provider {
       txSigs.forEach(sig => {
         this.onTransaction(sig);
       });
-
       return txSigs;
     } catch (err) {
       if (err instanceof Error || err === undefined) {
         this.onTransaction(undefined, err);
       }
-
       return [];
     }
   }

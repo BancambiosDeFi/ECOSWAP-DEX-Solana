@@ -2,13 +2,37 @@ import React, { useMemo, useState } from 'react';
 // import { DateRangePicker } from 'materialui-daterange-picker';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { makeStyles } from '@mui/styles';
+import Menu from '@mui/material/Menu';
 import CircularProgress from '@mui/material/CircularProgress';
+import { makeStyles } from '@mui/styles';
 import { useWallet } from '../../components/wallet/wallet';
 
 const useStyles = makeStyles(() => ({
+  arrow: {
+    padding: 0,
+    marginLeft: '5px',
+    width: 0,
+    height: 0,
+    background: 'transparent',
+    borderTop: '5px solid transparent',
+    borderBottom: '5px solid transparent',
+    borderLeft: '10px solid #C4C4C4',
+    borderRight: '0px',
+    cursor: 'pointer',
+  },
+  rotateArrow: {
+    marginLeft: '5px',
+    padding: 0,
+    width: 0,
+    height: 0,
+    background: 'transparent',
+    borderTop: '10px solid #C4C4C4',
+    borderBottom: '0',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent',
+    cursor: 'pointer',
+  },
   rangePicker: {
     position: 'fixed',
     left: '50%',
@@ -17,24 +41,37 @@ const useStyles = makeStyles(() => ({
     transform: 'translate(-50%,-50%)',
   },
   btn: {
-    width: '250px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minWidth: '250px',
     fontWeight: 400,
     fontSize: '16px',
     border: '0.15px solid #5145FB',
     background: '#1E2022',
     borderRadius: '8px',
     color: '#fff',
-    padding: '7px 35px',
+    padding: '6px 15px',
   },
   disabledBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     fontWeight: 400,
     fontSize: '16px',
     border: '0.15px solid #5145FB',
     background: '#1E2022',
     borderRadius: '8px',
     color: '#7C8498',
-    padding: '7px 35px',
+    padding: '6px 15px',
     pointerEvents: 'none',
+    minWidth: '250px',
+  },
+  divider: {
+    background:
+      'linear-gradient(232deg, rgba(236, 38, 245, 0.3) 50%, rgba(159, 90, 229, 0.3) 100%)',
+    border: 'none',
+    height: '1px',
   },
   pickerWrapper: {
     '& h6': {
@@ -47,9 +84,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function PeriodMenu({ options, setPeriod, checkedOption }) {
-  const styles = useStyles();
   const { connected } = useWallet();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const styles = useStyles();
   const [showDataPicker, setShowDataPicker] = useState<boolean>(false);
   const [openRangePicker, setOpenRangePicker] = useState<boolean>(true);
 
@@ -98,7 +135,8 @@ export default function PeriodMenu({ options, setPeriod, checkedOption }) {
         aria-expanded={anchorEl ? 'true' : undefined}
         onClick={handleOpenMenu}
       >
-        {rangeDate}
+        <Typography component="span">{rangeDate}</Typography>
+        <div className={anchorEl ? styles.arrow : styles.rotateArrow} />
       </button>
       <Menu
         id="basic-menu"
@@ -107,6 +145,7 @@ export default function PeriodMenu({ options, setPeriod, checkedOption }) {
         onClose={handleCloseMenu}
         PaperProps={{
           style: {
+            border: '1px solid #0156FF',
             width: '250px',
             right: 0,
             backgroundColor: '#35363A',
@@ -126,6 +165,7 @@ export default function PeriodMenu({ options, setPeriod, checkedOption }) {
             </MenuItem>
           );
         })}
+        <hr className={styles.divider} />
         <MenuItem style={{ position: 'relative' }}>
           {showDataPicker && (
             <div className={styles.rangePicker}>
@@ -138,7 +178,10 @@ export default function PeriodMenu({ options, setPeriod, checkedOption }) {
               /> */}
             </div>
           )}
-          <Button style={{ paddingLeft: '10px' }} onClick={() => setShowDataPicker(true)}>
+          <Button
+            style={{ paddingLeft: '10px', color: '#fff' }}
+            onClick={() => setShowDataPicker(true)}
+          >
             + Custom Data
           </Button>
         </MenuItem>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { Grid } from '@mui/material';
 import BasicLayout from '../../srm-components/BasicLayout';
+import { Grid } from '@mui/material';
 import { PagesTransitionButton } from '../../components/PagesTransitionButton';
 
 const useStyles = makeStyles((theme: Theme) => ({

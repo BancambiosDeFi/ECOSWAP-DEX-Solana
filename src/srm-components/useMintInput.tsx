@@ -93,7 +93,7 @@ export function useMintInput(
             </>
           }
         >
-          {label}
+          <>{label}</>
         </Tooltip>
       }
       name={name}

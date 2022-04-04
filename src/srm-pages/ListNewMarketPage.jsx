@@ -127,7 +127,9 @@ export default function ListNewMarketPage() {
                   `For a BTC/USDT market, this would be in units of BTC.`
                 }
               >
-                Minimum Order Size <Text type="secondary">(Lot size in e.g. BTC)</Text>
+                <>
+                  Minimum Order Size <Text type="secondary">(Lot size in e.g. BTC)</Text>
+                </>
               </Tooltip>
             }
             name="lotSize"
@@ -153,7 +155,9 @@ export default function ListNewMarketPage() {
                   `For a BTC/USDT market, this would be in units of USDT.`
                 }
               >
-                Tick Size <Text type="secondary">(Price increment in e.g. USDT)</Text>
+                <>
+                  Tick Size <Text type="secondary">(Price increment in e.g. USDT)</Text>
+                </>
               </Tooltip>
             }
             name="tickSize"

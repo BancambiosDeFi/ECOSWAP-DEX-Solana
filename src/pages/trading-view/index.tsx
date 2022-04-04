@@ -1,12 +1,10 @@
-import { createChart, CrosshairMode } from 'lightweight-charts';
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Grid } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Wallet from '@project-serum/sol-wallet-adapter';
 import { ConfirmOptions, Connection } from '@solana/web3.js';
 import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
-
 // eslint-disable-next-line import/no-unresolved
 import SwapProvider from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
@@ -14,87 +12,7 @@ import { NotifyingProvider } from '../swap/NotifyingProvider';
 import SwapContainer from '../swap/components/SwapContainer';
 import SearchForPairingsComponent from '../swap/components/SearchForPairings';
 import SwapTabs from '../swap/components/SwapTabs';
-import { priceData } from './priceData';
-import { volumeData } from './volumeData';
-
-const ChartComponent = () => {
-  const chartContainerRef = useRef() as any;
-  const chart = useRef() as any;
-  // const resizeObserver = useRef() as any;
-
-  useEffect(() => {
-    chart.current = createChart(chartContainerRef.current, {
-      width: 580,
-      height: 400,
-      layout: {
-        backgroundColor: '#253248',
-        textColor: 'rgba(255, 255, 255, 0.9)',
-      },
-      grid: {
-        vertLines: {
-          color: '#334158',
-        },
-        horzLines: {
-          color: '#334158',
-        },
-      },
-      crosshair: {
-        mode: CrosshairMode.Normal,
-      },
-      timeScale: {
-        borderColor: '#485c7b',
-      },
-    });
-
-    console.log(chart.current);
-
-    const candleSeries = chart.current.addCandlestickSeries({
-      upColor: '#4bffb5',
-      downColor: '#ff4976',
-      borderDownColor: '#ff4976',
-      borderUpColor: '#4bffb5',
-      wickDownColor: '#838ca1',
-      wickUpColor: '#838ca1',
-    });
-
-    candleSeries.setData(priceData);
-
-    const volumeSeries = chart.current.addHistogramSeries({
-      color: '#182233',
-      lineWidth: 2,
-      priceFormat: {
-        type: 'volume',
-      },
-      overlay: true,
-      scaleMargins: {
-        top: 0.8,
-        bottom: 0,
-      },
-    });
-
-    volumeSeries.setData(volumeData);
-  }, []);
-
-  // Resize chart on container resizes.
-  useEffect(() => {
-    // resizeObserver.current = new ResizeObserver(entries => {
-    //   const { width, height } = entries[0].contentRect;
-    //   chart.current.applyOptions({ width, height });
-    //   setTimeout(() => {
-    //     chart.current.timeScale().fitContent();
-    //   }, 0);
-    // });
-    // resizeObserver.current.observe(chartContainerRef.current);
-    // return () => resizeObserver.current.disconnect();
-  }, []);
-
-  return (
-    <div>
-      <div ref={chartContainerRef} className="chart-container" />
-    </div>
-  );
-};
-
+import { Chart } from './Chart';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minHeight: '70vh',
@@ -173,7 +91,7 @@ export default function App() {
           <SwapProvider provider={provider} tokenList={tokenList as any}>
             <div className={styles.tableBoxContainer}>
               <div className={styles.tableBoxOne}>
-                <ChartComponent></ChartComponent>
+                <Chart />
               </div>
               <div className={styles.tableBoxTwo}>
                 <div className={styles.swapTabs}>

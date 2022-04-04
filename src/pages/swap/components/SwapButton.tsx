@@ -88,7 +88,7 @@ const SwapButton: React.FC<SwapButtonProps> = ({
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
-      setConnection(new Connection(getNetwork()));
+      // setConnection(new Connection(getNetwork()));
     }
   }, [wallet, connected]);
 

@@ -162,8 +162,9 @@ export function useUnmigratedOpenOrdersAccounts() {
   };
 }
 
-const MarketContext: React.Context<null | MarketContextValues> =
-  React.createContext<null | MarketContextValues>(null);
+const MarketContext: React.Context<null | MarketContextValues> = React.createContext<null | MarketContextValues>(
+  null,
+);
 
 const _VERY_SLOW_REFRESH_INTERVAL = 5000 * 1000;
 
@@ -297,8 +298,9 @@ export function useSelectedTokenAccounts(): [
   SelectedTokenAccounts,
   (newSelectedTokenAccounts: SelectedTokenAccounts) => void,
 ] {
-  const [selectedTokenAccounts, setSelectedTokenAccounts] =
-    useLocalStorageState<SelectedTokenAccounts>('selectedTokenAccounts', {});
+  const [selectedTokenAccounts, setSelectedTokenAccounts] = useLocalStorageState<
+    SelectedTokenAccounts
+  >('selectedTokenAccounts', {});
 
   return [selectedTokenAccounts, setSelectedTokenAccounts];
 }

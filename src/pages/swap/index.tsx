@@ -13,7 +13,8 @@ import { NotifyingProvider } from './NotifyingProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: '70vh',
+    // minHeight: '70vh',
+    marginTop: '50px',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },

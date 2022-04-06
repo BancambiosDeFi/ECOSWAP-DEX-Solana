@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tableBoxOne: {
     width: '100%',
-    height: '264px',
+    height: '100%',
+    margin: 'auto 0 20px',
     // backgroundColor: 'white',
   },
   tableBoxTwo: {

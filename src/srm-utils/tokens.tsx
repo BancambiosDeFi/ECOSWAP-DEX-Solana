@@ -28,9 +28,7 @@ export const MINT_LAYOUT = BufferLayout.struct([
   BufferLayout.blob(36),
 ]);
 
-export function parseTokenAccountData(
-  data: Buffer,
-): {
+export function parseTokenAccountData(data: Buffer): {
   mint: PublicKey;
   owner: PublicKey;
   amount: number;

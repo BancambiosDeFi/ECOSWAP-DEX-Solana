@@ -18,9 +18,8 @@ interface ReferrerContextValues {
   allowRefLink: boolean;
 }
 
-const ReferrerContext: React.Context<null | ReferrerContextValues> = React.createContext<null | ReferrerContextValues>(
-  null,
-);
+const ReferrerContext: React.Context<null | ReferrerContextValues> =
+  React.createContext<null | ReferrerContextValues>(null);
 
 export const ASSOCIATED_TOKEN_PROGRAM_ID: PublicKey = new PublicKey(
   'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',

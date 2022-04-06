@@ -100,6 +100,7 @@ export default () => {
   const [isConfirmed, setConfirmed] = useState(false);
   const [isNotWarn, setNotWarn] = useState(false);
   const [isPoolExist, setPoolExist] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { swappableTokens: tokenList } = useSwappableTokens();
   const { fromMint, toMint, fromAmount, toAmount } = useSwapContext();
   const connection = useConnection();
@@ -111,7 +112,7 @@ export default () => {
   const fromMintInfo = useMint(fromMint);
   const styles = useStyles();
 
-  const onLiquidityAdd = async () => {
+  const onLiquidityAdd = useCallback(async () => {
     if (wallet && poolKey && poolInfo) {
       const { quoteMint, baseMint } = poolKey;
       const { quoteDecimals } = poolInfo;
@@ -182,12 +183,14 @@ export default () => {
         }
       }
     }
-  };
+  }, [connection, wallet, poolKey, poolInfo, fromMintInfo, toMintInfo, isNotWarn, noWarnPools]);
 
   useEffect(() => {
+    setLoading(true);
     getAllRaydiumPoolKeys(connection).then(poolKeys => {
       console.log('Pools added!');
       setRaydiumPoolKeys(poolKeys);
+      setLoading(false);
     });
   }, []);
 
@@ -200,8 +203,8 @@ export default () => {
       );
 
       if (filteredPoolKeys.length > 0) {
+        setLoading(true);
         const poolInfo = await getRaydiumPoolInfo({ connection, poolKeys: filteredPoolKeys[0] });
-        console.log(poolInfo);
         const baseCoinInfo = createTokenAmount(
           createToken(
             fromMint.toString(),
@@ -232,6 +235,7 @@ export default () => {
           (poolInfo.lpSupply.toNumber() / 10 ** poolInfo.lpDecimals).toFixed(poolInfo.lpDecimals),
         );
         setPoolExist(true);
+        setLoading(false);
         setPoolKey(filteredPoolKeys[0]);
         setPoolInfo(poolInfo);
         setPoolStats({ baseCoinInfo, quoteCoinInfo, lpPoolAmount });
@@ -298,6 +302,7 @@ export default () => {
           disabled={!isConfirmed || !isPoolExist}
           onClick={onLiquidityAdd}
           title={isPoolExist ? 'Add Liquidity' : 'Pool not found'}
+          loading={loading}
         />
       </Card>
     </Box>

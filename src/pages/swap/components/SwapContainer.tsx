@@ -22,6 +22,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     margin: '20px 33px 20px 0',
   },
+  charts: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 interface ChartProps {
@@ -43,8 +48,10 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
             <PagesTransitionButton location={location} />
             <SwapCard />
           </Box>
-          <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
-          <ChartContainer mint={toMint} swapType={SwapType.to} location={location} />
+          <div className={styles.charts}>
+            <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
+            <ChartContainer mint={toMint} swapType={SwapType.to} location={location} />
+          </div>
         </>
       ) : (
         <Box className={styles.root}>

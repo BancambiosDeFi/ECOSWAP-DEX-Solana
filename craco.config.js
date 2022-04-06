@@ -1,7 +1,17 @@
 const CracoLessPlugin = require('craco-less');
 const CracoAliasPlugin = require('craco-alias');
+const { DefinePlugin } = require('webpack');
 
 module.exports = {
+  webpack: {
+    plugins: {
+      add: [
+        new DefinePlugin({
+          process: { env: {} },
+        }),
+      ],
+    },
+  },
   plugins: [
     {
       plugin: CracoLessPlugin,

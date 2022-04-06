@@ -32,6 +32,11 @@ import { getSelectedTokenAccountForMint } from './markets';
 import { getDecimalCount, sleep } from './utils';
 import { notify } from './notifications';
 
+interface Signer {
+  publicKey: PublicKey;
+  secretKey: Uint8Array;
+}
+
 export async function createTokenAccountTransaction({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   connection,
@@ -136,16 +141,14 @@ export async function settleFunds({
       referrerQuoteWallet = usdcRef;
     }
   }
-  const {
-    transaction: settleFundsTransaction,
-    signers: settleFundsSigners,
-  } = await market.makeSettleFundsTransaction(
-    connection,
-    openOrders,
-    baseCurrencyAccountPubkey,
-    quoteCurrencyAccountPubkey,
-    referrerQuoteWallet,
-  );
+  const { transaction: settleFundsTransaction, signers: settleFundsSigners } =
+    await market.makeSettleFundsTransaction(
+      connection,
+      openOrders,
+      baseCurrencyAccountPubkey,
+      quoteCurrencyAccountPubkey,
+      referrerQuoteWallet,
+    );
 
   const transaction = mergeTransactions([createAccountTransaction, settleFundsTransaction]);
 
@@ -394,26 +397,22 @@ export async function placeOrder({
   const signers: Account[] = [];
 
   if (!baseCurrencyAccount) {
-    const {
-      transaction: createAccountTransaction,
-      newAccountPubkey,
-    } = await createTokenAccountTransaction({
-      connection,
-      wallet,
-      mintPublicKey: market.baseMintAddress,
-    });
+    const { transaction: createAccountTransaction, newAccountPubkey } =
+      await createTokenAccountTransaction({
+        connection,
+        wallet,
+        mintPublicKey: market.baseMintAddress,
+      });
     transaction.add(createAccountTransaction);
     baseCurrencyAccount = newAccountPubkey;
   }
   if (!quoteCurrencyAccount) {
-    const {
-      transaction: createAccountTransaction,
-      newAccountPubkey,
-    } = await createTokenAccountTransaction({
-      connection,
-      wallet,
-      mintPublicKey: market.quoteMintAddress,
-    });
+    const { transaction: createAccountTransaction, newAccountPubkey } =
+      await createTokenAccountTransaction({
+        connection,
+        wallet,
+        mintPublicKey: market.quoteMintAddress,
+      });
     transaction.add(createAccountTransaction);
     quoteCurrencyAccount = newAccountPubkey;
   }
@@ -441,10 +440,8 @@ export async function placeOrder({
   const matchOrderstransaction = market.makeMatchOrdersTransaction(5);
   transaction.add(matchOrderstransaction);
   const startTime = getUnixTs();
-  const {
-    transaction: placeOrderTx,
-    signers: placeOrderSigners,
-  } = await market.makePlaceOrderTransaction(connection, params, 120_000, 120_000);
+  const { transaction: placeOrderTx, signers: placeOrderSigners } =
+    await market.makePlaceOrderTransaction(connection, params, 120_000, 120_000);
   const endTime = getUnixTs();
   console.log(`Creating order transaction took ${endTime - startTime}`);
   transaction.add(placeOrderTx);
@@ -631,7 +628,7 @@ export async function sendTransaction({
 }: {
   transaction: Transaction;
   wallet: WalletAdapter;
-  signers?: Array<Account>;
+  signers?: Account[] | Signer[];
   connection: Connection;
   sendingMessage?: string;
   sentMessage?: string;
@@ -665,7 +662,7 @@ export async function signTransaction({
 }: {
   transaction: Transaction;
   wallet: WalletAdapter;
-  signers?: Array<Account>;
+  signers?: Array<Account> | Signer[];
   connection: Connection;
 }) {
   transaction.recentBlockhash = (await connection.getRecentBlockhash('max')).blockhash;

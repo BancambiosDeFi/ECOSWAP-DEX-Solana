@@ -3,6 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 // eslint-disable-next-line import/no-unresolved
 import SwapContainer from '../swap/components/SwapContainer';
+import { useWallet } from '../../components/wallet/wallet';
 import { Chart } from './Chart';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -12,15 +13,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(1),
   },
   tableBoxContainer: {
-    verticalAlign: 'top',
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
     alignItems: 'center',
   },
   tableBoxOne: {
-    width: '100%',
-    height: '100%',
-    margin: 'auto 0 20px',
-    // backgroundColor: 'white',
+    height: '340px',
+  },
+  tableBoxOneConnected: {
+    height: '520px',
   },
   tableBoxTwo: {
     display: 'flex',
@@ -36,10 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const ChartContainer = () => {
   const styles = useStyles();
+  const { connected } = useWallet();
 
   return (
     <div className={styles.tableBoxContainer}>
-      <div className={styles.tableBoxOne}>
+      <div className={!connected ? styles.tableBoxOne : styles.tableBoxOneConnected}>
         <Chart />
       </div>
       <div className={styles.tableBoxTwo}>

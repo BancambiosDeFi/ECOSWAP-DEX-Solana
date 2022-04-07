@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import React, { FC } from 'react';
 import { Button } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import styles from './Button.module.css';
 
@@ -10,7 +11,18 @@ export interface ButtonProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   isIconVisible?: boolean;
   disable?: boolean;
+  loading?: boolean;
 }
+
+const ButtonLoader = styled('div')({
+  '&': {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  '.loader': {
+    color: 'rgb(127, 70, 251)',
+  },
+});
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ConnectSwapButton = styled(Button)(({ theme }) => ({
@@ -171,6 +183,7 @@ const ButtonComponent: FC<ButtonProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isIconVisible = true,
   disable = false,
+  loading = false,
 }) => {
   let StyledButton: any;
 
@@ -191,7 +204,13 @@ const ButtonComponent: FC<ButtonProps> = ({
   return (
     <div className={disable ? styles.button_disable_container : styles.button_container}>
       <StyledButton onClick={onClick} disabled={disable}>
-        {title}
+        {loading ? (
+          <ButtonLoader>
+            <CircularProgress className="loader" />
+          </ButtonLoader>
+        ) : (
+          title
+        )}
       </StyledButton>
     </div>
   );

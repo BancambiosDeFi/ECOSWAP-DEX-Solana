@@ -20,13 +20,9 @@ interface ChartProps {
 }
 
 const useStyles = makeStyles(theme => ({
-  wrapper: ({ swapType }: any) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'left',
-    alignItems: 'center',
+  wrapper: () => ({
     height: '85px',
-    maxWidth: '468px', // '435px',
+    maxWidth: '435px',
     borderRadius: '20px',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     boxSizing: 'border-box',
@@ -106,8 +102,6 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location 
   const tokenInfo = tokenMap.get(mint.toString());
   const [historicalQuotes, setHistoricalQuotes] = useState<number[]>([]);
   const [percentageChange, setPercentageChange] = useState<number | undefined>(undefined);
-  const marginComponent = location === 'trade' ? '18px' : '0px';
-  const marginLeft = location === 'trade' ? '0px' : '-16px';
 
   const getTokenHistoricalQuotes = async (): Promise<AxiosResponse<any>> => {
     const endTime = moment().toISOString();
@@ -189,27 +183,25 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location 
     ) : null;
 
   return (
-    <div style={{ marginLeft: marginComponent, position: 'relative', left: marginLeft }}>
-      <Box className={styles.wrapper}>
-        <Box className={styles.tokenWrapper}>
-          <TokenIcon mint={mint} style={{ width: '45px' }} />
-          <Box className={styles.tokenInfoWrapper}>
-            <Box className={styles.tokenNameAndDiffWrapper}>
-              <TokenName
-                mint={mint}
-                style={{ textAlign: 'left', fontSize: 20, fontWeight: 700, margin: 0 }}
-              />
-              {triangleComponent}
-              {percentageChangeComponent}
-            </Box>
-            {lastPriceComponent}
+    <Box className={styles.wrapper}>
+      <Box className={styles.tokenWrapper}>
+        <TokenIcon mint={mint} style={{ width: '45px' }} />
+        <Box className={styles.tokenInfoWrapper}>
+          <Box className={styles.tokenNameAndDiffWrapper}>
+            <TokenName
+              mint={mint}
+              style={{ textAlign: 'left', fontSize: 20, fontWeight: 700, margin: 0 }}
+            />
+            {triangleComponent}
+            {percentageChangeComponent}
           </Box>
-          <SingleChart mint={mint} />
+          {lastPriceComponent}
         </Box>
-        <Box className={styles.chartWrapper}>
-          <TinyArea {...config} />
-        </Box>
+        <SingleChart mint={mint} />
       </Box>
-    </div>
+      <Box className={styles.chartWrapper}>
+        <TinyArea {...config} />
+      </Box>
+    </Box>
   );
 };

@@ -340,7 +340,7 @@ export function SwapTokenForm({
           inputMode: 'numeric',
           // eslint-disable-next-line
           // prettier-ignore
-          pattern: '^[0-9]*(\.[0-9]*)?$'
+          pattern: '^[0-9]*(\.[0-9]*)?$',
         }}
         InputProps={{
           // disableUnderline: true,

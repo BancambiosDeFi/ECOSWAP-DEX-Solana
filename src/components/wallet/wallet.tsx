@@ -41,9 +41,10 @@ export function WalletProvider({ children }) {
   const [autoConnect, setAutoConnect] = useState(false);
   const [providerUrl, setProviderUrl] = useLocalStorageState('walletProvider');
 
-  const provider = useMemo(() => WALLET_PROVIDERS.find(({ url }) => url === providerUrl), [
-    providerUrl,
-  ]);
+  const provider = useMemo(
+    () => WALLET_PROVIDERS.find(({ url }) => url === providerUrl),
+    [providerUrl],
+  );
 
   // eslint-disable-next-line prefer-const
   let [wallet, setWallet] = useState<WalletAdapter | undefined>(undefined);

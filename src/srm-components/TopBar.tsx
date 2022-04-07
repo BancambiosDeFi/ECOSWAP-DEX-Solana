@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Connection } from '@solana/web3.js';
-import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import logo from '../srm-assets/logo.png';
 import { useWallet } from '../components/wallet/wallet';
@@ -12,13 +11,14 @@ import { EndpointInfo } from '../srm-utils/types';
 import { notify } from '../srm-utils/notifications';
 import WalletConnect from '../components/wallet/WalletConnect';
 import { getTradePageUrl } from '../srm-utils/markets';
+import UserWalletHeaderMenu from '../components/wallet/UserWalletHeaderMenu';
 
 const Wrapper = styled.div`
   background-color: #04030a;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  padding: 0px 30px;
+  justify-content: center;
+  padding: 0px 100px;
   flex-wrap: wrap;
 `;
 const LogoWrapper = styled.div`
@@ -26,6 +26,7 @@ const LogoWrapper = styled.div`
   align-items: center;
   color: #0156ff !important;
   font-weight: bold;
+  padding-bottom: '10px';
   cursor: pointer;
   img {
     height: 56px;
@@ -154,10 +155,7 @@ export default function TopBar() {
           width: '100%',
         }}
       >
-        <LogoWrapper
-          style={{ marginLeft: '100px', paddingBottom: '10px' }}
-          onClick={() => history.push(tradePageUrl)}
-        >
+        <LogoWrapper style={{ paddingBottom: '10px' }} onClick={() => history.push(tradePageUrl)}>
           <img src={logo} alt="" />
         </LogoWrapper>
         <div
@@ -203,42 +201,7 @@ export default function TopBar() {
               Token Sale
             </Menu.Item>
           </Menu>
-          {connected && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                paddingBottom: '16px',
-                justifyContent: 'space-between',
-                marginRight: '10px',
-              }}
-            >
-              <Typography
-                style={{
-                  fontStyle: 'normal',
-                  fontWeight: 'bold',
-                  fontSize: '30.6667px',
-                  lineHeight: '46px',
-                  paddingRight: '10px',
-                }}
-              >
-                🌏
-              </Typography>
-              <Typography
-                style={{
-                  fontStyle: 'normal',
-                  fontWeight: 'bold',
-                  fontSize: '16px',
-                  lineHeight: '46px',
-                }}
-              >
-                $215
-              </Typography>
-            </div>
-          )}
-          <div style={{ marginRight: '100px', paddingBottom: '9px' }}>
-            <WalletConnect />
-          </div>
+          {!connected ? <WalletConnect /> : <UserWalletHeaderMenu />}
         </div>
       </Wrapper>
     </>

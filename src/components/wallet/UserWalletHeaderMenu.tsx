@@ -25,8 +25,12 @@ const useStyles = makeStyles({
     'margin': 0,
     'padding': '0',
     'background': 'rgba(159, 90, 229, 0.3)',
-    'border': '1px solid',
-    'borderColor': '#EC26F5',
+    'border': 'solid 1px transparent',
+    'backgroundImage':
+      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #9F5AE5, #EC26F5)',
+    'backgroundOrigin': 'border-box',
+    'backgroundClip': 'content-box, border-box',
+    'boxShadow': '2px 500px #431e68 inset',
     'borderRadius': '20px',
     'alignItems': 'center',
     '&:hover': {

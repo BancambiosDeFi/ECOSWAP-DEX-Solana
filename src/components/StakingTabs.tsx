@@ -11,14 +11,17 @@ const useStyles = makeStyles(() => ({
     background: '#202124',
     borderRadius: '8px',
     marginBottom: '20px',
+    width: '280px',
   },
   tab: {
     '&&': {
       color: '#BDC1C6',
-      fontSize: '16px',
+      fontSize: '22px',
       fontWeight: '700',
       fontFamily: 'Saira',
       borderRadius: '8px',
+      textTransform: 'none',
+      width: '50%',
     },
   },
   active: {

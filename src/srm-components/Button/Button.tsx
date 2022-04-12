@@ -31,7 +31,7 @@ const ConnectSwapButton = styled(Button)(({ theme }) => ({
   'maxHeight': '64px',
   'maxWidth': '434px',
   'color': '#FFFFFF',
-  'border': 'solid 1px transparent',
+  'border': 'solid 3px transparent',
   'borderRadius': '8px',
   'backgroundImage':
     'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
@@ -58,7 +58,7 @@ const SwapButton = styled(Button)(({ theme }) => ({
   'maxHeight': '64px',
   'maxWidth': '434px',
   'color': '#FFFFFF',
-  'border': 'solid 1px transparent',
+  'border': 'solid 3px transparent',
   'borderRadius': '8px',
   'backgroundImage':
     'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',

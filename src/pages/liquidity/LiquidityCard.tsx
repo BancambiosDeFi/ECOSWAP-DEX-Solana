@@ -123,7 +123,7 @@ const useStyles = makeStyles(() => ({
     'fontFamily': '"Spy Agency", sans-serif',
     'fontWeight': '400',
     'color': '#fff',
-    'border': 'solid 1px transparent',
+    'border': 'solid 3px transparent',
     'borderRadius': '8px',
     'backgroundImage':
       'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import {
   Liquidity,
   Spl,
@@ -34,6 +34,7 @@ import { PoolInfo } from './PoolInfo';
 import { ConfirmationBlock } from './ConfirmationBlock';
 import { InfoLabel } from './InfoLabel';
 import { AddLiquidityButton } from './AddLiquidityButton';
+import { ExpiresInBlock } from './ExpiresInBlock';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -89,11 +90,13 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
   },
+  fromBlock: {
+    position: 'relative',
+    marginBottom: '8px',
+  },
 }));
 
 export default () => {
-  const [raydiumPoolKeys, setRaydiumPoolKeys] = useState<LiquidityPoolKeysV4[]>([]);
-  const [poolStats, setPoolStats] = useState({});
   const [poolKey, setPoolKey] = useState<LiquidityPoolKeysV4 | null>(null);
   const [poolInfo, setPoolInfo] = useState<LiquidityPoolInfo | null>(null);
   const [noWarnPools, setNoWarnPools] = useState<string[]>([]);
@@ -102,14 +105,13 @@ export default () => {
   const [isPoolExist, setPoolExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const { swappableTokens: tokenList } = useSwappableTokens();
-  const { fromMint, toMint, fromAmount, toAmount } = useSwapContext();
+  const { fromMint, toMint } = useSwapContext();
   const connection = useConnection();
   const { wallet } = useWallet();
   const tokenMap = useTokenMap();
-  const toTokenInfo = tokenMap.get(toMint.toString());
-  const fromTokenInfo = tokenMap.get(fromMint.toString());
   const toMintInfo = useMint(toMint);
   const fromMintInfo = useMint(fromMint);
+  const fromTokenInfo = tokenMap.get(fromMint.toString());
   const styles = useStyles();
 
   const onLiquidityAdd = useCallback(async () => {
@@ -185,87 +187,39 @@ export default () => {
     }
   }, [connection, wallet, poolKey, poolInfo, fromMintInfo, toMintInfo, isNotWarn, noWarnPools]);
 
+  const fetchPoolInfo = useCallback(async () => {
+    setLoading(true);
+    const currentPoolInfo = await getRaydiumPoolInfo({
+      connection,
+      poolKeys: poolKey as LiquidityPoolKeysV4,
+    });
+    setPoolInfo(currentPoolInfo);
+    setLoading(false);
+  }, [connection, poolKey]);
+
   useEffect(() => {
     setLoading(true);
     getAllRaydiumPoolKeys(connection).then(poolKeys => {
-      console.log('Pools added!');
-      setRaydiumPoolKeys(poolKeys);
-      setLoading(false);
-    });
-  }, []);
-
-  useEffect(() => {
-    const fetchPoolInfo = async () => {
-      const filteredPoolKeys = raydiumPoolKeys.filter(
+      const [poolKey] = poolKeys.filter(
         pool =>
           (pool.baseMint.equals(fromMint) && pool.quoteMint.equals(toMint)) ||
           (pool.baseMint.equals(toMint) && pool.quoteMint.equals(fromMint)),
       );
-
-      if (filteredPoolKeys.length > 0) {
-        setLoading(true);
-        const poolInfo = await getRaydiumPoolInfo({ connection, poolKeys: filteredPoolKeys[0] });
-        const baseCoinInfo = createTokenAmount(
-          createToken(
-            fromMint.toString(),
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            fromMintInfo?.decimals,
-            // @ts-ignore
-            fromTokenInfo?.symbol,
-            fromTokenInfo?.name,
-          ),
-          // @ts-ignore
-          poolInfo.baseReserve,
-        );
-        const quoteCoinInfo = createTokenAmount(
-          createToken(
-            toMint.toString(),
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            toMintInfo?.decimals,
-            // @ts-ignore
-            toTokenInfo?.symbol,
-            toTokenInfo?.name,
-          ),
-          // @ts-ignore
-          poolInfo.quoteReserve,
-        );
-        const lpPoolAmount = Number(
-          (poolInfo.lpSupply.toNumber() / 10 ** poolInfo.lpDecimals).toFixed(poolInfo.lpDecimals),
-        );
+      if (poolKey) {
+        setPoolKey(poolKey);
         setPoolExist(true);
-        setLoading(false);
-        setPoolKey(filteredPoolKeys[0]);
-        setPoolInfo(poolInfo);
-        setPoolStats({ baseCoinInfo, quoteCoinInfo, lpPoolAmount });
-        // .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }
       } else {
         setPoolExist(false);
-        console.error(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          `Pool stats ERROR: "${fromTokenInfo?.symbol}-${toTokenInfo?.symbol}" or ` +
-            // eslint-disable-next-line max-len
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            `"${toTokenInfo?.symbol}-${fromTokenInfo?.symbol}" Raydium liquidity pool doesn't exist!`,
-        );
       }
-    };
-    if (toMint && raydiumPoolKeys.length && fromMintInfo && toMintInfo) {
+      setLoading(false);
+    });
+  }, [fromMint, toMint, connection]);
+
+  useEffect(() => {
+    if (poolKey) {
       fetchPoolInfo();
     }
-  }, [
-    toAmount,
-    toMint,
-    raydiumPoolKeys,
-    fromMintInfo,
-    toMintInfo,
-    connection,
-    fromAmount,
-    fromMint,
-    fromTokenInfo,
-    toTokenInfo,
-  ]);
+  }, [poolKey]);
 
   useEffect(() => {
     const noWarnPools = localStorage.getItem('noWarnPools');
@@ -277,7 +231,10 @@ export default () => {
   return (
     <Box className={styles.root}>
       <Card className={styles.card}>
-        <Typography className={styles.title}>From</Typography>
+        <div className={styles.fromBlock}>
+          <Typography className={styles.title}>From</Typography>
+          <ExpiresInBlock fetchStats={fetchPoolInfo} />
+        </div>
         <SwapFromForm tokenList={tokenList} />
         <div className={styles.switchBlock}>
           <Typography className={styles.switchTitle}>To (Estimate)</Typography>
@@ -289,7 +246,7 @@ export default () => {
             <InfoLabel />
           </Box>
         )}
-        {isPoolExist && <PoolInfo {...poolStats} />}
+        {isPoolExist && <PoolInfo poolInfo={poolInfo} />}
         {!(poolKey && noWarnPools.includes(poolKey.id.toString())) ? (
           <ConfirmationBlock
             isConfirmed={isConfirmed}

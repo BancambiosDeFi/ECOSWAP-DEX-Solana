@@ -16,8 +16,9 @@ export const ENDPOINTS: EndpointInfo[] = [
 
 const accountListenerCount = new Map();
 
-const ConnectionContext: React.Context<null | ConnectionContextValues> =
-  React.createContext<null | ConnectionContextValues>(null);
+const ConnectionContext: React.Context<null | ConnectionContextValues> = React.createContext<null | ConnectionContextValues>(
+  null,
+);
 
 export function ConnectionProvider({ children }) {
   const [endpoint, setEndpoint] = useLocalStorageState<string>(

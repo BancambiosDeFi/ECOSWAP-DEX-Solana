@@ -1,20 +1,16 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Liquidity,
-  Spl,
   Percent,
   Token,
   LiquidityPoolKeysV4,
   LiquidityPoolInfo,
-  SPL_ACCOUNT_LAYOUT,
-  getMultipleAccountsInfo,
 } from '@raydium-io/raydium-sdk';
 import { Card, Typography, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import {
   useSwappableTokens,
   useSwapContext,
-  useMint,
   useTokenMap,
   // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
@@ -24,9 +20,11 @@ import {
   createTokenAmount,
   getAllRaydiumPoolKeys,
   getRaydiumPoolInfo,
+  convertToBN,
 } from '../../utils/raydiumRequests';
 import { useConnection } from '../../srm-utils/connection';
 import { sendTransaction } from '../../srm-utils/send';
+import { getWalletTokenAccounts } from '../../srm-utils/getWalletTokenAccounts';
 import { useWallet } from '../../components/wallet/wallet';
 // import { InfoLabel } from '../swap/components/Info';
 import { SwapFromForm, SwapToForm, SwitchButton } from '../swap/components/SwapCard';
@@ -35,6 +33,8 @@ import { ConfirmationBlock } from './ConfirmationBlock';
 import { InfoLabel } from './InfoLabel';
 import { AddLiquidityButton } from './AddLiquidityButton';
 import { ExpiresInBlock } from './ExpiresInBlock';
+
+const ADD_LIQUIDITY_TIMEOUT = 1000 * 60 * 2;
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -105,35 +105,38 @@ export default () => {
   const [isPoolExist, setPoolExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const { swappableTokens: tokenList } = useSwappableTokens();
-  const { fromMint, toMint } = useSwapContext();
+  const { fromMint, fromAmount, toMint, toAmount } = useSwapContext();
   const connection = useConnection();
   const { wallet } = useWallet();
   const tokenMap = useTokenMap();
-  const toMintInfo = useMint(toMint);
-  const fromMintInfo = useMint(fromMint);
-  const fromTokenInfo = tokenMap.get(fromMint.toString());
   const styles = useStyles();
 
   const onLiquidityAdd = useCallback(async () => {
-    if (wallet && poolKey && poolInfo) {
+    if (wallet && poolKey && poolInfo && fromAmount && toAmount) {
       const { quoteMint, baseMint } = poolKey;
-      const { quoteDecimals } = poolInfo;
+      const { baseDecimals, quoteDecimals } = poolInfo;
+      const fromTokenInfo = tokenMap.get(baseMint.toString());
+      const toTokenInfo = tokenMap.get(quoteMint.toString());
 
       const currencyAmount = createTokenAmount(
         createToken(
-          fromMint.toString(),
+          baseMint.toString(),
           // @ts-ignore
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          fromMintInfo?.decimals,
+          baseDecimals,
           // @ts-ignore
           fromTokenInfo?.symbol,
           fromTokenInfo?.name,
         ),
         // @ts-ignore
-        poolInfo.baseReserve,
+        convertToBN(fromAmount * Math.pow(10, baseDecimals)),
       );
-      const anotherCurrency = new Token(quoteMint, quoteDecimals);
-
+      const anotherCurrency = new Token(
+        quoteMint.toString(),
+        quoteDecimals,
+        toTokenInfo?.symbol,
+        toTokenInfo?.name,
+      );
       const { maxAnotherAmount } = Liquidity.computeAnotherAmount({
         poolKeys: poolKey,
         poolInfo,
@@ -141,43 +144,29 @@ export default () => {
         anotherCurrency,
         slippage: new Percent(0),
       });
-      const quoteTokenAccount = await Spl.getAssociatedTokenAccount({
-        mint: quoteMint,
+      const { rawInfos: tokenAccountRawInfos } = await getWalletTokenAccounts({
+        connection,
         owner: wallet.publicKey,
       });
-      const lpTokenAccount = await Spl.getAssociatedTokenAccount({
-        mint: baseMint,
-        owner: wallet.publicKey,
-      });
-      const infos = await getMultipleAccountsInfo(connection, [quoteTokenAccount, lpTokenAccount]);
-      const [quoteAccountInfo, lpAccountInfo] = infos;
-      if (quoteAccountInfo && lpAccountInfo) {
+
+      if (tokenAccountRawInfos.length) {
         const { transaction, signers } = await Liquidity.makeAddLiquidityTransaction({
           connection,
           poolKeys: poolKey,
           userKeys: {
-            tokenAccounts: [
-              {
-                pubkey: quoteTokenAccount,
-                accountInfo: SPL_ACCOUNT_LAYOUT.decode(quoteAccountInfo.data),
-              },
-              {
-                pubkey: lpTokenAccount,
-                accountInfo: SPL_ACCOUNT_LAYOUT.decode(lpAccountInfo.data),
-              },
-            ],
+            tokenAccounts: tokenAccountRawInfos,
             owner: wallet.publicKey,
           },
           amountInA: currencyAmount,
           amountInB: maxAnotherAmount,
           fixedSide: 'a',
         });
-
         await sendTransaction({
           connection,
           wallet,
           transaction,
           signers,
+          timeout: ADD_LIQUIDITY_TIMEOUT,
         });
 
         if (isNotWarn) {
@@ -185,7 +174,7 @@ export default () => {
         }
       }
     }
-  }, [connection, wallet, poolKey, poolInfo, fromMintInfo, toMintInfo, isNotWarn, noWarnPools]);
+  }, [connection, wallet, poolKey, poolInfo, isNotWarn, noWarnPools, fromAmount, toAmount]);
 
   const fetchPoolInfo = useCallback(async () => {
     setLoading(true);
@@ -256,7 +245,7 @@ export default () => {
           />
         ) : null}
         <AddLiquidityButton
-          disabled={!isConfirmed || !isPoolExist}
+          disabled={!isConfirmed || !isPoolExist || !fromAmount || !toAmount}
           onClick={onLiquidityAdd}
           title={isPoolExist ? 'Add Liquidity' : 'Pool not found'}
           loading={loading}

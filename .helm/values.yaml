@@ -9,6 +9,7 @@ deployment:
   container:
     image: ''
   maxSurge: 3
+  app_port: '80'
   probe_path: '/'
 
 host_url: ''

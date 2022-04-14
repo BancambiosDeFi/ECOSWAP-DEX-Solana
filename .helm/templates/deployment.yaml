@@ -32,8 +32,8 @@ spec:
         image: {{ include "container-image" . }}
         imagePullPolicy: IfNotPresent
         ports:
-        - name: tcp
-          containerPort: 80
+        - name: app-port
+          containerPort: {{ .Values.deployment.app_port }}
         resources:
           requests: 
             memory: "1G"
@@ -43,14 +43,14 @@ spec:
         startupProbe:
           httpGet:
             path: {{ .Values.deployment.probe_path }}
-            port: 80
+            port: {{ .Values.deployment.app_port }}
           initialDelaySeconds: 10
           failureThreshold: 20
           periodSeconds: 5
         livenessProbe:
           httpGet:
             path: {{ .Values.deployment.probe_path }}
-            port: 80
+            port: {{ .Values.deployment.app_port }}
           failureThreshold: 3
           periodSeconds: 30
       affinity:

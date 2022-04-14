@@ -4,12 +4,20 @@ kind: ''      # subgroup on git
 app_env: ''   # branch on git
 namespace: '' # namespase on k8s
 
-container: 
-  image: ''
+deployment:
+  replicas: 3
+  container:
+    image: ''
+  maxSurge: 3
+  app_port: '80'
+  probe_path: '/'
 
-probe_path: '/'
-host: ''
+host_url: ''
 
 affinity:
   role: ''
   environment: ''
+
+podautoscaler:
+  minReplicas: 3
+  maxReplicas: 5

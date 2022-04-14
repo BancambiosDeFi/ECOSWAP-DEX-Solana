@@ -23,10 +23,10 @@ metadata:
 spec:
   tls:
   - hosts:
-      - {{ .Values.host }}
+      - {{ .Values.host_url }}
     secretName: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}-tls
   rules:
-    - host: {{ .Values.host }}
+    - host: {{ .Values.host_url }}
       http:
         paths:
         - path: /
@@ -61,10 +61,10 @@ metadata:
 spec:
   tls:
   - hosts:
-      - {{ .Values.host }}
+      - {{ .Values.host_url }}
     secretName: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}-tls
   rules:
-    - host: {{ .Values.host }}
+    - host: {{ .Values.host_url }}
       http:
         paths:
         - path: /investor-registration

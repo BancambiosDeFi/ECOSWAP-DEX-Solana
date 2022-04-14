@@ -11,6 +11,7 @@ spec:
     kind: {{ .Values.kind }}
     app_env: {{ .Values.app_env }}
   ports:
-  - protocol: TCP
+  - name: app-port
+    protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: app-port

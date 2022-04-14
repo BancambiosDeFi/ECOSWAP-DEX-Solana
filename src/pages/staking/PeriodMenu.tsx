@@ -88,6 +88,7 @@ export default function PeriodMenu({ options, setPeriod, checkedOption }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const styles = useStyles();
   const [showDataPicker, setShowDataPicker] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [openRangePicker, setOpenRangePicker] = useState<boolean>(true);
 
   // const toggleRangePicker = () => setOpenRangePicker(!openRangePicker);

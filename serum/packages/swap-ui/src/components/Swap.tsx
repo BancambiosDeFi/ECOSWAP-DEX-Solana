@@ -210,7 +210,7 @@ export function SwapTokenForm({
 
   const formattedAmount =
     mintAccount && amount
-      ? amount.toLocaleString('fullwide', {
+      ? amount.toLocaleString('en-IN', {
           maximumFractionDigits: mintAccount.decimals,
           useGrouping: false,
         })
@@ -236,7 +236,7 @@ export function SwapTokenForm({
       </div>
       <TextField
         type="number"
-        value={formattedAmount}
+        value={amount}
         onChange={e => setAmount(parseFloat(e.target.value))}
         InputProps={{
           disableUnderline: true,

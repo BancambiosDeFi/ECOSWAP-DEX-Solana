@@ -158,19 +158,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SwapCard({
-  containerStyle,
-  contentStyle,
-  swapTokenContainerStyle,
-}: {
-  containerStyle?: any;
-  contentStyle?: any;
-  swapTokenContainerStyle?: any;
-}) {
+export default function SwapCard() {
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
-  const { impact, setImpact, fromAmount, toAmount, fromMint } = useSwapContext();
+  const { setImpact, fromAmount, toAmount, fromMint } = useSwapContext();
   const { onSwap } = useOnSwap();
   const { connected, wallet } = useWallet();
   const [ecoImpactType, setEcoImpactType] = useState<string>('$');
@@ -298,10 +290,10 @@ export default function SwapCard({
           txSignatures,
         }}
       />
-      <Card className={styles.card} style={containerStyle}>
-        <div style={contentStyle}>
+      <Card className={styles.card}>
+        <div>
           <Typography className={styles.title}>From</Typography>
-          <SwapFromForm style={swapTokenContainerStyle} tokenList={tokenList} />
+          <SwapFromForm tokenList={tokenList} />
           <div className={styles.switchBlock}>
             <Typography className={styles.switchTitle}>To (Estimate)</Typography>
             <SwitchButton />
@@ -338,7 +330,7 @@ export function SwitchButton() {
   );
 }
 
-function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
+export function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { fromMint, setFromMint, fromAmount, setFromAmount } = useSwapContext();
   // eslint-disable-next-line padding-line-between-statements
   return (
@@ -354,7 +346,7 @@ function SwapFromForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[
   );
 }
 
-function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
+export function SwapToForm({ style, tokenList }: { style?: any; tokenList: TokenInfo[] }) {
   const { toMint, setToMint, toAmount, setToAmount } = useSwapContext();
   // eslint-disable-next-line padding-line-between-statements
   return (
@@ -400,10 +392,14 @@ export function SwapTokenForm({
 
   const formattedAmount =
     mintAccount && amount
-      ? amount.toLocaleString('fullwide', {
-          maximumFractionDigits: mintAccount.decimals,
-          useGrouping: false,
-        })
+      ? parseFloat(
+          amount
+            .toLocaleString('en-IN', {
+              maximumFractionDigits: mintAccount.decimals,
+              useGrouping: false,
+            })
+            .replace(/,/, '.'),
+        )
       : amount;
 
   return (
@@ -421,7 +417,21 @@ export function SwapTokenForm({
       <TextField
         type="number"
         value={formattedAmount}
-        onChange={e => setAmount(parseFloat(e.target.value))}
+        onChange={e => {
+          if (e.target.value === '') {
+            setAmount(0);
+          }
+          const newValue = parseFloat(e.target.value || '0');
+          if (!isNaN(newValue)) {
+            setAmount(newValue);
+          }
+        }}
+        inputProps={{
+          inputMode: 'numeric',
+          // eslint-disable-next-line
+          // prettier-ignore
+          pattern: '^[0-9]*(\.[0-9]*)?$'
+        }}
         InputProps={{
           // disableUnderline: true,
           classes: {

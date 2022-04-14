@@ -6,11 +6,13 @@ export default function WalletConnect() {
   const { connected, connect, disconnect } = useWallet();
 
   return (
-    <ButtonComponent
-      type={'connect'}
-      title={'Connect Wallet'}
-      onClick={connected ? disconnect : connect}
-      isIconVisible={false}
-    />
+    <div style={{ width: '' }}>
+      <ButtonComponent
+        type={'connect'}
+        title={'Connect Wallet'}
+        onClick={connected ? disconnect : connect}
+        isIconVisible={false}
+      />
+    </div>
   );
 }

@@ -12,8 +12,10 @@ import StakingPage from './pages/staking';
 // import { getTradePageUrl } from './srm-utils/markets';
 import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
+import SwapContainer from './pages/swap/components/SwapContainer';
 import WithdrawPage from './pages/withdraw';
-import TradingViewPage from './pages/trading-view';
+import { LiquidityContainer } from './pages/liquidity';
+import TradingView from './pages/trading-view';
 
 export function Routes() {
   return (
@@ -43,19 +45,26 @@ export function Routes() {
           <Route exact path="/design-system">
             <DesignSystemPage />
           </Route>
-          <Route exact path="/swap">
+          {/* <Route exact path="/swap">
             <SwapPage />
-          </Route>
+          </Route> */}
           <Route exact path="/withdraw">
             <WithdrawPage />
           </Route>
           <Route exact path="/staking">
             <StakingPage />
           </Route>
-
-          <Route exact path="/trading-view">
-            <TradingViewPage />
-          </Route>
+          <SwapPage>
+            <Route exact path="/swap">
+              <SwapContainer location={'swap'} />
+            </Route>
+            <Route exact path="/liquidity">
+              <LiquidityContainer />
+            </Route>
+            <Route exact path="/trading-view">
+              <TradingView />
+            </Route>
+          </SwapPage>
         </Switch>
       </HashRouter>
     </>

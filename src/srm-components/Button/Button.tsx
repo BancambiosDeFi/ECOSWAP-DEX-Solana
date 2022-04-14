@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import React, { FC } from 'react';
 import { Button } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import styles from './Button.module.css';
 
@@ -10,7 +11,18 @@ export interface ButtonProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   isIconVisible?: boolean;
   disable?: boolean;
+  loading?: boolean;
 }
+
+const ButtonLoader = styled('div')({
+  '&': {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  '.loader': {
+    color: 'rgb(127, 70, 251)',
+  },
+});
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ConnectSwapButton = styled(Button)(({ theme }) => ({
@@ -21,8 +33,12 @@ const ConnectSwapButton = styled(Button)(({ theme }) => ({
   'color': '#FFFFFF',
   'background': 'rgba(1, 86, 255, 0.3)',
   'borderRadius': '8px',
-  'border': '3px solid',
-  'borderColor': '#9F5AE5',
+  'border': 'solid 3px transparent',
+  'backgroundImage':
+    'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
+  'backgroundOrigin': 'border-box',
+  'backgroundClip': 'content-box, border-box',
+  'boxShadow': '2px 500px rgb(3, 46, 131) inset',
   // #0156FF
   'textTransform': 'none',
   'fontFamily': '"Spy Agency", sans-serif',
@@ -46,8 +62,12 @@ const SwapButton = styled(Button)(({ theme }) => ({
   'color': '#FFFFFF',
   'background': 'rgba(1, 86, 255, 0.3)',
   'borderRadius': '8px',
-  'border': '3px solid',
-  'borderColor': '#9F5AE5',
+  'border': 'solid 3px transparent',
+  'backgroundImage':
+    'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
+  'backgroundOrigin': 'border-box',
+  'backgroundClip': 'content-box, border-box',
+  'boxShadow': '2px 500px rgb(3, 46, 131) inset',
   'textTransform': 'none',
   'fontFamily': '"Spy Agency", sans-serif',
   'fontSize': '20px',
@@ -171,6 +191,7 @@ const ButtonComponent: FC<ButtonProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isIconVisible = true,
   disable = false,
+  loading = false,
 }) => {
   let StyledButton: any;
 
@@ -191,7 +212,13 @@ const ButtonComponent: FC<ButtonProps> = ({
   return (
     <div className={disable ? styles.button_disable_container : styles.button_container}>
       <StyledButton onClick={onClick} disabled={disable}>
-        {title}
+        {loading ? (
+          <ButtonLoader>
+            <CircularProgress className="loader" />
+          </ButtonLoader>
+        ) : (
+          title
+        )}
       </StyledButton>
     </div>
   );

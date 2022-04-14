@@ -114,10 +114,10 @@ k8s-prod:
       --set project=$CI_PROJECT_NAME
       --set kind=$KIND
       --set app_env=$CI_COMMIT_REF_SLUG
-      --set container.image=$IMAGE_NAME
+      --set deployment.container.image=$IMAGE_NAME
       --set affinity.role=worker
       --set affinity.environment=prod
-      --set host=$HOST_URL
+      --set host_url=$HOST_URL
       --namespace prod
       --debug
       --wait

@@ -56,7 +56,7 @@
     "typescript": "4.6.2"
   },
   "scripts": {
-    "prebuild": "cp -r impact-pool-api .. && cd ../impact-pool-api && yarn install",
+    "prebuild": "cp -r impact-pool-api .. && cd ../impact-pool-api && yarn install && npm link",
     "postbuild": "npm link ../impact-pool-api",
     "predeploy": "git pull --ff-only && yarn && yarn build",
     "deploy": "gh-pages -d build",

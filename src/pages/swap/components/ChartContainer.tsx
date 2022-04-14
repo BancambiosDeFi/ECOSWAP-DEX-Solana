@@ -21,12 +21,8 @@ interface ChartProps {
 
 const useStyles = makeStyles(theme => ({
   wrapper: () => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignSelf: 'center',
     height: '85px',
-    maxWidth: '468px', // '435px',
+    maxWidth: '435px',
     borderRadius: '20px',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     boxSizing: 'border-box',

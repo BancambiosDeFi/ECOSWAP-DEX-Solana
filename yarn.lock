@@ -10,16 +10,16 @@
     "@jridgewell/trace-mapping" "^0.3.0"
 
 "@angular/common@>= 5.0.0":
-  "integrity" "sha512-tQ2dKh5v/a0Nz6EXguw/vyms8VeRhcZO0F2xd9C+UdS3DVBftC1milluWGpjXdkLijTlJBCr114aXyZsyjNf3g=="
-  "resolved" "https://registry.npmjs.org/@angular/common/-/common-13.3.2.tgz"
-  "version" "13.3.2"
+  "integrity" "sha512-W5rZyuilGAA+tHoTbvHHu11efUBssiiX9BKg2rQAwbdnG+hZfNs0ze28Y+2bwjTDkbLsXsQwm30gs2uie7aMyA=="
+  "resolved" "https://registry.npmjs.org/@angular/common/-/common-13.3.3.tgz"
+  "version" "13.3.3"
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/core@>= 5.0.0", "@angular/core@13.3.2":
-  "integrity" "sha512-e+3eyV1AaiiP/3L82BKi5WowAYzsOmSfzYdT4utQScuTjbtNhIo4NvlpSRwk51QRYR9XsqinHO3SfEX2eMPSGA=="
-  "resolved" "https://registry.npmjs.org/@angular/core/-/core-13.3.2.tgz"
-  "version" "13.3.2"
+"@angular/core@>= 5.0.0", "@angular/core@13.3.3":
+  "integrity" "sha512-zVsAuR1qT2QEUXDk8ANs+pCnxH7ckKAD+rJXoxI1Br94Ey1o7lNXu/GPJtTqxDbsRd7sGqMMQRti36t2CA5QhA=="
+  "resolved" "https://registry.npmjs.org/@angular/core/-/core-13.3.3.tgz"
+  "version" "13.3.3"
   dependencies:
     "tslib" "^2.3.0"
 

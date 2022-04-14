@@ -7,6 +7,8 @@ import { useSwapContext } from '@serum/swap-ui';
 import { SwapType } from '../../../types';
 import { useWallet } from '../../../components/wallet/wallet';
 import { PagesTransitionButton } from '../../../components/PagesTransitionButton';
+import { StakingTabs } from '../../../components/StakingTabs';
+import SearchForPairingsComponent from './SearchForPairings';
 import SwapCard from './SwapCard';
 import { ChartContainer } from './ChartContainer';
 
@@ -19,6 +21,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     height: '100%',
     margin: '20px 33px 20px 0',
+  },
+  charts: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 }));
 
@@ -33,14 +40,18 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
 
   return (
     <>
+      <StakingTabs />
+      <SearchForPairingsComponent type={'none'} width={'600'} />
       {connected ? (
         <>
           <Box className={styles.root}>
             <PagesTransitionButton location={location} />
             <SwapCard />
           </Box>
-          <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
-          <ChartContainer mint={toMint} swapType={SwapType.to} location={location} />
+          <div className={styles.charts}>
+            <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
+            <ChartContainer mint={toMint} swapType={SwapType.to} location={location} />
+          </div>
         </>
       ) : (
         <Box className={styles.root}>

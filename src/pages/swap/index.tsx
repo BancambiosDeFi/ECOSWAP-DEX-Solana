@@ -11,35 +11,23 @@ import Swap from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { useWallet } from '../../components/wallet/wallet';
 import { NotifyingProvider } from './NotifyingProvider';
-import SwapContainer from './components/SwapContainer';
-import SearchForPairingsComponent from './components/SearchForPairings';
 import SwapTabs from './components/SwapTabs';
-
-// App illustrating the use of the Swap component.
-//
-// One needs to just provide an Anchor `Provider` and a `TokenListContainer`
-// to the `Swap` component, and then everything else is taken care of.
-// function App() {
-//   return (
-// <SnackbarProvider maxSnack={5} autoHideDuration={8000}>
-// <AppInner />
-// </SnackbarProvider>
-//   );
-// }
+import SearchForPairingsComponent from './components/SearchForPairings';
+import SwapContainer from './components/SwapContainer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: '70vh',
+    // minHeight: '70vh',
+    marginTop: '50px',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },
 }));
 
-export default function SwapPage() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function SwapPage({ children }) {
   const styles = useStyles();
   const { wallet } = useWallet();
-  //   const { enqueueSnackbar } = useSnackbar();
-  // const [isConnected, setIsConnected] = useState(false);
   const [tokenList, setTokenList] = useState<TokenListContainer | null>(null);
 
   const [provider] = useMemo(() => {
@@ -49,29 +37,13 @@ export default function SwapPage() {
     };
     const network = 'https://solana-api.projectserum.com';
     const connection = new Connection(network, opts.preflightCommitment);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const provider = new NotifyingProvider(connection, wallet as Wallet, opts, (tx, err) => {
-      // if (err) {
-      //   enqueueSnackbar(`Error: ${err.toString()}`, {
-      //     variant: 'error',
-      //   });
-      // } else {
-      //   enqueueSnackbar('Transaction sent', {
-      //     variant: 'success',
-      //     action: (
-      //       <Button
-      //         color="inherit"
-      //         component="a"
-      //         target="_blank"
-      //         rel="noopener"
-      //         href={`https://explorer.solana.com/tx/${tx}`}
-      //       >
-      //         View on Solana Explorer
-      //       </Button>
-      //     ),
-      //   });
-      // }
-    });
+    const provider = new NotifyingProvider(
+      connection,
+      wallet as Wallet,
+      opts,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (tx, err) => undefined,
+    );
 
     return [provider];
   }, [wallet]);

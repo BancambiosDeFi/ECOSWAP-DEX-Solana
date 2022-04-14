@@ -72,15 +72,15 @@ export default function UserWalletHeaderMenu() {
   const { wallet, providerName, connected, disconnect } = useWallet();
   const [userBalance, setUserBalance] = useState('0');
 
-  // const networkMain = 'https://solana-mainnet.phantom.tech';
+  const networkMain = 'https://solana-mainnet.phantom.tech';
   // testnet balance
-  const networkTest = 'https://api.testnet.solana.com';
+  // const networkTest = 'https://api.testnet.solana.com';
   // devnet balance
   // const networkDev = 'https://api.devnet.solana.com';
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
-      const connection = new Connection(networkTest);
+      const connection = new Connection(networkMain);
       const balancePromise = getBalance(connection, wallet.publicKey);
 
       balancePromise.then(number => {

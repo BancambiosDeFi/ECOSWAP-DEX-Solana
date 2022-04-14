@@ -1,9 +1,9 @@
 import React from 'react';
 // eslint-disable-next-line import/no-unresolved
-import { useSwapContext } from '@serum/swap-ui';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { useSwapContext } from '@serum/swap-ui';
 import { SwapType } from '../../../types';
 import { useWallet } from '../../../components/wallet/wallet';
 import { PagesTransitionButton } from '../../../components/PagesTransitionButton';

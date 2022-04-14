@@ -90,7 +90,7 @@ export default function PeriodMenu({ options, setPeriod, checkedOption }) {
   const [showDataPicker, setShowDataPicker] = useState<boolean>(false);
   const [openRangePicker, setOpenRangePicker] = useState<boolean>(true);
 
-  const toggleRangePicker = () => setOpenRangePicker(!openRangePicker);
+  // const toggleRangePicker = () => setOpenRangePicker(!openRangePicker);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

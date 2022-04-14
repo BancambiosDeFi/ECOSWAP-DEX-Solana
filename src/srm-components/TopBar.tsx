@@ -65,7 +65,7 @@ export default function TopBar() {
   const { connected, wallet } = useWallet();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {
-    endpoint,
+    // endpoint,
     endpointInfo,
     setEndpoint,
     availableEndpoints,

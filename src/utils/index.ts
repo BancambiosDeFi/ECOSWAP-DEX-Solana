@@ -27,5 +27,8 @@ export const getImpactPool = (payer: PublicKey, impactName: string): ImpactPool 
 };
 
 export const converterBNtoString = (value: BN): string => {
-  return value.div(new BN(process.env.REACT_APP_LAMPORTS_PER_SOL as string)).toString();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // @ts-ignore
+  return (value.toNumber() / +process.env.REACT_APP_USDT_DECIMALS_MULTIPLIER).toString();
 };

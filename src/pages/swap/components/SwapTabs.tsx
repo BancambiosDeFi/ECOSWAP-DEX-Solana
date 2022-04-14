@@ -23,10 +23,10 @@ const ButtonTabs = styled.button`
 export default function SwapTabs() {
   const [activeTab, setActiveTab] = useState('swap');
   const TabsButtons = ['Swap', 'Liquidity'];
-  const tabContent = {
-    swap: 1,
-    liquidity: 2,
-  };
+  // const tabContent = {
+  //   swap: 1,
+  //   liquidity: 2,
+  // };
 
   return (
     <TabsStyled>

@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NumberFormat from 'react-number-format';
-import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 import { useSwapContext } from '@serum/swap-ui';
+import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 
 interface SlippageToleranceProps {
   handleClose: () => void;

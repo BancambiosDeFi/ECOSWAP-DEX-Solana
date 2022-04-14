@@ -278,7 +278,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
   const styles = useStyles();
   const [isSettings, setIsSettings] = useState<boolean>(false);
   const [isEcoImpactSettings, setIsEcoImpactSettings] = useState<boolean>(false);
-  const { fromMint, toMint, fromAmount, toAmount, slippage, setSlippage } = useSwapContext();
+  const { fromMint, toMint, fromAmount, toAmount, slippage } = useSwapContext();
   const tokenMap = useTokenMap();
   const toTokenInfo = tokenMap.get(toMint.toString());
   const fromTokenInfo = tokenMap.get(fromMint.toString());
@@ -295,7 +295,6 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
 
   useEffect(() => {
     getAllRaydiumPoolKeys(connection).then(poolKeys => {
-      console.log('Pools added!');
       setRaydiumPoolKeys(poolKeys);
     });
   }, []);

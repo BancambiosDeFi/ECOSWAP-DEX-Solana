@@ -7,8 +7,9 @@ import { ConfirmOptions, Connection } from '@solana/web3.js';
 import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
 
 // eslint-disable-next-line import/no-unresolved
-import SwapProvider from '@serum/swap-ui';
+import Swap from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
+import { useWallet } from '../../components/wallet/wallet';
 import { NotifyingProvider } from './NotifyingProvider';
 import SwapContainer from './components/SwapContainer';
 import SearchForPairingsComponent from './components/SearchForPairings';
@@ -36,20 +37,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function SwapPage() {
   const styles = useStyles();
+  const { wallet } = useWallet();
   //   const { enqueueSnackbar } = useSnackbar();
   // const [isConnected, setIsConnected] = useState(false);
   const [tokenList, setTokenList] = useState<TokenListContainer | null>(null);
 
-  const [provider, wallet] = useMemo(() => {
+  const [provider] = useMemo(() => {
     const opts: ConfirmOptions = {
       preflightCommitment: 'recent',
       commitment: 'recent',
     };
     const network = 'https://solana-api.projectserum.com';
-    const wallet = new Wallet('https://www.sollet.io', network);
     const connection = new Connection(network, opts.preflightCommitment);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const provider = new NotifyingProvider(connection, wallet, opts, (tx, err) => {
+    const provider = new NotifyingProvider(connection, wallet as Wallet, opts, (tx, err) => {
       // if (err) {
       //   enqueueSnackbar(`Error: ${err.toString()}`, {
       //     variant: 'error',
@@ -72,24 +73,12 @@ export default function SwapPage() {
       // }
     });
 
-    return [provider, wallet];
-  }, []);
+    return [provider];
+  }, [wallet]);
 
   useEffect(() => {
     new TokenListProvider().resolve().then(setTokenList);
   }, [setTokenList]);
-
-  // Connect to the wallet.
-  useEffect(() => {
-    wallet.on('connect', () => {
-      //   enqueueSnackbar('Wallet connected', { variant: 'success' });
-      // setIsConnected(true);
-    });
-    wallet.on('disconnect', () => {
-      //   enqueueSnackbar('Wallet disconnected', { variant: 'info' });
-      // setIsConnected(false);
-    });
-  }, [wallet]);
 
   // TODO: change tokenList any type to something meaningful
   return (
@@ -101,14 +90,14 @@ export default function SwapPage() {
         alignItems="center"
         className={styles.root}
       >
-        {tokenList && (
-          <SwapProvider provider={provider} tokenList={tokenList as any}>
+        {tokenList && wallet && (
+          <Swap provider={provider} tokenList={tokenList as any}>
             <>
               <SwapTabs />
               <SearchForPairingsComponent type={'none'} width={'600'} />
               <SwapContainer location={'swap'} />
             </>
-          </SwapProvider>
+          </Swap>
         )}
       </Grid>
     </BasicLayout>

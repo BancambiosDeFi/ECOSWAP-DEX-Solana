@@ -1,5 +1,9 @@
 import { PublicKey } from '@solana/web3.js';
 
+export const DEFAULT_PUBLIC_KEY = new PublicKey(
+  '11111111111111111111111111111111',
+);
+
 export const DEX_PID = new PublicKey(
   '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin',
 );

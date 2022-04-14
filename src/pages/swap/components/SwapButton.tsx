@@ -1,106 +1,74 @@
 import React, { useEffect, useState } from 'react';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Connection, PublicKey } from '@solana/web3.js';
 // eslint-disable-next-line import/no-unresolved
-import { useOnSwap } from '@serum/swap-ui';
+import { useMarket, useOnSwap, useSwapContext, useTokenMap } from '@serum/swap-ui';
+import { Box } from '@mui/material';
+import { useRouteVerbose } from '@serum/swap-ui/lib/context/Dex';
 import { useWallet } from '../../../components/wallet/wallet';
-import { getNetwork } from '../../../utils';
 import ButtonComponent from '../../../srm-components/Button/Button';
 import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';
+import BodyText from '../../../components/typography/BodyText';
 
 interface SwapButtonProps {
-  ecoImpactType: string;
-  ecoImpactValue: string;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsError: React.Dispatch<React.SetStateAction<boolean>>;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  checkingEcoContributionPossibility: () => Promise<void>;
 }
 
-const tokenExistErrorMessage =
-  'Your account does not have enough USDT tokens for the specified eco-contribution.\n' +
-  'You can continue the token exchange process without eco-contribution or cancel the ' +
-  'exchange and replenish your USDT token balance.';
-
-const SwapButton: React.FC<SwapButtonProps> = ({
-  ecoImpactType,
-  ecoImpactValue,
-  setOpen,
-  isLoading,
-  setIsLoading,
-  setIsError,
-  setErrorMessage,
-}) => {
+const SwapButton: React.FC<SwapButtonProps> = ({ checkingEcoContributionPossibility }) => {
   const { canSwap } = useOnSwap();
-  const { connected, wallet } = useWallet();
-  const [connection, setConnection] = useState<Connection>();
-
-  const checkingEcoContributionPossibility = () => {
-    Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      new PublicKey(process.env.REACT_APP_USDT_TOKEN_ADDRESS!),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      // @ts-ignore
-      wallet?.publicKey,
-    )
-      .then(tokenAddress => {
-        connection
-          ?.getTokenAccountBalance(tokenAddress)
-          .then(tokenBalance => {
-            if (
-              !tokenBalance.value.uiAmount ||
-              tokenBalance.value.uiAmount <= 0 ||
-              (ecoImpactType === '$' && tokenBalance.value.uiAmount < Number(ecoImpactValue))
-            ) {
-              setIsError(true);
-              setErrorMessage(tokenExistErrorMessage);
-            }
-            setIsLoading(true);
-            setOpen(true);
-          })
-          .catch(() => {
-            setErrorMessage(tokenExistErrorMessage);
-            setIsError(true);
-            setOpen(true);
-          });
-      })
-      .catch(e => {
-        setErrorMessage(e.message);
-        setIsError(true);
-        setOpen(true);
-      });
-  };
-
-  const swapTransaction = () => {
-    console.log('swapTransaction func...');
-  };
+  const { fromMint, toMint, fromAmount } = useSwapContext();
+  const { connected } = useWallet();
+  const tokenMap = useTokenMap();
+  const fromTokenInfo = tokenMap.get(fromMint.toString());
+  const route = useRouteVerbose(fromMint, toMint);
+  const fromMarket = useMarket(route && route.markets ? route.markets[0] : undefined);
+  const [errorText, setErrorText] = useState<string>('');
+  const [warningText, setWarningText] = useState<string>('');
 
   useEffect(() => {
-    if (isLoading) {
-      swapTransaction();
+    if (
+      fromTokenInfo?.symbol &&
+      fromMarket?.minOrderSize &&
+      fromAmount > 0 &&
+      fromAmount < fromMarket?.minOrderSize
+    ) {
+      setErrorText(
+        `${fromTokenInfo?.symbol} amount less than the min order size '${fromMarket?.minOrderSize}'`,
+      );
+    } else {
+      setErrorText('');
     }
-  }, [isLoading]);
+  }, [fromMarket?.minOrderSize, fromAmount, fromTokenInfo?.symbol]);
 
   useEffect(() => {
-    if (wallet?.publicKey && connected) {
-      // setConnection(new Connection(getNetwork()));
+    if (fromTokenInfo?.symbol === 'SOL') {
+      setWarningText(
+        'Unfortunately, it is not possible to make an eco-contribution when exchanging SOL.',
+      );
+    } else {
+      setWarningText('');
     }
-  }, [wallet, connected]);
+  }, [fromTokenInfo?.symbol]);
 
   if (connected) {
     return (
-      <ButtonComponent
-        type={'swap'}
-        title={'Swap'}
-        onClick={checkingEcoContributionPossibility}
-        // onClick={onSwap}
-        disable={!canSwap}
-        isIconVisible={false}
-      />
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {errorText ? <BodyText style={{ color: 'red' }} text={errorText} /> : null}
+        {warningText ? <BodyText style={{ color: 'yellow' }} text={warningText} /> : null}
+        <ButtonComponent
+          type={'swap'}
+          title={'Swap'}
+          onClick={checkingEcoContributionPossibility}
+          disable={!canSwap}
+          isIconVisible={false}
+        />
+      </Box>
     );
   } else {
     return <WalletConnectSwap />;

@@ -25,8 +25,12 @@ const useStyles = makeStyles({
     'margin': 0,
     'padding': '0',
     'background': 'rgba(159, 90, 229, 0.3)',
-    'border': '1px solid',
-    'borderColor': '#EC26F5',
+    'border': 'solid 1px transparent',
+    'backgroundImage':
+      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #9F5AE5, #EC26F5)',
+    'backgroundOrigin': 'border-box',
+    'backgroundClip': 'content-box, border-box',
+    'boxShadow': '2px 500px #431e68 inset',
     'borderRadius': '20px',
     'alignItems': 'center',
     '&:hover': {
@@ -68,15 +72,15 @@ export default function UserWalletHeaderMenu() {
   const { wallet, providerName, connected, disconnect } = useWallet();
   const [userBalance, setUserBalance] = useState('0');
 
-  const networkMain = 'https://solana-mainnet.phantom.tech';
+  // const networkMain = 'https://solana-mainnet.phantom.tech';
   // testnet balance
-  // const networkTest = 'https://api.testnet.solana.com';
+  const networkTest = 'https://api.testnet.solana.com';
   // devnet balance
   // const networkDev = 'https://api.devnet.solana.com';
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
-      const connection = new Connection(networkMain);
+      const connection = new Connection(networkTest);
       const balancePromise = getBalance(connection, wallet.publicKey);
 
       balancePromise.then(number => {

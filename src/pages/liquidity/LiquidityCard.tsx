@@ -8,6 +8,7 @@ import {
 } from '@raydium-io/raydium-sdk';
 import { Card, Typography, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import {
   useSwappableTokens,
   useSwapContext,
@@ -39,20 +40,31 @@ const ADD_LIQUIDITY_TIMEOUT = 1000 * 60 * 2;
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     height: '100%',
-    margin: '20px 0',
+    margin: '15px 0',
+  },
+  cardLabel: {
+    fontFamily: 'Saira',
+    fontWeight: '700',
+    fontSize: '24px',
+    margin: '0 0 15px 30px',
   },
   card: {
-    borderRadius: '20px !important',
+    borderRadius: '8px !important',
     border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    backgroundColor: '#35363A !important',
-    width: '435px',
-    height: '100%',
-    padding: '26px 16px',
+    backgroundColor: '#0A0C0E !important',
+    width: '486px',
+    height: 'fit-content',
+    padding: '9px 25px',
+    marginBottom: '43px',
+  },
+  swapCard: {
+    paddingTop: '52px',
   },
   title: {
     fontFamily: 'Saira !important',
@@ -93,6 +105,41 @@ const useStyles = makeStyles(() => ({
   fromBlock: {
     position: 'relative',
     marginBottom: '8px',
+  },
+  createPoolText: {
+    fontFamily: 'Saira !important',
+    fontStyle: 'normal',
+    fontWeight: '400 !important',
+    fontSize: '16px !important',
+    lineHeight: '29px !important',
+    textAlign: 'left',
+    color: '#FFFFFF',
+  },
+  wrapperCreatePoolButton: {
+    marginTop: '10px',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  createPoolButton: {
+    'cursor': 'pointer',
+    'width': '213px',
+    'height': '43px',
+    'fontSize': '20px',
+    'fontFamily': '"Spy Agency", sans-serif',
+    'fontWeight': '400',
+    'color': '#fff',
+    'border': 'solid 1px transparent',
+    'borderRadius': '8px',
+    'backgroundImage':
+      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
+    'backgroundOrigin': 'border-box',
+    'backgroundClip': 'content-box, border-box',
+    'boxShadow': '2px 50px rgb(3, 46, 131) inset',
+    '&:hover': {
+      background:
+        'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
+      boxShadow: '0px 0px 16px #9F5AE5',
+    },
   },
 }));
 
@@ -251,6 +298,29 @@ export default () => {
           loading={loading}
         />
       </Card>
+      <div>
+        <h2 className={styles.cardLabel}>Your Liquidity</h2>
+        <Card className={styles.card}></Card>
+      </div>
+      <div>
+        <h2 className={styles.cardLabel}>Create Pool</h2>
+        <Card className={styles.card}>
+          <Typography className={styles.createPoolText}>
+            {`Create a liquidity pool on Bancambios that can be traded on the swap interface. Read
+            the guide before attempting.`}
+          </Typography>
+          <div className={styles.wrapperCreatePoolButton}>
+            <button className={styles.createPoolButton}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}
+              >
+                <AddTwoToneIcon sx={{ fontSize: 17 }} />
+                Create Pool
+              </div>
+            </button>
+          </div>
+        </Card>
+      </div>
     </Box>
   );
 };

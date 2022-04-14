@@ -26,12 +26,15 @@ const useStyles = makeStyles(theme => ({
     'flexDirection': 'row',
     'justifyContent': 'space-between',
     'backgroundColor': 'rgba(65, 63, 63, 1)',
-    'borderRadius': '20px',
     'padding': '8px 16px',
     'marginBottom': '20px',
-    'backgroundClip': 'padding-box',
-    'border': 'solid 0.5px transparent',
-
+    'border': 'solid 1px transparent',
+    'borderRadius': '8px',
+    'backgroundImage':
+      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
+    'backgroundOrigin': 'border-box',
+    'backgroundClip': 'content-box, border-box',
+    'boxShadow': '2px 500px #202124 inset',
     '&:before': {
       content: '',
       position: 'absolute',

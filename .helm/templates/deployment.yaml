@@ -9,11 +9,11 @@ metadata:
     kind: {{ .Values.kind }}
     app_env: {{ .Values.app_env }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: {{ .Values.deployment.maxSurge }}
       maxUnavailable: 0
   selector:
     matchLabels:
@@ -32,8 +32,8 @@ spec:
         image: {{ include "container-image" . }}
         imagePullPolicy: IfNotPresent
         ports:
-        - name: tcp
-          containerPort: 80
+        - name: app-port
+          containerPort: {{ .Values.deployment.app_port }}
         resources:
           requests: 
             memory: "1G"
@@ -42,17 +42,17 @@ spec:
             memory: "2G"
         startupProbe:
           httpGet:
-            path: {{ .Values.probe_path }}
-            port: 80
+            path: {{ .Values.deployment.probe_path }}
+            port: {{ .Values.deployment.app_port }}
           initialDelaySeconds: 10
           failureThreshold: 20
           periodSeconds: 5
         livenessProbe:
           httpGet:
-            path: {{ .Values.probe_path }}
-            port: 80
-          failureThreshold: 2
-          periodSeconds: 20
+            path: {{ .Values.deployment.probe_path }}
+            port: {{ .Values.deployment.app_port }}
+          failureThreshold: 3
+          periodSeconds: 30
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

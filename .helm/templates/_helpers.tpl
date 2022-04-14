@@ -2,6 +2,6 @@
 {{/* 
 replace of value "^" on "+" 
 */}}
-{{- $image := .Values.container.image | replace "^" "+" -}}
+{{- $image := .Values.deployment.container.image | replace "^" "+" -}}
 {{- printf $image -}}
 {{- end -}}

@@ -42,14 +42,14 @@ spec:
             memory: "2G"
         startupProbe:
           httpGet:
-            path: {{ .Values.probe_path }}
+            path: {{ .Values.deployment.probe_path }}
             port: 80
           initialDelaySeconds: 10
           failureThreshold: 20
           periodSeconds: 5
         livenessProbe:
           httpGet:
-            path: {{ .Values.probe_path }}
+            path: {{ .Values.deployment.probe_path }}
             port: 80
           failureThreshold: 3
           periodSeconds: 30

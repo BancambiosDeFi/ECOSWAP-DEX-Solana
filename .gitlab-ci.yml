@@ -13,7 +13,7 @@ variables:
   HOST_URL: bx.app
 
 stages:
-  - build
+  # - build
   - deploy
 
 # --- commit develop
@@ -74,31 +74,31 @@ stand-01-develop:
 # ---
 
 # --- commit main
-build-k8s:
-  stage: build
-  before_script:
-    - apk add binutils curl
-    - curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub
-    - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk
-    - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-bin-2.31-r0.apk
-    - apk add glibc-2.31-r0.apk glibc-bin-2.31-r0.apk
-    - curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip &&
-      unzip awscliv2.zip > /dev/null 2>&1 &&
-      aws/install > /dev/null 2>&1
-    - docker --version && aws --version
-    - export AWS_ACCESS_KEY_ID="$BC_AWS_ACCESS_KEY_ID"
-    - export AWS_SECRET_ACCESS_KEY="$BC_AWS_SECRET_ACCESS_KEY"
-    - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_REG_URL}
-  script:
-    - docker build
-        --build-arg APP_ENV_ARG="main"
-      -t $IMAGE_NAME .
-    - docker push $IMAGE_NAME
-    - docker rmi -f $IMAGE_NAME
-  only:
-    - main
-  tags:
-    - bc-exchange-gitlab-runner-01
+# build-k8s:
+#   stage: build
+#   before_script:
+#     - apk add binutils curl
+#     - curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub
+#     - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk
+#     - curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-bin-2.31-r0.apk
+#     - apk add glibc-2.31-r0.apk glibc-bin-2.31-r0.apk
+#     - curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip &&
+#       unzip awscliv2.zip > /dev/null 2>&1 &&
+#       aws/install > /dev/null 2>&1
+#     - docker --version && aws --version
+#     - export AWS_ACCESS_KEY_ID="$BC_AWS_ACCESS_KEY_ID"
+#     - export AWS_SECRET_ACCESS_KEY="$BC_AWS_SECRET_ACCESS_KEY"
+#     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_REG_URL}
+#   script:
+#     - docker build
+#         --build-arg APP_ENV_ARG="main"
+#       -t $IMAGE_NAME .
+#     - docker push $IMAGE_NAME
+#     - docker rmi -f $IMAGE_NAME
+#   only:
+#     - main
+#   tags:
+#     - bc-exchange-gitlab-runner-01
 
 k8s-prod:
   stage: deploy
@@ -114,10 +114,10 @@ k8s-prod:
       --set project=$CI_PROJECT_NAME
       --set kind=$KIND
       --set app_env=$CI_COMMIT_REF_SLUG
-      --set container.image=$IMAGE_NAME
+      --set container.image=155584866075.dkr.ecr.eu-central-1.amazonaws.com/bc-exchange-main-srm-dex-fe:4780-84f8f2ce
       --set affinity.role=worker
       --set affinity.environment=prod
-      --set host=$HOST_URL
+      --set host_url=$HOST_URL
       --namespace prod
       --debug
       --wait

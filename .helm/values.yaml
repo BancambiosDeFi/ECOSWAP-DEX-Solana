@@ -5,7 +5,7 @@ app_env: ''   # branch on git
 namespace: '' # namespase on k8s
 
 deployment:
-  replicas: 1
+  replicas: 3
   container:
     image: ''
   maxSurge: 3

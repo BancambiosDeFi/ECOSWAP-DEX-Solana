@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.project }}-{{ .Values.kind }}-{{ .Values.app_env }}
-        image: {{ .Values.deployment.container.image }}
+        image: {{ include "container-image" . }}
         imagePullPolicy: IfNotPresent
         ports:
         - name: tcp

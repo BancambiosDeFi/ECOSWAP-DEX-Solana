@@ -114,7 +114,7 @@ k8s-prod:
       --set project=$CI_PROJECT_NAME
       --set kind=$KIND
       --set app_env=$CI_COMMIT_REF_SLUG
-      --set container.image=155584866075.dkr.ecr.eu-central-1.amazonaws.com/bc-exchange-main-srm-dex-fe:4780-84f8f2ce
+      --set deployment.container.image=155584866075.dkr.ecr.eu-central-1.amazonaws.com/bc-exchange-main-srm-dex-fe:4780-84f8f2ce
       --set affinity.role=worker
       --set affinity.environment=prod
       --set host_url=$HOST_URL

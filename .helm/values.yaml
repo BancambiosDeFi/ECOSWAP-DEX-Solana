@@ -8,7 +8,7 @@ container:
   image: ''
 
 deployment:
-  maxSurge: 1
+  maxSurge: 3
   probe_path: '/'
 
 host_url: ''
@@ -17,6 +17,6 @@ affinity:
   role: ''
   environment: ''
 
-# podautoscaler:
-#   minReplicas: 3
-#   maxReplicas: 5
+podautoscaler:
+  minReplicas: 3
+  maxReplicas: 5

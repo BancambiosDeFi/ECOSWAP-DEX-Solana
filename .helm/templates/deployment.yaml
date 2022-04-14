@@ -9,7 +9,6 @@ metadata:
     kind: {{ .Values.kind }}
     app_env: {{ .Values.app_env }}
 spec:
-  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:

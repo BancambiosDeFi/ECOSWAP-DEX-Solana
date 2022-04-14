@@ -13,7 +13,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: {{ .Values.deployment.maxSurge }}
       maxUnavailable: 0
   selector:
     matchLabels:
@@ -51,8 +51,8 @@ spec:
           httpGet:
             path: {{ .Values.probe_path }}
             port: 80
-          failureThreshold: 2
-          periodSeconds: 20
+          failureThreshold: 3
+          periodSeconds: 30
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

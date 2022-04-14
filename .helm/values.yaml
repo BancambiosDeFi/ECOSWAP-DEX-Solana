@@ -4,10 +4,11 @@ kind: ''      # subgroup on git
 app_env: ''   # branch on git
 namespace: '' # namespase on k8s
 
-container:
-  image: ''
+
 
 deployment:
+  container:
+    image: ''
   maxSurge: 3
   probe_path: '/'
 

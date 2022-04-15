@@ -15,7 +15,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Provider } from '@project-serum/anchor';
-import { Market } from '@project-serum/serum';
+import { Market } from '../../../serum';
 import { SRM_MINT, USDC_MINT, USDT_MINT } from '../utils/pubkeys';
 import {
   useFairRoute,

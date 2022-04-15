@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { MintInfo } from '@solana/spl-token';
 import { BN } from '@project-serum/anchor';
-import { OpenOrders } from '@project-serum/serum';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { Close } from '@mui/icons-material';
+import { OpenOrders } from '../../../serum';
 import { useMarket, useOpenOrders, useDexContext } from '../context/Dex';
 import { useTokenMap } from '../context/TokenList';
 import { useMint, useOwnedTokenAccount } from '../context/Token';

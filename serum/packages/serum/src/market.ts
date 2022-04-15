@@ -431,6 +431,7 @@ export class Market {
       openOrdersAddressKey,
       openOrdersAccount,
       feeDiscountPubkey,
+      maxTs,
     }: OrderParams,
   ) {
     const { transaction, signers } = await this.makePlaceOrderTransaction<
@@ -446,6 +447,7 @@ export class Market {
       openOrdersAddressKey,
       openOrdersAccount,
       feeDiscountPubkey,
+      maxTs,
     });
     return await this._sendTransaction(connection, transaction, [
       owner,
@@ -599,6 +601,7 @@ export class Market {
       openOrdersAccount,
       feeDiscountPubkey = undefined,
       selfTradeBehavior = 'decrementTake',
+      maxTs,
     }: OrderParams<T>,
     cacheDurationMs = 0,
     feeDiscountPubkeyCacheDurationMs = 0,
@@ -714,6 +717,7 @@ export class Market {
       openOrdersAddressKey: openOrdersAddress,
       feeDiscountPubkey: useFeeDiscountPubkey,
       selfTradeBehavior,
+      maxTs,
     });
     transaction.add(placeOrderInstruction);
 
@@ -745,6 +749,7 @@ export class Market {
       openOrdersAddressKey,
       openOrdersAccount,
       feeDiscountPubkey = null,
+      maxTs,
     } = params;
     // @ts-ignore
     const ownerAddress: PublicKey = owner.publicKey ?? owner;
@@ -771,9 +776,8 @@ export class Market {
         orderType,
         clientId,
         programId: this._programId,
-        // TODO: remove any
         feeDiscountPubkey: this.supportsSrmFeeDiscounts
-          ? (feeDiscountPubkey as any)
+          ? feeDiscountPubkey
           : null,
       });
     } else {
@@ -797,6 +801,7 @@ export class Market {
       feeDiscountPubkey = null,
       selfTradeBehavior = 'decrementTake',
       programId,
+      maxTs,
     } = params;
     // @ts-ignore
     const ownerAddress: PublicKey = owner.publicKey ?? owner;
@@ -823,10 +828,12 @@ export class Market {
       clientId,
       programId: programId ?? this._programId,
       selfTradeBehavior,
-      // TODO: remove any
+      // @ts-ignore
       feeDiscountPubkey: this.supportsSrmFeeDiscounts
-        ? (feeDiscountPubkey as any)
+        ? feeDiscountPubkey
         : null,
+      // @ts-ignore
+      maxTs,
     });
   }
 
@@ -863,6 +870,21 @@ export class Market {
     return await this._sendTransaction(connection, transaction, [owner]);
   }
 
+  async cancelOrdersByClientIds(
+    connection: Connection,
+    owner: Account,
+    openOrders: PublicKey,
+    clientIds: BN[],
+  ) {
+    const transaction = await this.makeCancelOrdersByClientIdsTransaction(
+      connection,
+      owner.publicKey,
+      openOrders,
+      clientIds,
+    );
+    return await this._sendTransaction(connection, transaction, [owner]);
+  }
+
   async makeCancelOrderByClientIdTransaction(
     connection: Connection,
     owner: PublicKey,
@@ -895,6 +917,28 @@ export class Market {
         }),
       );
     }
+    return transaction;
+  }
+
+  async makeCancelOrdersByClientIdsTransaction(
+    connection: Connection,
+    owner: PublicKey,
+    openOrders: PublicKey,
+    clientIds: BN[],
+  ) {
+    const transaction = new Transaction();
+    transaction.add(
+      DexInstructions.cancelOrdersByClientIds({
+        market: this.address,
+        openOrders,
+        owner,
+        bids: this._decoded.bids,
+        asks: this._decoded.asks,
+        eventQueue: this._decoded.eventQueue,
+        clientIds,
+        programId: this._programId,
+      }),
+    );
     return transaction;
   }
 
@@ -1068,8 +1112,7 @@ export class Market {
             : quoteWallet,
         vaultSigner,
         programId: this._programId,
-        // TODO: remove any
-        referrerQuoteWallet: referrerQuoteWallet as any,
+        referrerQuoteWallet,
       }),
     );
 
@@ -1272,6 +1315,7 @@ export interface OrderParams<T = Account> {
     | 'abortTransaction'
     | undefined;
   programId?: PublicKey;
+  maxTs?: number | null;
 }
 
 export const _OPEN_ORDERS_LAYOUT_V1 = struct([
@@ -1500,7 +1544,9 @@ export class Orderbook {
     for (const { key, quantity } of this.slab.items(descending)) {
       const price = getPriceFromKey(key);
       if (levels.length > 0 && levels[levels.length - 1][0].eq(price)) {
-        levels[levels.length - 1][1].iadd(quantity);
+        levels[levels.length - 1][1] = levels[levels.length - 1][1].add(
+          quantity,
+        );
       } else if (levels.length === depth) {
         break;
       } else {

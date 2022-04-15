@@ -34,6 +34,7 @@ import { ConfirmationBlock } from './ConfirmationBlock';
 import { InfoLabel } from './InfoLabel';
 import { AddLiquidityButton } from './AddLiquidityButton';
 import { ExpiresInBlock } from './ExpiresInBlock';
+import { YourLiquidity } from './YourLiquidity';
 
 const ADD_LIQUIDITY_TIMEOUT = 1000 * 60 * 2;
 
@@ -300,11 +301,8 @@ export default () => {
           loading={loading}
         />
       </Card>
-      <div>
-        <h2 className={styles.cardLabel}>Your Liquidity</h2>
-        <Card className={styles.card}></Card>
-      </div>
-      <div>
+      <YourLiquidity poolInfo={poolInfo} />
+      {/* <div>
         <h2 className={styles.cardLabel}>Create Pool</h2>
         <Card className={styles.card}>
           <Typography className={styles.createPoolText}>
@@ -322,7 +320,7 @@ export default () => {
             </button>
           </div>
         </Card>
-      </div>
+      </div> */}
     </Box>
   );
 };

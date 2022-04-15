@@ -11,9 +11,6 @@ import Swap from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { useWallet } from '../../components/wallet/wallet';
 import { NotifyingProvider } from './NotifyingProvider';
-import SwapTabs from './components/SwapTabs';
-import SearchForPairingsComponent from './components/SearchForPairings';
-import SwapContainer from './components/SwapContainer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -64,11 +61,7 @@ export default function SwapPage({ children }) {
       >
         {tokenList && wallet && (
           <Swap provider={provider} tokenList={tokenList as any}>
-            <>
-              <SwapTabs />
-              <SearchForPairingsComponent type={'none'} width={'600'} />
-              <SwapContainer location={'swap'} />
-            </>
+            {children}
           </Swap>
         )}
       </Grid>

@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
     'border': 'solid 1px transparent',
     'borderRadius': '8px',
     'backgroundImage':
+      // eslint-disable-next-line max-len
       'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
     'backgroundOrigin': 'border-box',
     'backgroundClip': 'content-box, border-box',

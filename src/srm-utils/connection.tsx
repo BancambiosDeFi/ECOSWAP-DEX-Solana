@@ -16,6 +16,7 @@ export const ENDPOINTS: EndpointInfo[] = [
 
 const accountListenerCount = new Map();
 
+// eslint-disable-next-line max-len
 const ConnectionContext: React.Context<null | ConnectionContextValues> = React.createContext<null | ConnectionContextValues>(
   null,
 );

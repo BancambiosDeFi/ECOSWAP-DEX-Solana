@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { useMarket, useOnSwap, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { Box } from '@mui/material';
+// eslint-disable-next-line import/no-unresolved
 import { useRouteVerbose } from '@serum/swap-ui/lib/context/Dex';
 import { useWallet } from '../../../components/wallet/wallet';
 import ButtonComponent from '../../../srm-components/Button/Button';
@@ -31,6 +32,7 @@ const SwapButton: React.FC<SwapButtonProps> = ({ checkingEcoContributionPossibil
       fromAmount < fromMarket?.minOrderSize
     ) {
       setErrorText(
+        // eslint-disable-next-line max-len
         `${fromTokenInfo?.symbol} amount less than the min order size '${fromMarket?.minOrderSize}'`,
       );
     } else {

@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NumberFormat from 'react-number-format';
+// eslint-disable-next-line import/no-unresolved
 import { useSwapContext } from '@serum/swap-ui';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 

@@ -27,7 +27,7 @@ export function Routes() {
             <Redirect to="/swap" />
           </Route>
           <Route exact path="/market/:marketAddress">
-            <TradePage />
+            <Redirect to="/swap" />
           </Route>
           <Route exact path="/orders" component={OpenOrdersPage} />
           <Route exact path="/balances" component={BalancesPage} />

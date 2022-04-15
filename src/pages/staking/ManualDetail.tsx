@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     padding: '15px 15px 5px',
     borderRadius: '8px',
-    background: '#11161d',
+    background: '#0a0c0f',
   },
   btnWrapper: {
     marginBottom: '10px',

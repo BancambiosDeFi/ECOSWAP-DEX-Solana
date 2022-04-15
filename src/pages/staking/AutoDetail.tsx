@@ -4,7 +4,6 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Collapse from '@mui/material/Collapse';
 import { useWallet } from '../../components/wallet/wallet';
-import PeriodMenu from './PeriodMenu';
 import { MemoClaimPopup } from './ClaimPopup';
 
 interface showDetailsProps {
@@ -41,7 +40,7 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     padding: '15px 15px 5px',
     borderRadius: '8px',
-    background: '#11161d',
+    background: '#0a0c0f',
   },
   btnWrapper: {
     marginBottom: '10px',
@@ -91,20 +90,12 @@ export default function ManualDetail({
                     {detailValue}
                   </Typography>
                   <div className={styles.btnWrapper}>
-                    {connected ? (
-                      <PeriodMenu
-                        options={options}
-                        setPeriod={setPeriod}
-                        checkedOption={checkedOption}
-                      />
-                    ) : (
-                      <button
-                        style={{ cursor: 'not-allowed', color: '#7C8498' }}
-                        className={styles.btn}
-                      >
-                        Auto
-                      </button>
-                    )}
+                    <button
+                      style={{ cursor: 'not-allowed', color: '#7C8498' }}
+                      className={styles.btn}
+                    >
+                      Week Auto Compound
+                    </button>
                   </div>
                 </Grid>
               </Grid>

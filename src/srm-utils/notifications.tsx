@@ -1,10 +1,9 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { notification } from 'antd';
 
 export function notify({
   message,
   description,
-  txid,
   type,
 }: {
   message: string;

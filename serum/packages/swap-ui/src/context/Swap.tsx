@@ -7,6 +7,7 @@ import {
   Transaction,
   SystemProgram,
   Signer,
+  TransactionSignature,
 } from '@solana/web3.js';
 import {
   Token,
@@ -31,8 +32,11 @@ import {
 } from './TokenList';
 import { useMint, useOwnedTokenAccount } from './Token';
 import { SOL_MINT, WRAPPED_SOL_MINT } from '../utils/pubkeys';
+import { TransferTokens } from 'impact-pool-api/dist/schema';
+import { converterNumberToBN, getImpactPool } from '../utils/impactPool';
 
-const DEFAULT_SLIPPAGE_PERCENT = 0.5;
+const DEFAULT_SLIPPAGE_PERCENT = 0.1;
+const DEFAULT_IMPACT_USDT_VALUE = 0.5;
 
 export type SwapContext = {
   // Mint being traded from. The user must own these tokens.
@@ -58,6 +62,10 @@ export type SwapContext = {
   // shown to the user.
   slippage: number;
   setSlippage: (n: number) => void;
+
+  // The amount of USDT for deduction for swap transaction to eco-contribution
+  impact: number;
+  setImpact: (n: number) => void;
 
   // Null if the user is using fairs directly from DEX prices.
   // Otherwise, a user specified override for the price to use when calculating
@@ -93,6 +101,7 @@ export function SwapContextProvider(props: any) {
   const [isClosingNewAccounts, setIsClosingNewAccounts] = useState(false);
   const [isStrict, setIsStrict] = useState(false);
   const [slippage, setSlippage] = useState(DEFAULT_SLIPPAGE_PERCENT);
+  const [impact, setImpact] = useState(DEFAULT_IMPACT_USDT_VALUE);
   const [fairOverride, setFairOverride] = useState<number | null>(null);
   const fair = _useSwapFair(fromMint, toMint, fairOverride);
   const { referral } = props;
@@ -149,6 +158,8 @@ export function SwapContextProvider(props: any) {
         swapToFromMints,
         slippage,
         setSlippage,
+        impact,
+        setImpact,
         fairOverride,
         setFairOverride,
         isClosingNewAccounts,
@@ -194,56 +205,12 @@ export function useCanSwap(): boolean {
   const fromWallet = useOwnedTokenAccount(fromMint);
   const fair = useSwapFair();
   const route = useRouteVerbose(fromMint, toMint);
+  const fromMarket = useMarket(
+    route && route.markets ? route.markets[0] : undefined,
+  );
   if (route === null) {
-    // console.log("Route doesn't exist");
     return false;
   }
-  // console.log('useCanSwap checking...');
-  //
-  // if (fromWallet !== undefined && fromWallet !== null) {
-  //   console.log('1 - From wallet exists. ');
-  // }
-  //
-  // if (fair !== undefined && fair > 0) {
-  //   console.log('2 - Fair price is defined.');
-  // }
-  //
-  // if (fromMint.equals(toMint) === false) {
-  //   console.log('3 - Mints are distinct.');
-  // }
-  //
-  // if (swapClient.program.provider.wallet.publicKey !== null) {
-  //   console.log('4 - Wallet is connected.');
-  // }
-  //
-  // if (fromAmount > 0 && toAmount > 0) {
-  //   console.log('5 - Trade amounts greater than zero.');
-  // }
-  //
-  // if (route !== null) {
-  //   console.log('6 - Trade route exists.');
-  // }
-  //
-  // if (
-  //   route.kind !== 'wormhole-native' ||
-  //   wormholeMap
-  //     .get(fromMint.toString())
-  //     ?.tags?.includes(SPL_REGISTRY_WORM_TAG) !== undefined
-  // ) {
-  //   console.log(
-  //     '7 - Wormhole <-> native markets must have the wormhole token as the *from* address since they are one-sided markets.',
-  //   );
-  // }
-  // if (
-  //   route.kind !== 'wormhole-sollet' ||
-  //   solletMap
-  //     .get(fromMint.toString())
-  //     ?.tags?.includes(SPL_REGISTRY_SOLLET_TAG) !== undefined
-  // ) {
-  //   console.log(
-  //     "8 - Wormhole <-> sollet markets must have the sollet token as the *from* address since they're one sided markets.",
-  //   );
-  // }
 
   return (
     // From wallet exists.
@@ -256,9 +223,10 @@ export function useCanSwap(): boolean {
     fromMint.equals(toMint) === false &&
     // Wallet is connected.
     swapClient.program.provider.wallet.publicKey !== null &&
-    // Trade amounts greater than zero.
+    // Trade amounts greater than zero and more than or equal to the min order size.
     fromAmount > 0 &&
     toAmount > 0 &&
+    fromAmount >= fromMarket?.minOrderSize! &&
     // Trade route exists.
     route !== null &&
     // Wormhole <-> native markets must have the wormhole token as the
@@ -292,11 +260,6 @@ export function useReferral(fromMarket?: Market): PublicKey | undefined {
       return undefined;
     }
 
-    // console.log('ASSOCIATED_TOKEN_PROGRAM_ID = ', ASSOCIATED_TOKEN_PROGRAM_ID);
-    // console.log('TOKEN_PROGRAM_ID = ', TOKEN_PROGRAM_ID);
-    // console.log('fromMarket.quoteMintAddress = ', fromMarket.quoteMintAddress);
-    // console.log('referral = ', referral);
-
     return Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
@@ -321,6 +284,7 @@ export function useOnSwap() {
     isStrict,
   } = useSwapContext();
   const { swapClient } = useDexContext();
+  const { impact } = useSwapContext();
   const fromMintInfo = useMint(fromMint);
   const toMintInfo = useMint(toMint);
   const openOrders = useOpenOrders();
@@ -341,30 +305,25 @@ export function useOnSwap() {
   const quoteWallet = useOwnedTokenAccount(quoteMint);
 
   // Click handler.
-  const sendSwapTransaction = async () => {
-    // console.log('sendSwapTransaction ...');
+  const sendSwapTransaction = async (): Promise<
+    Array<TransactionSignature> | Promise<any>
+  > => {
     if (!fromMintInfo || !toMintInfo) {
-      // console.log('if !fromMintInfo || !toMintInfo');
       throw new Error('Unable to calculate mint decimals');
     }
     if (!fair) {
-      // console.log('if !fair');
       throw new Error('Invalid fair');
     }
     if (!quoteMint || !quoteMintInfo) {
-      // console.log('if !quoteMint || !quoteMintInfo');
       throw new Error('Quote mint not found');
     }
 
-    // console.log('before amount');
     const amount = new BN(fromAmount * 10 ** fromMintInfo.decimals);
     const isSol = fromMint.equals(SOL_MINT) || toMint.equals(SOL_MINT);
     const wrappedSolAccount = isSol ? Keypair.generate() : undefined;
 
-    // console.log('before txs');
     // Build the swap.
     const txs = await (async () => {
-      // console.log('txs ...');
       if (!fromMarket) {
         throw new Error('Market undefined');
       }
@@ -393,7 +352,24 @@ export function useOnSwap() {
         ? toWallet.publicKey
         : undefined;
 
-      // console.log('before serumTransaction');
+      // if (!toWalletAddr) {
+      //   const {
+      //     transaction,
+      //     associatedToken,
+      //   } = await createAssociatedTokenAccount(
+      //     toMint,
+      //     swapClient.program.provider.wallet.publicKey,
+      //   );
+      //
+      //   const signedTransaction = await swapClient.program.provider.wallet.signTransaction(
+      //     transaction,
+      //   );
+      //
+      //   await swapClient.program.provider.send(signedTransaction, undefined, {
+      //     commitment: 'confirmed',
+      //   });
+      //   toWalletAddr = associatedToken;
+      // }
 
       const serumTransaction = await swapClient.swapTxs({
         fromMint,
@@ -414,9 +390,18 @@ export function useOnSwap() {
         close: isClosingNewAccounts,
       });
 
-      // console.log('after serumTransaction');
+      if (impact && !isSol) {
+        const impactPool = getImpactPool(
+          swapClient.program.provider.wallet.publicKey,
+          'USDT',
+        );
 
-      // console.log('serumTransaction = ', serumTransaction);
+        const impactTransaction = await impactPool.TransferTokens(
+          new TransferTokens(converterNumberToBN(impact)),
+        );
+
+        serumTransaction[serumTransaction.length - 1].tx.add(impactTransaction);
+      }
 
       return serumTransaction;
     })();
@@ -445,7 +430,9 @@ export function useOnSwap() {
       txs[0].signers.push(...unwrapSigners);
     }
 
-    await swapClient.program.provider.sendAll(txs);
+    return swapClient.program.provider.sendAll(txs, {
+      commitment: 'confirmed',
+    });
   };
 
   return { canSwap, onSwap: sendSwapTransaction };
@@ -499,6 +486,7 @@ function unwrapSol(
   wrappedSolAccount: Keypair,
 ): { tx: Transaction; signers: Array<Signer | undefined> } {
   const tx = new Transaction();
+
   tx.add(
     Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,

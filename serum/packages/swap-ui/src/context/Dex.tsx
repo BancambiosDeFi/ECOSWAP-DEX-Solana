@@ -26,6 +26,7 @@ import {
 import { useTokenMap, useTokenListContext } from './TokenList';
 import { fetchSolletInfo, requestWormholeSwapMarketIfNeeded } from './Sollet';
 import { setMintCache } from './Token';
+import { DEFAULT_PUBLIC_KEY } from '../utils/pubkeys';
 
 const BASE_TAKER_FEE_BPS = 0.0022;
 export const FEE_MULTIPLIER = 1 - BASE_TAKER_FEE_BPS;
@@ -64,7 +65,11 @@ export function DexContextProvider(props: any) {
   // 2. Batch fetch all market accounts for those open orders.
   // 3. Batch fetch all mints associated with the markets.
   useEffect(() => {
-    if (!swapClient.program.provider.wallet.publicKey) {
+    if (
+      !swapClient.program.provider.wallet.publicKey ||
+      swapClient.program.provider.wallet.publicKey.toString() ===
+        DEFAULT_PUBLIC_KEY.toString()
+    ) {
       setOoAccounts(new Map());
       return;
     }
@@ -448,6 +453,7 @@ export function useRouteVerbose(
       const [wormholeMarket, kind] = swapMarket;
       return { markets: [wormholeMarket], kind };
     }
+
     const markets = swapClient.route(
       fromMint.equals(SOL_MINT) ? WRAPPED_SOL_MINT : fromMint,
       toMint.equals(SOL_MINT) ? WRAPPED_SOL_MINT : toMint,

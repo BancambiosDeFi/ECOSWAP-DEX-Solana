@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useWallet } from '../../components/wallet/wallet';
 import ButtonComponent from '../../srm-components/Button/Button';
 import WalletConnectSwap from '../../components/wallet/WalletConnectSwap';

@@ -1,20 +1,22 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import FmdBadIcon from '@mui/icons-material/FmdBad';
+import { TransactionSignature } from '@solana/web3.js';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import ButtonComponent from '../srm-components/Button/Button';
 import SubtitleText from './typography/SubtitleText';
 import SmallText from './typography/SmallText';
 import ModalWrapper from './ModalWrapper';
+import TransactionLink from './TransactionLink';
 
 interface CreateInvestorAccountModalProps {
   handleClose: () => void;
-  startSwapTransaction: () => void;
+  startSwapTransaction: () => Promise<void>;
   isLoading: boolean;
   open: boolean;
   isError: boolean;
   errorMessage: string;
-  transactionLink: string;
+  txSignatures: Array<TransactionSignature>;
 }
 
 const TypographyStyled = styled(Typography)(() => ({
@@ -36,19 +38,8 @@ const SwapConfirmationModal: React.FC<CreateInvestorAccountModalProps> = ({
   errorMessage,
   handleClose,
   startSwapTransaction,
-  transactionLink,
+  txSignatures,
 }) => {
-  const transactionLinkElement = (
-    <a
-      style={{ textDecoration: 'none', fontWeight: 600 }}
-      target="_blank"
-      rel="noopener noreferrer"
-      href={`https://solscan.io/tx/${transactionLink}`}
-    >
-      here
-    </a>
-  );
-
   return (
     <ModalWrapper open={open} handleClose={handleClose} title="Token swapping">
       {isError ? (
@@ -70,23 +61,37 @@ const SwapConfirmationModal: React.FC<CreateInvestorAccountModalProps> = ({
             }}
           >
             <FmdBadIcon sx={{ color: 'rgb(183,82,230)', fontSize: 90, marginBottom: '10px' }} />
-            <SubtitleText style={{ color: '#FFFFFF' }} text="Eco-contribution error" />
+            <SubtitleText
+              style={{ color: '#FFFFFF' }}
+              text={isLoading ? 'Transaction error' : 'Eco-contribution error'}
+            />
             <SmallText style={{ marginTop: '8px', color: '#FFFFFF' }} text={errorMessage} />
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-            <ButtonComponent
-              type="done"
-              isIconVisible={false}
-              onClick={handleClose}
-              title="CANCEL"
-            />
-            <ButtonComponent
-              type="done"
-              isIconVisible={false}
-              onClick={startSwapTransaction}
-              title="CONTINUE"
-            />
-          </Box>
+          {isLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <ButtonComponent
+                type="done"
+                isIconVisible={false}
+                onClick={handleClose}
+                title="Got it"
+              />
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
+              <ButtonComponent
+                type="done"
+                isIconVisible={false}
+                onClick={handleClose}
+                title="CANCEL"
+              />
+              <ButtonComponent
+                type="done"
+                isIconVisible={false}
+                onClick={startSwapTransaction}
+                title="CONTINUE"
+              />
+            </Box>
+          )}
         </Box>
       ) : isLoading ? (
         <Box
@@ -113,9 +118,10 @@ const SwapConfirmationModal: React.FC<CreateInvestorAccountModalProps> = ({
         >
           <Box sx={{ p: { xs: 1, md: 3 } }}>
             <SubtitleText style={{ color: '#FFFFFF' }} text="Swap transaction was successful!" />
-            <TypographyStyled>
-              Please see the transaction details {transactionLinkElement}.
-            </TypographyStyled>
+            <TypographyStyled>Please see the transactions details:</TypographyStyled>
+            {txSignatures.map((signature, index) => (
+              <TransactionLink key={index} signature={signature.toString()} index={index + 1} />
+            ))}
           </Box>
           <Box
             sx={{

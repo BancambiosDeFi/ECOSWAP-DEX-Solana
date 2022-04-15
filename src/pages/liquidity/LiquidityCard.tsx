@@ -1,20 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   Liquidity,
-  Spl,
   Percent,
   Token,
   LiquidityPoolKeysV4,
   LiquidityPoolInfo,
-  SPL_ACCOUNT_LAYOUT,
-  getMultipleAccountsInfo,
 } from '@raydium-io/raydium-sdk';
 import { Card, Typography, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import {
   useSwappableTokens,
   useSwapContext,
-  useMint,
   useTokenMap,
   // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
@@ -24,9 +21,11 @@ import {
   createTokenAmount,
   getAllRaydiumPoolKeys,
   getRaydiumPoolInfo,
+  convertToBN,
 } from '../../utils/raydiumRequests';
 import { useConnection } from '../../srm-utils/connection';
 import { sendTransaction } from '../../srm-utils/send';
+import { getWalletTokenAccounts } from '../../srm-utils/getWalletTokenAccounts';
 import { useWallet } from '../../components/wallet/wallet';
 // import { InfoLabel } from '../swap/components/Info';
 import { SwapFromForm, SwapToForm, SwitchButton } from '../swap/components/SwapCard';
@@ -34,24 +33,38 @@ import { PoolInfo } from './PoolInfo';
 import { ConfirmationBlock } from './ConfirmationBlock';
 import { InfoLabel } from './InfoLabel';
 import { AddLiquidityButton } from './AddLiquidityButton';
+import { ExpiresInBlock } from './ExpiresInBlock';
+
+const ADD_LIQUIDITY_TIMEOUT = 1000 * 60 * 2;
 
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     height: '100%',
-    margin: '20px 0',
+    margin: '15px 0',
+  },
+  cardLabel: {
+    fontFamily: 'Saira',
+    fontWeight: '700',
+    fontSize: '24px',
+    margin: '0 0 15px 30px',
   },
   card: {
-    borderRadius: '20px !important',
+    borderRadius: '8px !important',
     border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    backgroundColor: '#35363A !important',
-    width: '435px',
-    height: '100%',
-    padding: '26px 16px',
+    backgroundColor: '#0A0C0E !important',
+    width: '486px',
+    height: 'fit-content',
+    padding: '9px 25px',
+    marginBottom: '43px',
+  },
+  swapCard: {
+    paddingTop: '52px',
   },
   title: {
     fontFamily: 'Saira !important',
@@ -89,11 +102,50 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
   },
+  fromBlock: {
+    position: 'relative',
+    marginBottom: '8px',
+  },
+  createPoolText: {
+    fontFamily: 'Saira !important',
+    fontStyle: 'normal',
+    fontWeight: '400 !important',
+    fontSize: '16px !important',
+    lineHeight: '29px !important',
+    textAlign: 'left',
+    color: '#FFFFFF',
+  },
+  wrapperCreatePoolButton: {
+    marginTop: '10px',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  createPoolButton: {
+    'cursor': 'pointer',
+    'width': '213px',
+    'height': '43px',
+    'fontSize': '20px',
+    'fontFamily': '"Spy Agency", sans-serif',
+    'fontWeight': '400',
+    'color': '#fff',
+    'border': 'solid 1px transparent',
+    'borderRadius': '8px',
+    'backgroundImage':
+      // eslint-disable-next-line max-len
+      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
+    'backgroundOrigin': 'border-box',
+    'backgroundClip': 'content-box, border-box',
+    'boxShadow': '2px 50px rgb(3, 46, 131) inset',
+    '&:hover': {
+      background:
+        // eslint-disable-next-line max-len
+        'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
+      boxShadow: '0px 0px 16px #9F5AE5',
+    },
+  },
 }));
 
 export default () => {
-  const [raydiumPoolKeys, setRaydiumPoolKeys] = useState<LiquidityPoolKeysV4[]>([]);
-  const [poolStats, setPoolStats] = useState({});
   const [poolKey, setPoolKey] = useState<LiquidityPoolKeysV4 | null>(null);
   const [poolInfo, setPoolInfo] = useState<LiquidityPoolInfo | null>(null);
   const [noWarnPools, setNoWarnPools] = useState<string[]>([]);
@@ -102,36 +154,38 @@ export default () => {
   const [isPoolExist, setPoolExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const { swappableTokens: tokenList } = useSwappableTokens();
-  const { fromMint, toMint, fromAmount, toAmount } = useSwapContext();
+  const { fromMint, fromAmount, toMint, toAmount } = useSwapContext();
   const connection = useConnection();
   const { wallet } = useWallet();
   const tokenMap = useTokenMap();
-  const toTokenInfo = tokenMap.get(toMint.toString());
-  const fromTokenInfo = tokenMap.get(fromMint.toString());
-  const toMintInfo = useMint(toMint);
-  const fromMintInfo = useMint(fromMint);
   const styles = useStyles();
 
   const onLiquidityAdd = useCallback(async () => {
-    if (wallet && poolKey && poolInfo) {
+    if (wallet && poolKey && poolInfo && fromAmount && toAmount) {
       const { quoteMint, baseMint } = poolKey;
-      const { quoteDecimals } = poolInfo;
+      const { baseDecimals, quoteDecimals } = poolInfo;
+      const fromTokenInfo = tokenMap.get(baseMint.toString());
+      const toTokenInfo = tokenMap.get(quoteMint.toString());
 
       const currencyAmount = createTokenAmount(
         createToken(
-          fromMint.toString(),
+          baseMint.toString(),
           // @ts-ignore
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          fromMintInfo?.decimals,
+          baseDecimals,
           // @ts-ignore
           fromTokenInfo?.symbol,
           fromTokenInfo?.name,
         ),
         // @ts-ignore
-        poolInfo.baseReserve,
+        convertToBN(fromAmount * Math.pow(10, baseDecimals)),
       );
-      const anotherCurrency = new Token(quoteMint, quoteDecimals);
-
+      const anotherCurrency = new Token(
+        quoteMint.toString(),
+        quoteDecimals,
+        toTokenInfo?.symbol,
+        toTokenInfo?.name,
+      );
       const { maxAnotherAmount } = Liquidity.computeAnotherAmount({
         poolKeys: poolKey,
         poolInfo,
@@ -139,43 +193,29 @@ export default () => {
         anotherCurrency,
         slippage: new Percent(0),
       });
-      const quoteTokenAccount = await Spl.getAssociatedTokenAccount({
-        mint: quoteMint,
+      const { rawInfos: tokenAccountRawInfos } = await getWalletTokenAccounts({
+        connection,
         owner: wallet.publicKey,
       });
-      const lpTokenAccount = await Spl.getAssociatedTokenAccount({
-        mint: baseMint,
-        owner: wallet.publicKey,
-      });
-      const infos = await getMultipleAccountsInfo(connection, [quoteTokenAccount, lpTokenAccount]);
-      const [quoteAccountInfo, lpAccountInfo] = infos;
-      if (quoteAccountInfo && lpAccountInfo) {
+
+      if (tokenAccountRawInfos.length) {
         const { transaction, signers } = await Liquidity.makeAddLiquidityTransaction({
           connection,
           poolKeys: poolKey,
           userKeys: {
-            tokenAccounts: [
-              {
-                pubkey: quoteTokenAccount,
-                accountInfo: SPL_ACCOUNT_LAYOUT.decode(quoteAccountInfo.data),
-              },
-              {
-                pubkey: lpTokenAccount,
-                accountInfo: SPL_ACCOUNT_LAYOUT.decode(lpAccountInfo.data),
-              },
-            ],
+            tokenAccounts: tokenAccountRawInfos,
             owner: wallet.publicKey,
           },
           amountInA: currencyAmount,
           amountInB: maxAnotherAmount,
           fixedSide: 'a',
         });
-
         await sendTransaction({
           connection,
           wallet,
           transaction,
           signers,
+          timeout: ADD_LIQUIDITY_TIMEOUT,
         });
 
         if (isNotWarn) {
@@ -183,89 +223,41 @@ export default () => {
         }
       }
     }
-  }, [connection, wallet, poolKey, poolInfo, fromMintInfo, toMintInfo, isNotWarn, noWarnPools]);
+  }, [connection, wallet, poolKey, poolInfo, isNotWarn, noWarnPools, fromAmount, toAmount]);
+
+  const fetchPoolInfo = useCallback(async () => {
+    setLoading(true);
+    const currentPoolInfo = await getRaydiumPoolInfo({
+      connection,
+      poolKeys: poolKey as LiquidityPoolKeysV4,
+    });
+    setPoolInfo(currentPoolInfo);
+    setLoading(false);
+  }, [connection, poolKey]);
 
   useEffect(() => {
     setLoading(true);
     getAllRaydiumPoolKeys(connection).then(poolKeys => {
-      console.log('Pools added!');
-      setRaydiumPoolKeys(poolKeys);
-      setLoading(false);
-    });
-  }, []);
-
-  useEffect(() => {
-    const fetchPoolInfo = async () => {
-      const filteredPoolKeys = raydiumPoolKeys.filter(
+      const [poolKey] = poolKeys.filter(
         pool =>
           (pool.baseMint.equals(fromMint) && pool.quoteMint.equals(toMint)) ||
           (pool.baseMint.equals(toMint) && pool.quoteMint.equals(fromMint)),
       );
-
-      if (filteredPoolKeys.length > 0) {
-        setLoading(true);
-        const poolInfo = await getRaydiumPoolInfo({ connection, poolKeys: filteredPoolKeys[0] });
-        const baseCoinInfo = createTokenAmount(
-          createToken(
-            fromMint.toString(),
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            fromMintInfo?.decimals,
-            // @ts-ignore
-            fromTokenInfo?.symbol,
-            fromTokenInfo?.name,
-          ),
-          // @ts-ignore
-          poolInfo.baseReserve,
-        );
-        const quoteCoinInfo = createTokenAmount(
-          createToken(
-            toMint.toString(),
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            toMintInfo?.decimals,
-            // @ts-ignore
-            toTokenInfo?.symbol,
-            toTokenInfo?.name,
-          ),
-          // @ts-ignore
-          poolInfo.quoteReserve,
-        );
-        const lpPoolAmount = Number(
-          (poolInfo.lpSupply.toNumber() / 10 ** poolInfo.lpDecimals).toFixed(poolInfo.lpDecimals),
-        );
+      if (poolKey) {
+        setPoolKey(poolKey);
         setPoolExist(true);
-        setLoading(false);
-        setPoolKey(filteredPoolKeys[0]);
-        setPoolInfo(poolInfo);
-        setPoolStats({ baseCoinInfo, quoteCoinInfo, lpPoolAmount });
-        // .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }
       } else {
         setPoolExist(false);
-        console.error(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          `Pool stats ERROR: "${fromTokenInfo?.symbol}-${toTokenInfo?.symbol}" or ` +
-            // eslint-disable-next-line max-len
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            `"${toTokenInfo?.symbol}-${fromTokenInfo?.symbol}" Raydium liquidity pool doesn't exist!`,
-        );
       }
-    };
-    if (toMint && raydiumPoolKeys.length && fromMintInfo && toMintInfo) {
+      setLoading(false);
+    });
+  }, [fromMint, toMint, connection]);
+
+  useEffect(() => {
+    if (poolKey) {
       fetchPoolInfo();
     }
-  }, [
-    toAmount,
-    toMint,
-    raydiumPoolKeys,
-    fromMintInfo,
-    toMintInfo,
-    connection,
-    fromAmount,
-    fromMint,
-    fromTokenInfo,
-    toTokenInfo,
-  ]);
+  }, [poolKey]);
 
   useEffect(() => {
     const noWarnPools = localStorage.getItem('noWarnPools');
@@ -277,7 +269,10 @@ export default () => {
   return (
     <Box className={styles.root}>
       <Card className={styles.card}>
-        <Typography className={styles.title}>From</Typography>
+        <div className={styles.fromBlock}>
+          <Typography className={styles.title}>From</Typography>
+          <ExpiresInBlock fetchStats={fetchPoolInfo} />
+        </div>
         <SwapFromForm tokenList={tokenList} />
         <div className={styles.switchBlock}>
           <Typography className={styles.switchTitle}>To (Estimate)</Typography>
@@ -289,7 +284,7 @@ export default () => {
             <InfoLabel />
           </Box>
         )}
-        {isPoolExist && <PoolInfo {...poolStats} />}
+        {isPoolExist && <PoolInfo poolInfo={poolInfo} />}
         {!(poolKey && noWarnPools.includes(poolKey.id.toString())) ? (
           <ConfirmationBlock
             isConfirmed={isConfirmed}
@@ -299,12 +294,35 @@ export default () => {
           />
         ) : null}
         <AddLiquidityButton
-          disabled={!isConfirmed || !isPoolExist}
+          disabled={!isConfirmed || !isPoolExist || !fromAmount || !toAmount}
           onClick={onLiquidityAdd}
           title={isPoolExist ? 'Add Liquidity' : 'Pool not found'}
           loading={loading}
         />
       </Card>
+      <div>
+        <h2 className={styles.cardLabel}>Your Liquidity</h2>
+        <Card className={styles.card}></Card>
+      </div>
+      <div>
+        <h2 className={styles.cardLabel}>Create Pool</h2>
+        <Card className={styles.card}>
+          <Typography className={styles.createPoolText}>
+            {`Create a liquidity pool on Bancambios that can be traded on the swap interface. Read
+            the guide before attempting.`}
+          </Typography>
+          <div className={styles.wrapperCreatePoolButton}>
+            <button className={styles.createPoolButton}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}
+              >
+                <AddTwoToneIcon sx={{ fontSize: 17 }} />
+                Create Pool
+              </div>
+            </button>
+          </div>
+        </Card>
+      </div>
     </Box>
   );
 };

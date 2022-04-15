@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react';
-import { TokenAmount } from '@raydium-io/raydium-sdk';
+import React, { useMemo } from 'react';
+import { TokenAmount, LiquidityPoolInfo } from '@raydium-io/raydium-sdk';
 import { makeStyles } from '@mui/styles';
 import { Box, Typography } from '@mui/material';
+import {
+  useSwappableTokens,
+  useSwapContext,
+  useMint,
+  useTokenMap,
+  // eslint-disable-next-line import/no-unresolved
+} from '@serum/swap-ui';
+import { createToken, createTokenAmount } from '../../utils/raydiumRequests';
 
 interface PoolInfoProps {
-  baseCoinInfo: TokenAmount;
-  quoteCoinInfo: TokenAmount;
-  lpPoolAmount: string;
+  poolInfo: LiquidityPoolInfo | null;
 }
 
 // @ts-ignore
@@ -20,12 +26,16 @@ const useStyles = makeStyles(theme => ({
     'flexDirection': 'row',
     'justifyContent': 'space-between',
     'backgroundColor': 'rgba(65, 63, 63, 1)',
-    'borderRadius': '20px',
     'padding': '8px 16px',
     'marginBottom': '20px',
-    'backgroundClip': 'padding-box',
-    'border': 'solid 0.5px transparent',
-
+    'border': 'solid 1px transparent',
+    'borderRadius': '8px',
+    'backgroundImage':
+      // eslint-disable-next-line max-len
+      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
+    'backgroundOrigin': 'border-box',
+    'backgroundClip': 'content-box, border-box',
+    'boxShadow': '2px 500px #202124 inset',
     '&:before': {
       content: '',
       position: 'absolute',
@@ -66,16 +76,49 @@ const useStyles = makeStyles(theme => ({
 const normalizeAmount = (amount: string) =>
   Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-export const PoolInfo: React.FC<PoolInfoProps | Record<string, never>> = ({
-  baseCoinInfo,
-  quoteCoinInfo,
-  lpPoolAmount,
-}) => {
+export const PoolInfo: React.FC<PoolInfoProps | Record<string, never>> = ({ poolInfo }) => {
+  const { fromMint, toMint } = useSwapContext();
+  const tokenMap = useTokenMap();
+  const toMintInfo = useMint(toMint);
+  const fromMintInfo = useMint(fromMint);
   const styles = useStyles();
 
-  if (!baseCoinInfo || !quoteCoinInfo || !lpPoolAmount) {
+  const poolStats = useMemo(() => {
+    if (poolInfo) {
+      const toTokenInfo = tokenMap.get(toMint.toString());
+      const fromTokenInfo = tokenMap.get(fromMint.toString());
+
+      const baseCoinInfo = createTokenAmount(
+        createToken(
+          fromMint.toString(),
+          fromMintInfo?.decimals as number,
+          fromTokenInfo?.symbol,
+          fromTokenInfo?.name,
+        ),
+        poolInfo.baseReserve,
+      );
+      const quoteCoinInfo = createTokenAmount(
+        createToken(
+          toMint.toString(),
+          toMintInfo?.decimals as number,
+          toTokenInfo?.symbol,
+          toTokenInfo?.name,
+        ),
+        poolInfo.quoteReserve,
+      );
+      const lpPoolAmount = (poolInfo.lpSupply.toNumber() / 10 ** poolInfo.lpDecimals).toFixed(
+        poolInfo.lpDecimals,
+      );
+
+      return { baseCoinInfo, quoteCoinInfo, lpPoolAmount };
+    }
+  }, [poolInfo, toMint, toMintInfo, fromMint, fromMintInfo]);
+
+  if (!poolStats) {
     return null;
   }
+
+  const { baseCoinInfo, quoteCoinInfo, lpPoolAmount } = poolStats;
 
   return (
     <Box className={styles.swapInfoWrapper}>

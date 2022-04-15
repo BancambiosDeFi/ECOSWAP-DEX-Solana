@@ -162,7 +162,7 @@ export default function WithdrawPage() {
   useEffect(() => {
     if (wallet?.publicKey && connected) {
       setConnection(new Connection(getNetwork()));
-      setImpactPool(getImpactPool(wallet.publicKey, 'USDT_TESTNET_ZWEI'));
+      setImpactPool(getImpactPool(wallet.publicKey, 'USDT'));
     }
   }, [wallet, connected]);
 
@@ -188,7 +188,7 @@ export default function WithdrawPage() {
 
   const valueComponent =
     withdrawValue && !isLoadingStatistics ? (
-      <Typography className={styles.withdrawValue}>{withdrawValue}</Typography>
+      <Typography className={styles.withdrawValue}>{withdrawValue} USDT</Typography>
     ) : (
       <>
         <Box

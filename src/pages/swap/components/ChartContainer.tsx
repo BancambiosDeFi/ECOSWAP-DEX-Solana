@@ -95,7 +95,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType, location }) => {
+export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType }) => {
   const styles = useStyles({ swapType });
   const tokenMap = useTokenMap();
   const requestDelay = swapType === SwapType.from ? 0 : 2000;

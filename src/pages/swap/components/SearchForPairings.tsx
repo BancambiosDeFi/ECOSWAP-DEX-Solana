@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
-import { autocompleteClasses, Box, List, Popper, TextField, Typography } from '@mui/material';
+import { Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 
 // eslint-disable-next-line import/no-unresolved
@@ -245,6 +245,24 @@ export default function SearchForPairingsComponent({ type, width }) {
 function ListItem({ props, option }) {
   const [errorDownloading, setErrorDownloading] = useState(false);
   const { setFromMint, setToMint } = useSwapContext();
+  const [selectedOption, setSelectedOption] = useState<any>({});
+  const [isClose, setClose] = useState(false);
+
+  const returnSelectedOption = option => {
+    setSelectedOption(option);
+  };
+
+  useEffect(() => {
+    if (isClose) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const timer = setTimeout(() => {
+        const fromMint = new PublicKey(selectedOption.from.address);
+        const toMint = new PublicKey(selectedOption.to.address);
+        setFromMint(fromMint);
+        setToMint(toMint);
+      }, 0);
+    }
+  }, [close, selectedOption]);
 
   return (
     <List
@@ -256,10 +274,8 @@ function ListItem({ props, option }) {
       }}
       component="li"
       onClickCapture={() => {
-        const fromMint = new PublicKey(option.from.address);
-        const toMint = new PublicKey(option.to.address);
-        setFromMint(fromMint);
-        setToMint(toMint);
+        returnSelectedOption(option);
+        setClose(true);
       }}
       key={`${option.from.symbol}/${option.to.symbol}`}
       {...props}

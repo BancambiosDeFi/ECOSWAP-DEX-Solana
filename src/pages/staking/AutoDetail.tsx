@@ -65,9 +65,6 @@ export default function ManualDetail({
   showDetails,
   detailTitle,
   detailValue,
-  checkedOption,
-  setPeriod,
-  options,
   claimValue,
   handleChangeClaim,
 }: showDetailsProps) {

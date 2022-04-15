@@ -13,6 +13,7 @@ const SingleChart = ({ mint }: { mint: PublicKey }) => {
 
   const chartContainerRef = useRef() as any;
 
+  // eslint-disable-next-line max-len
   const chart_api = `https://min-api.cryptocompare.com/data/exchange/histoday?tsym=${tokenInfo?.symbol}&limit=7&api_key=${chart_api_key}`;
 
   useEffect(() => {

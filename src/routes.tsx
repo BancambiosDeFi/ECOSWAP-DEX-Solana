@@ -14,9 +14,8 @@ import DesignSystemPage from './srm-pages/DesignSystemPage';
 import SwapPage from './pages/swap';
 import SwapContainer from './pages/swap/components/SwapContainer';
 import WithdrawPage from './pages/withdraw';
-import TradingPage from './pages/trade';
-import { ChartContainer } from './pages/trading-view';
 import { LiquidityContainer } from './pages/liquidity';
+import TradingView from './pages/trading-view';
 
 export function Routes() {
   return (
@@ -63,7 +62,7 @@ export function Routes() {
               <LiquidityContainer />
             </Route>
             <Route exact path="/trading-view">
-              <ChartContainer />
+              <TradingView />
             </Route>
           </SwapPage>
         </Switch>

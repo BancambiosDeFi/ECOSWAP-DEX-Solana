@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ChartContainer = () => {
+const TradingView: React.FC = () => {
   const styles = useStyles();
   const { connected } = useWallet();
 
@@ -50,3 +50,5 @@ export const ChartContainer = () => {
     </div>
   );
 };
+
+export default TradingView;

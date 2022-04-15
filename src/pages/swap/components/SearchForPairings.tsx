@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
-import { autocompleteClasses, Box, List, Popper, TextField, Typography } from '@mui/material';
+import { Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 
 // eslint-disable-next-line import/no-unresolved
@@ -254,6 +254,7 @@ function ListItem({ props, option }) {
 
   useEffect(() => {
     if (isClose) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const timer = setTimeout(() => {
         const fromMint = new PublicKey(selectedOption.from.address);
         const toMint = new PublicKey(selectedOption.to.address);

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { makeStyles } from '@mui/styles';
+import { useSwapContext } from '@serum/swap-ui';
 import { Box, IconButton, Typography } from '@mui/material';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 
 interface SwapSettingsProps {
-  slippageTolerance: string;
   minimumReceived: number;
   toTokenSymbol: string;
   priceImpact: string;
@@ -54,7 +54,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SwapSettingsInfo: React.FC<SwapSettingsProps> = ({
-  slippageTolerance,
   minimumReceived,
   toTokenSymbol,
   priceImpact,
@@ -64,6 +63,7 @@ const SwapSettingsInfo: React.FC<SwapSettingsProps> = ({
   infoIconStyle,
 }) => {
   const styles = useStyles();
+  const { slippage } = useSwapContext();
 
   return (
     <Box className={styles.swapInfoWrapper}>
@@ -84,7 +84,7 @@ const SwapSettingsInfo: React.FC<SwapSettingsProps> = ({
         ))}
       </Box>
       <Box className={styles.swapInfoSideBlock}>
-        <Typography className={styles.swapInfoText}>{slippageTolerance}%</Typography>
+        <Typography className={styles.swapInfoText}>{slippage.toString()}%</Typography>
         <Typography className={styles.swapInfoText}>BX Pool</Typography>
         <Typography className={styles.swapInfoText}>
           {minimumReceived} {toTokenSymbol}

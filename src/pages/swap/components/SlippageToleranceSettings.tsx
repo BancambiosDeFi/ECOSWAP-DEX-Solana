@@ -10,12 +10,11 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NumberFormat from 'react-number-format';
+import { useSwapContext } from '@serum/swap-ui';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 
 interface SlippageToleranceProps {
   handleClose: () => void;
-  slippageTolerance: string;
-  setSlippageTolerance: React.Dispatch<React.SetStateAction<string>>;
   popoverId: string | undefined;
   handleInfoButtonClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   infoIconStyle: string;
@@ -188,35 +187,32 @@ const NumberFormatCustom = React.forwardRef<NumberFormat<CustomProps>, CustomPro
 
 const SlippageToleranceSettings: React.FC<SlippageToleranceProps> = ({
   handleClose,
-  slippageTolerance,
-  setSlippageTolerance,
   popoverId,
   handleInfoButtonClick,
   infoIconStyle,
 }) => {
   const styles = useStyles();
-  const [customValue, setCustomValue] = useState<string>(
-    slippageTolerance === '0.1' || slippageTolerance === '0.5' || slippageTolerance === '1'
-      ? ''
-      : slippageTolerance,
+  const { slippage, setSlippage } = useSwapContext();
+  const [customValue, setCustomValue] = useState<number | undefined>(
+    slippage === 0.1 || slippage === 0.5 || slippage === 1 ? undefined : slippage,
   );
 
-  const handleSelectPercent = (event: React.MouseEvent<HTMLElement>, percent: string | null) => {
+  const handleSelectPercent = (event: React.MouseEvent<HTMLElement>, percent: number | null) => {
     if (percent !== null) {
-      setSlippageTolerance(percent);
+      setSlippage(percent);
     }
   };
 
   const handleCustomField = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomValue(event.target.value);
+    setCustomValue(Number(event.target.value));
   };
 
   const handleFocusRemoving = () => {
     if (!customValue || Number(customValue) > 50) {
-      setCustomValue('');
-      setSlippageTolerance('0.1');
+      setCustomValue(undefined);
+      setSlippage(0.1);
     } else {
-      setSlippageTolerance(customValue);
+      setSlippage(customValue);
     }
   };
 
@@ -247,18 +243,18 @@ const SlippageToleranceSettings: React.FC<SlippageToleranceProps> = ({
       </Box>
       <Box className={styles.rowBlock}>
         <StyledToggleButtonGroup
-          value={slippageTolerance}
+          value={slippage}
           exclusive
           onChange={handleSelectPercent}
           aria-label="select-slippage-tolerance-percent"
         >
-          <ToggleButton value="0.1" aria-label="0.1%">
+          <ToggleButton value={0.1} aria-label="0.1%">
             0.1%
           </ToggleButton>
-          <ToggleButton value="0.5" aria-label="0.5%">
+          <ToggleButton value={0.5} aria-label="0.5%">
             0.5%
           </ToggleButton>
-          <ToggleButton value="1" aria-label="1%">
+          <ToggleButton value={1} aria-label="1%">
             1%
           </ToggleButton>
         </StyledToggleButtonGroup>

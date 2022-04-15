@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { PublicKey } from '@solana/web3.js';
+import React, { useEffect, useState } from 'react';
+import { Connection, PublicKey, TransactionSignature } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
 import { useWallet } from '../../../components/wallet/wallet';
 import SwapConfirmationModal from '../../../components/SwapConfirmationModal';
+import { getNetwork } from '../../../utils';
 import { TokenIcon } from './TokenIcon';
 // eslint-disable-next-line import/order
 import {
@@ -15,11 +17,17 @@ import {
   useMint,
   useOwnedTokenAccount,
   useSwappableTokens,
+  useOnSwap,
   // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
 import TokenDialog from './TokenDialog';
 import SwapSettingsContainer from './SwapSettingsContainer';
 import SwapButton from './SwapButton';
+
+const tokenExistErrorMessage =
+  'Your account does not have enough USDT tokens for the specified eco-contribution.\n' +
+  'You can continue the token exchange process without eco-contribution or cancel the ' +
+  'exchange and replenish your USDT token balance.';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -154,15 +162,19 @@ export default function SwapCard() {
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
-  const { fromAmount, toAmount } = useSwapContext();
-  const { connected } = useWallet();
+  const { setImpact, fromAmount, toAmount, fromMint } = useSwapContext();
+  const { onSwap } = useOnSwap();
+  const { connected, wallet } = useWallet();
   const [ecoImpactType, setEcoImpactType] = useState<string>('$');
   const [ecoImpactValue, setEcoImpactValue] = useState<string>('0.5');
-  const [slippageTolerance, setSlippageTolerance] = useState<string>('0.1');
+  const [txSignatures, setTxSignatures] = useState<Array<TransactionSignature>>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const tokenMap = useTokenMap();
+  const fromTokenInfo = tokenMap.get(fromMint.toString());
+  const [connection, setConnection] = useState<Connection>();
 
   const handleClose = () => {
     if (!isLoading || isError) {
@@ -172,18 +184,91 @@ export default function SwapCard() {
     }
   };
 
-  const startSwapTransaction = () => {
+  const checkingEcoContributionPossibility = async () => {
+    if (fromTokenInfo && fromTokenInfo.symbol !== 'SOL') {
+      Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        new PublicKey(process.env.REACT_APP_USDT_TOKEN_ADDRESS!),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // @ts-ignore
+        wallet?.publicKey,
+      )
+        .then(tokenAddress => {
+          connection
+            ?.getTokenAccountBalance(tokenAddress)
+            .then(tokenBalance => {
+              if (
+                !tokenBalance.value.uiAmount ||
+                tokenBalance.value.uiAmount <= 0 ||
+                (ecoImpactType === '$' && tokenBalance.value.uiAmount < Number(ecoImpactValue))
+              ) {
+                setImpact(0);
+                setIsError(true);
+                setErrorMessage(tokenExistErrorMessage);
+                setOpen(true);
+              } else {
+                setImpact(
+                  ecoImpactType === '$'
+                    ? Number(ecoImpactValue)
+                    : tokenBalance.value.uiAmount * (Number(ecoImpactValue) / 100),
+                );
+                setOpen(true);
+                setIsLoading(true);
+              }
+            })
+            .catch(() => {
+              setImpact(0);
+              setErrorMessage(tokenExistErrorMessage);
+              setIsError(true);
+              setOpen(true);
+            });
+        })
+        .catch(e => {
+          setErrorMessage(e.message);
+          setIsError(true);
+          setOpen(true);
+        });
+    } else {
+      setImpact(0);
+      setIsLoading(true);
+      setOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    if (wallet?.publicKey && connected) {
+      setConnection(new Connection(getNetwork()));
+    }
+  }, [wallet, connected]);
+
+  const startSwapTransaction = async () => {
     setIsLoading(true);
     setIsError(false);
     setErrorMessage('');
+
+    const transactionResponse = await onSwap();
+    if (transactionResponse.length > 0) {
+      setTxSignatures(transactionResponse);
+      setIsLoading(false);
+    } else {
+      setIsError(true);
+      setErrorMessage('Transaction failed');
+    }
   };
+
+  useEffect(() => {
+    if (isLoading && !isError) {
+      startSwapTransaction();
+    }
+  }, [isLoading, isError]);
 
   const swapSettingsContainer =
     connected && fromAmount && toAmount ? (
       <SwapSettingsContainer
         {...{
-          slippageTolerance,
-          setSlippageTolerance,
           ecoImpactType,
           setEcoImpactType,
           ecoImpactValue,
@@ -195,11 +280,15 @@ export default function SwapCard() {
   return (
     <>
       <SwapConfirmationModal
-        {...{ open, isError, errorMessage, isLoading, handleClose, startSwapTransaction }}
-        transactionLink={
-          '38qrvPdFxoehysCiD6xZF1cviV3sRaDJRhcdBtv6KBfs4CoHhDGrQEEXzyyhmxs6Ayz2STr3KXZ9JvQ' +
-          'VMXACP892?cluster=testnet'
-        }
+        {...{
+          open,
+          isError,
+          errorMessage,
+          isLoading,
+          handleClose,
+          startSwapTransaction,
+          txSignatures,
+        }}
       />
       <Card className={styles.card}>
         <div>
@@ -213,7 +302,7 @@ export default function SwapCard() {
           {swapSettingsContainer}
           <SwapButton
             {...{
-              slippageTolerance,
+              checkingEcoContributionPossibility,
               ecoImpactType,
               ecoImpactValue,
               setOpen,
@@ -221,6 +310,7 @@ export default function SwapCard() {
               setIsLoading,
               setIsError,
               setErrorMessage,
+              startSwapTransaction,
             }}
           />
         </div>

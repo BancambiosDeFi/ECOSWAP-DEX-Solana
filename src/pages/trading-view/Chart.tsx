@@ -1,5 +1,5 @@
 import { createChart, CrosshairMode } from 'lightweight-charts';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { useSwapContext, useTokenMap } from '@serum/swap-ui';
 import moment from 'moment';

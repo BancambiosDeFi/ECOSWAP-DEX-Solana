@@ -18,6 +18,7 @@ interface ReferrerContextValues {
   allowRefLink: boolean;
 }
 
+// eslint-disable-next-line max-len
 const ReferrerContext: React.Context<null | ReferrerContextValues> = React.createContext<null | ReferrerContextValues>(
   null,
 );

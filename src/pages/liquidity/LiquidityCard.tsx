@@ -131,12 +131,14 @@ const useStyles = makeStyles(() => ({
     'border': 'solid 1px transparent',
     'borderRadius': '8px',
     'backgroundImage':
+      // eslint-disable-next-line max-len
       'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
     'backgroundOrigin': 'border-box',
     'backgroundClip': 'content-box, border-box',
     'boxShadow': '2px 50px rgb(3, 46, 131) inset',
     '&:hover': {
       background:
+        // eslint-disable-next-line max-len
         'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
       boxShadow: '0px 0px 16px #9F5AE5',
     },

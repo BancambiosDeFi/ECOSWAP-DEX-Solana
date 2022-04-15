@@ -162,6 +162,7 @@ export function useUnmigratedOpenOrdersAccounts() {
   };
 }
 
+// eslint-disable-next-line max-len
 const MarketContext: React.Context<null | MarketContextValues> = React.createContext<null | MarketContextValues>(
   null,
 );

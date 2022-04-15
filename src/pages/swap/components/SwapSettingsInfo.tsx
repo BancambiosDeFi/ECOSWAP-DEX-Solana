@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { makeStyles } from '@mui/styles';
+// eslint-disable-next-line import/no-unresolved
 import { useSwapContext } from '@serum/swap-ui';
 import { Box, IconButton, Typography } from '@mui/material';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';

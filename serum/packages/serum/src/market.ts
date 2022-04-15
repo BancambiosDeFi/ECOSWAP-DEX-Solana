@@ -433,19 +433,20 @@ export class Market {
       feeDiscountPubkey,
     }: OrderParams,
   ) {
-    const { transaction, signers } =
-      await this.makePlaceOrderTransaction<Account>(connection, {
-        owner,
-        payer,
-        side,
-        price,
-        size,
-        orderType,
-        clientId,
-        openOrdersAddressKey,
-        openOrdersAccount,
-        feeDiscountPubkey,
-      });
+    const { transaction, signers } = await this.makePlaceOrderTransaction<
+      Account
+    >(connection, {
+      owner,
+      payer,
+      side,
+      price,
+      size,
+      orderType,
+      clientId,
+      openOrdersAddressKey,
+      openOrdersAccount,
+      feeDiscountPubkey,
+    });
     return await this._sendTransaction(connection, transaction, [
       owner,
       ...signers,
@@ -1373,6 +1374,7 @@ export class OpenOrders {
       programId,
       filters,
     );
+
     return accounts.map(({ publicKey, accountInfo }) =>
       OpenOrders.fromAccountInfo(publicKey, accountInfo, programId),
     );

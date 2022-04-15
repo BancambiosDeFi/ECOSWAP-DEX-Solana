@@ -26,7 +26,7 @@ const LogoWrapper = styled.div`
   align-items: center;
   color: #0156ff !important;
   font-weight: bold;
-  padding-bottom: '10px';
+  padding-bottom: 10px;
   cursor: pointer;
   img {
     height: 56px;
@@ -66,7 +66,7 @@ export default function TopBar() {
   const { connected, wallet } = useWallet();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {
-    endpoint,
+    // endpoint,
     endpointInfo,
     setEndpoint,
     availableEndpoints,

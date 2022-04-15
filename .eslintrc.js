@@ -18,6 +18,14 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: ['.eslintrc.js'],
+  // settings: {
+  //   'import/resolver': {
+  //     node: {
+  //       extensions: ['.js', '.ts', '.tsx'],
+  //       paths: ['src', 'lib'],
+  //     },
+  //   },
+  // },
   rules: {
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
@@ -39,7 +47,7 @@ module.exports = {
     ],
     'eqeqeq': ['error', 'always'],
     'no-console': 'off',
-    'import/no-unresolved': [2, { caseSensitive: false }],
+    'import/no-unresolved': [1, { caseSensitive: false }],
     '@typescript-eslint/ban-ts-comment': 'off',
   },
 };

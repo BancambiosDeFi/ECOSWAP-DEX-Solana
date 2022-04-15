@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   },
   container: {
     padding: '22px 15px',
-    background: '#11161d',
+    background: '#0a0c0f',
     borderRadius: '18px',
   },
   img: {

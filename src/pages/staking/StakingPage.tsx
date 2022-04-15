@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
-import logo from '../../srm-assets/logo.svg';
+import logo from '../../srm-assets/banc-logo.png';
 import infoIcon from '../../srm-assets/info.svg';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
@@ -15,7 +15,6 @@ import AutoDetail from './AutoDetail';
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     padding: '22px 15px',
-    background: '#11161d',
     borderRadius: '18px',
   },
   root: {

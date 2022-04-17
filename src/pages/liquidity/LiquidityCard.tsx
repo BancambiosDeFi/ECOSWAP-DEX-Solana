@@ -8,7 +8,6 @@ import {
 } from '@raydium-io/raydium-sdk';
 import { Card, Typography, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import {
   useSwappableTokens,
   useSwapContext,
@@ -147,6 +146,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default () => {
+  const [poolKeys, setPoolKeys] = useState<LiquidityPoolKeysV4[]>([]);
   const [poolKey, setPoolKey] = useState<LiquidityPoolKeysV4 | null>(null);
   const [poolInfo, setPoolInfo] = useState<LiquidityPoolInfo | null>(null);
   const [noWarnPools, setNoWarnPools] = useState<string[]>([]);
@@ -244,6 +244,7 @@ export default () => {
           (pool.baseMint.equals(fromMint) && pool.quoteMint.equals(toMint)) ||
           (pool.baseMint.equals(toMint) && pool.quoteMint.equals(fromMint)),
       );
+      setPoolKeys(poolKeys);
       if (poolKey) {
         setPoolKey(poolKey);
         setPoolExist(true);
@@ -301,7 +302,7 @@ export default () => {
           loading={loading}
         />
       </Card>
-      <YourLiquidity poolInfo={poolInfo} />
+      <YourLiquidity poolInfo={poolInfo} poolKeys={poolKeys} poolKey={poolKey} />
       {/* <div>
         <h2 className={styles.cardLabel}>Create Pool</h2>
         <Card className={styles.card}>

@@ -17,14 +17,13 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#202124',
     padding: '8px 16px',
     marginBottom: '20px',
-    border: 'solid 1px transparent',
+    // border: 'solid 1px transparent',
     borderRadius: '8px',
-    backgroundImage:
-      // eslint-disable-next-line max-len
-      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
-    backgroundOrigin: 'border-box',
-    backgroundClip: 'content-box, border-box',
-    boxShadow: '2px 500px #202124 inset',
+    // backgroundImage:
+    //   'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
+    // backgroundOrigin: 'border-box',
+    // backgroundClip: 'content-box, border-box',
+    // boxShadow: '2px 500px #202124 inset',
   },
   swapInfoSideBlock: {
     width: 'fit-content',

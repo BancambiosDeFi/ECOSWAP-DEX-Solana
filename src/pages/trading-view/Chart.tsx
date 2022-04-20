@@ -1,11 +1,12 @@
 import { createChart, CrosshairMode } from 'lightweight-charts';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { useSwapContext, useTokenMap } from '@serum/swap-ui';
 import moment from 'moment';
 import { chart_api_key } from '../utils';
 
 const Chart = () => {
+  const [data, setData] = useState<boolean>(true);
   const { fromMint, toMint } = useSwapContext();
   const tokenMap = useTokenMap();
   const fromTokenInfo = tokenMap.get(fromMint.toString());
@@ -17,9 +18,8 @@ const Chart = () => {
   const chart = useRef() as any;
 
   useEffect(() => {
-    chartContainerRef.current.children.length > 0
-      ? chartContainerRef.current.children[0].remove()
-      : null;
+    chartContainerRef.current.children.length > 0 ? chart.current.remove() : null;
+
     chart.current = createChart(chartContainerRef.current, {
       width: 580,
       height: 400,
@@ -66,6 +66,12 @@ const Chart = () => {
     fetch(chart_pair_api)
       .then(response => response.json())
       .then(data => {
+        if (data.Response === 'Error') {
+          setData(false);
+
+          return chart.current.remove();
+        }
+        setData(true);
         const prepared = data?.Data?.Data?.map(({ time, low, high, open, close, volumefrom }) => {
           return {
             time: moment.unix(time).format('YYYY-MMM-DD'),
@@ -78,7 +84,6 @@ const Chart = () => {
         });
         candles.setData(prepared);
         histogram.setData(prepared);
-        chart.timeScale().fitContent();
       })
       .catch(error => {
         console.error(error);
@@ -88,6 +93,11 @@ const Chart = () => {
   return (
     <section>
       <div ref={chartContainerRef} className="chart-container" />
+      {!data ? (
+        <h1 style={{ minWidth: 580, minHeight: 400, textAlign: 'center', lineHeight: '400px' }}>
+          There is no data for this pair
+        </h1>
+      ) : null}
     </section>
   );
 };

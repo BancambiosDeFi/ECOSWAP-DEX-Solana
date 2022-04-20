@@ -208,6 +208,9 @@ export function useCanSwap(): boolean {
   const fromMarket = useMarket(
     route && route.markets ? route.markets[0] : undefined,
   );
+  const toMarket = useMarket(
+    route && route.markets ? route.markets[1] : undefined,
+  );
   if (route === null) {
     return false;
   }
@@ -227,6 +230,7 @@ export function useCanSwap(): boolean {
     fromAmount > 0 &&
     toAmount > 0 &&
     fromAmount >= fromMarket?.minOrderSize! &&
+    (toMarket === undefined || toAmount >= toMarket.minOrderSize!) &&
     // Trade route exists.
     route !== null &&
     // Wormhole <-> native markets must have the wormhole token as the
@@ -351,25 +355,6 @@ export function useOnSwap() {
         : toWallet
         ? toWallet.publicKey
         : undefined;
-
-      // if (!toWalletAddr) {
-      //   const {
-      //     transaction,
-      //     associatedToken,
-      //   } = await createAssociatedTokenAccount(
-      //     toMint,
-      //     swapClient.program.provider.wallet.publicKey,
-      //   );
-      //
-      //   const signedTransaction = await swapClient.program.provider.wallet.signTransaction(
-      //     transaction,
-      //   );
-      //
-      //   await swapClient.program.provider.send(signedTransaction, undefined, {
-      //     commitment: 'confirmed',
-      //   });
-      //   toWalletAddr = associatedToken;
-      // }
 
       const serumTransaction = await swapClient.swapTxs({
         fromMint,

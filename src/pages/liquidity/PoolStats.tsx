@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, Typography } from '@mui/material';
-import { LiquidityPoolInfo, TokenAmount } from '@raydium-io/raydium-sdk';
+import { TokenAmount } from '@raydium-io/raydium-sdk';
 
 import { toString, toPercentString, toFraction } from '../../srm-utils/priceHelper';
 
@@ -19,6 +19,7 @@ const useStyles = makeStyles(() => ({
     'border': 'solid 1px transparent',
     'borderRadius': '8px',
     'backgroundImage':
+      // eslint-disable-next-line max-len
       'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
     'backgroundOrigin': 'border-box',
     'backgroundClip': 'content-box, border-box',

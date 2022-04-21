@@ -6,6 +6,7 @@ import {
   sideLayout,
   u128,
   u64,
+  i64,
   VersionedLayout,
 } from './layout';
 import {
@@ -14,6 +15,7 @@ import {
   PublicKey,
 } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from './token-instructions';
+import BN from 'bn.js';
 
 // NOTE: Update these if the position of arguments for the settleFunds instruction changes
 export const SETTLE_FUNDS_BASE_WALLET_INDEX = 5;
@@ -98,10 +100,40 @@ INSTRUCTION_LAYOUT.inner.addVariant(
 INSTRUCTION_LAYOUT.inner.addVariant(14, struct([]), 'closeOpenOrders');
 INSTRUCTION_LAYOUT.inner.addVariant(15, struct([]), 'initOpenOrders');
 INSTRUCTION_LAYOUT.inner.addVariant(16, struct([u16('limit')]), 'prune');
+INSTRUCTION_LAYOUT.inner.addVariant(17, struct([u16('limit')]), 'consumeEventsPermissioned');
 INSTRUCTION_LAYOUT.inner.addVariant(
-  17,
-  struct([u16('limit')]),
-  'consumeEventsPermissioned',
+  18,
+  struct([
+    u64('clientId0'),
+    u64('clientId1'),
+    u64('clientId2'),
+    u64('clientId3'),
+    u64('clientId4'),
+    u64('clientId5'),
+    u64('clientId6'),
+    u64('clientId7')
+  ]),
+  'cancelOrdersByClientIds',
+);
+
+export const INSTRUCTION_LAYOUT_V2 = new VersionedLayout(
+  0,
+  union(u32('instruction')),
+);
+INSTRUCTION_LAYOUT_V2.inner.addVariant(
+  10,
+  struct([
+    sideLayout('side'),
+    u64('limitPrice'),
+    u64('maxBaseQuantity'),
+    u64('maxQuoteQuantity'),
+    selfTradeBehaviorLayout('selfTradeBehavior'),
+    orderTypeLayout('orderType'),
+    u64('clientId'),
+    u16('limit'),
+    i64('maxTs'),
+  ]),
+  'newOrderV3',
 );
 
 export function encodeInstruction(instruction) {
@@ -109,8 +141,17 @@ export function encodeInstruction(instruction) {
   return b.slice(0, INSTRUCTION_LAYOUT.encode(instruction, b));
 }
 
+export function encodeInstructionV2(instruction) {
+  const b = Buffer.alloc(100);
+  return b.slice(0, INSTRUCTION_LAYOUT_V2.encode(instruction, b));
+}
+
 export function decodeInstruction(message) {
   return INSTRUCTION_LAYOUT.decode(message);
+}
+
+export function decodeInstructionV2(message) {
+  return INSTRUCTION_LAYOUT_V2.decode(message);
 }
 
 export class DexInstructions {
@@ -248,6 +289,7 @@ export class DexInstructions {
     programId,
     selfTradeBehavior,
     feeDiscountPubkey = null,
+    maxTs = null,
   }) {
     const keys = [
       { pubkey: market, isSigner: false, isWritable: true },
@@ -270,10 +312,12 @@ export class DexInstructions {
         isWritable: false,
       });
     }
+
+    const encoder = maxTs ? encodeInstructionV2 : encodeInstruction;
     return new TransactionInstruction({
       keys,
       programId,
-      data: encodeInstruction({
+      data: encoder({
         newOrderV3: {
           side,
           limitPrice,
@@ -283,6 +327,7 @@ export class DexInstructions {
           orderType,
           clientId,
           limit: 65535,
+          maxTs: new BN(maxTs ?? '9223372036854775807'),
         },
       }),
     });
@@ -460,6 +505,40 @@ export class DexInstructions {
       programId,
       data: encodeInstruction({
         cancelOrderByClientIdV2: { clientId },
+      }),
+    });
+  }
+
+  static cancelOrdersByClientIds({
+    market,
+    openOrders,
+    owner,
+    bids,
+    asks,
+    eventQueue,
+    clientIds,
+    programId,
+  }) {
+    if (clientIds.length > 8) {
+      throw new Error("Number of client ids cannot exceed 8!");
+    }
+
+    while (clientIds.length < 8) {
+      clientIds.push(new BN(0));
+    }
+
+    return new TransactionInstruction({
+      keys: [
+        { pubkey: market, isSigner: false, isWritable: false },
+        { pubkey: bids, isSigner: false, isWritable: true },
+        { pubkey: asks, isSigner: false, isWritable: true },
+        { pubkey: openOrders, isSigner: false, isWritable: true },
+        { pubkey: owner, isSigner: true, isWritable: false },
+        { pubkey: eventQueue, isSigner: false, isWritable: true },
+      ],
+      programId,
+      data: encodeInstruction({
+        cancelOrdersByClientIds: Object.fromEntries(clientIds.map((clientId, i) => [`clientId${i}`, clientId])),
       }),
     });
   }

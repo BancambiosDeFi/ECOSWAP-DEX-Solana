@@ -6,11 +6,7 @@ import { MintLayout } from '@solana/spl-token';
 import { Connection, PublicKey } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 import { Swap as SwapClient } from '@project-serum/swap';
-import {
-  Market,
-  OpenOrders,
-  Orderbook as OrderbookSide,
-} from '@project-serum/serum';
+import { Market, OpenOrders, Orderbook as OrderbookSide } from '../../../serum';
 import {
   DEX_PID,
   USDC_MINT,

@@ -13,7 +13,7 @@ import {
   getOwnedAssociatedTokenAccounts,
   parseTokenAccountData,
 } from '../utils/tokens';
-import { SOL_MINT } from '../utils/pubkeys';
+import { DEFAULT_PUBLIC_KEY, SOL_MINT } from '../utils/pubkeys';
 
 export type TokenContext = {
   provider: Provider;
@@ -31,33 +31,38 @@ export function TokenContextProvider(props: any) {
       setRefresh(r => r + 1);
       return;
     }
-    // Fetch SPL tokens.
-    getOwnedAssociatedTokenAccounts(
-      provider.connection,
-      provider.wallet.publicKey,
-    ).then(accs => {
-      if (accs) {
-        // @ts-ignore
-        _OWNED_TOKEN_ACCOUNTS_CACHE.push(...accs);
-        setRefresh(r => r + 1);
-      }
-    });
-    // Fetch SOL balance.
-    provider.connection
-      .getAccountInfo(provider.wallet.publicKey)
-      .then((acc: { lamports: number }) => {
-        if (acc) {
-          _OWNED_TOKEN_ACCOUNTS_CACHE.push({
-            publicKey: provider.wallet.publicKey,
-            // @ts-ignore
-            account: {
-              amount: new BN(acc.lamports),
-              mint: SOL_MINT,
-            },
-          });
+
+    if (
+      provider.wallet.publicKey.toString() !== DEFAULT_PUBLIC_KEY.toString()
+    ) {
+      // Fetch SPL tokens.
+      getOwnedAssociatedTokenAccounts(
+        provider.connection,
+        provider.wallet.publicKey,
+      ).then(accs => {
+        if (accs) {
+          // @ts-ignore
+          _OWNED_TOKEN_ACCOUNTS_CACHE.push(...accs);
           setRefresh(r => r + 1);
         }
       });
+      // Fetch SOL balance.
+      provider.connection
+        .getAccountInfo(provider.wallet.publicKey)
+        .then((acc: { lamports: number }) => {
+          if (acc) {
+            _OWNED_TOKEN_ACCOUNTS_CACHE.push({
+              publicKey: provider.wallet.publicKey,
+              // @ts-ignore
+              account: {
+                amount: new BN(acc.lamports),
+                mint: SOL_MINT,
+              },
+            });
+            setRefresh(r => r + 1);
+          }
+        });
+    }
   }, [provider.wallet.publicKey, provider.connection]);
 
   return (

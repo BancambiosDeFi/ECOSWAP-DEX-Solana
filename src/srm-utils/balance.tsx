@@ -1,12 +1,8 @@
-import { TokenAmount, TokenAccount, Token, LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
+import { TokenAmount, Token, LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import BN from 'bn.js';
 
-import {
-  useTokenMap,
-  // eslint-disable-next-line import/no-unresolved
-} from '@serum/swap-ui';
 import { createToken } from '../utils/raydiumRequests';
 
 export interface ITokenAccount {
@@ -19,8 +15,7 @@ export interface ITokenAccount {
 
 export function objectMapEntry<T, V extends [string, any]>(
   target: T | undefined,
-  mapper: (entry: [key: keyof T, value: T[keyof T]]) => V,
-): { [P in keyof V[0]]: V[1] } {
+  mapper: (entry: [key: keyof T, value: T[keyof T]]) => V): { [P in keyof V[0]]: V[1] } {
   // @ts-expect-error
   return Object.fromEntries(
     Object.entries(target ?? {}).map(([key, value]) => {

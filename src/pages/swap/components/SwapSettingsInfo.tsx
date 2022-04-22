@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 // eslint-disable-next-line import/no-unresolved
-import { useSwapContext } from '@serum/swap-ui';
+import { useMarket, useSwapContext, useTokenMap } from '@serum/swap-ui';
+// eslint-disable-next-line import/no-unresolved
+import { useRouteVerbose } from '@serum/swap-ui/lib/context/Dex';
 import { Box, IconButton, Typography } from '@mui/material';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 
@@ -64,7 +66,26 @@ const SwapSettingsInfo: React.FC<SwapSettingsProps> = ({
   infoIconStyle,
 }) => {
   const styles = useStyles();
-  const { slippage } = useSwapContext();
+  const { slippage, toMint, fromMint } = useSwapContext();
+  const route = useRouteVerbose(fromMint, toMint);
+  const fromMarket = useMarket(route && route.markets ? route.markets[0] : undefined);
+  const tokenMap = useTokenMap();
+  const fromTokenInfo = tokenMap.get(fromMint.toString());
+  const toTokenInfo = tokenMap.get(toMint.toString());
+  const [poolName, setPoolName] = useState<string>('BX Pool');
+  const rightArrow = '\u279E';
+
+  useEffect(() => {
+    if (fromMarket && route && route.markets && route.markets.length > 1) {
+      const transitiveTokenInfo = tokenMap.get(fromMarket?.quoteMintAddress.toString());
+      setPoolName(
+        // eslint-disable-next-line max-len
+        `${fromTokenInfo?.symbol} ${rightArrow} ${transitiveTokenInfo?.symbol} ${rightArrow} ${toTokenInfo?.symbol}`,
+      );
+    } else {
+      setPoolName('BX Pool');
+    }
+  }, [route?.markets, fromMarket]);
 
   return (
     <Box className={styles.swapInfoWrapper}>
@@ -86,7 +107,7 @@ const SwapSettingsInfo: React.FC<SwapSettingsProps> = ({
       </Box>
       <Box className={styles.swapInfoSideBlock}>
         <Typography className={styles.swapInfoText}>{slippage.toString()}%</Typography>
-        <Typography className={styles.swapInfoText}>BX Pool</Typography>
+        <Typography className={styles.swapInfoText}>{poolName}</Typography>
         <Typography className={styles.swapInfoText}>
           {minimumReceived} {toTokenSymbol}
         </Typography>

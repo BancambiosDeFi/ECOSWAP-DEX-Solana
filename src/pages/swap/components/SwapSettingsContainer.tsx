@@ -16,16 +16,15 @@ import {
   CachedOutlined as UpdateIcon,
 } from '@mui/icons-material';
 import NumberFormat from 'react-number-format';
-import { LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
 // eslint-disable-next-line import/no-unresolved
 import { useMint, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import CloseIcon from '@mui/icons-material/Close';
+import { PublicKey } from '@solana/web3.js';
 import {
   convertToBN,
   convertToPercent,
   createToken,
   createTokenAmount,
-  getAllRaydiumPoolKeys,
   getPriceImpact,
   getRaydiumPoolInfo,
 } from '../../../utils/raydiumRequests';
@@ -38,6 +37,7 @@ import {
   getSwapPoolDescription,
 } from '../../../utils/descriptions';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
+import { useRadium } from '../../../utils/raydium';
 import SwapSettingsInfo from './SwapSettingsInfo';
 import SlippageToleranceSettings from './SlippageToleranceSettings';
 import { InfoLabel } from './Info';
@@ -284,20 +284,14 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
   const fromTokenInfo = tokenMap.get(fromMint.toString());
   const toMintInfo = useMint(toMint);
   const fromMintInfo = useMint(fromMint);
+  const { raydiumPoolKeys } = useRadium();
   const connection = useConnection();
-  const [raydiumPoolKeys, setRaydiumPoolKeys] = useState<LiquidityPoolKeysV4[] | null>(null);
   const [minimumReceived, setMinimumReceived] = useState<number>(toAmount);
   const [priceImpact, setPriceImpact] = useState<string>('');
   const [infoText, setInfoText] = useState<string>('');
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const popoverId = open ? 'simple-popover' : undefined;
-
-  useEffect(() => {
-    getAllRaydiumPoolKeys(connection).then(poolKeys => {
-      setRaydiumPoolKeys(poolKeys);
-    });
-  }, []);
 
   useEffect(() => {
     if (toAmount) {
@@ -321,11 +315,21 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
     if (toAmount && toMint && raydiumPoolKeys && fromMintInfo && toMintInfo) {
       const filteredPoolKeys = raydiumPoolKeys.filter(
         pool =>
-          (pool.baseMint.equals(fromMint) && pool.quoteMint.equals(toMint)) ||
-          (pool.baseMint.equals(toMint) && pool.quoteMint.equals(fromMint)),
+          // (pool.baseMint.equals(fromMint) && pool.quoteMint.equals(toMint)) ||
+          // (pool.baseMint.equals(toMint) && pool.quoteMint.equals(fromMint)),
+          (pool.baseMint.toString() === fromMint.toString() &&
+            pool.quoteMint.toString() === toMint.toString()) ||
+          (pool.baseMint.toString() === toMint.toString() &&
+            pool.quoteMint.toString() === fromMint.toString()),
       );
 
       if (filteredPoolKeys.length > 0) {
+        for (const [key, value] of Object.entries(filteredPoolKeys[0])) {
+          if (typeof value !== 'number') {
+            filteredPoolKeys[0][key] = new PublicKey(value);
+          }
+        }
+
         getRaydiumPoolInfo({ connection, poolKeys: filteredPoolKeys[0] })
           .then(poolInfo => {
             const amountIn = createTokenAmount(
@@ -368,13 +372,13 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
             setPriceImpact('');
           });
       } else {
-        console.error(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          `Price Impact ERROR: "${fromTokenInfo?.symbol}-${toTokenInfo?.symbol}" or ` +
-            // eslint-disable-next-line max-len
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            `"${toTokenInfo?.symbol}-${fromTokenInfo?.symbol}" Raydium liquidity pool doesn't exist!`,
-        );
+        // console.error(
+        //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        //   `Price Impact ERROR: "${fromTokenInfo?.symbol}-${toTokenInfo?.symbol}" or ` +
+        //     // eslint-disable-next-line max-len
+        //     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        //     `"${toTokenInfo?.symbol}-${fromTokenInfo?.symbol}" Raydium liquidity pool doesn't exist!`,
+        // );
         setPriceImpact('');
       }
     } else {
@@ -421,7 +425,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
   };
 
   const handleUpdateClick = () => {
-    console.log('Update clicked');
+    console.log('Oops!');
   };
 
   const handleSelectEcoImpactType = (event: React.MouseEvent<HTMLElement>, type: string | null) => {

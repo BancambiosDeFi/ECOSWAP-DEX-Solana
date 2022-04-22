@@ -123,6 +123,7 @@ export function toString(
   n: Numberish | null | undefined,
   options?: {
     /** @default 'auto' */
+    // eslint-disable-next-line prettier/prettier
     decimalLength?: number | 'auto' | 'auto ' | `auto ${number}`;
     /** whether set zero decimal depends on how you get zero. if you get it from very samll number, */
     zeroDecimalNotAuto?: boolean;

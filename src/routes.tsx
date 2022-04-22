@@ -16,8 +16,20 @@ import SwapContainer from './pages/swap/components/SwapContainer';
 import WithdrawPage from './pages/withdraw';
 import { LiquidityContainer } from './pages/liquidity';
 import TradingView from './pages/trading-view';
+// import { useConnection } from './srm-utils/connection';
+// import { getAllRaydiumPoolKeys } from './utils/raydiumRequests';
 
 export function Routes() {
+  // const connection = useConnection();
+
+  // useEffect(() => {
+  //   console.log('getAllRaydiumPoolKeys() in App()..');
+  //   getAllRaydiumPoolKeys(connection).then(poolKeys => {
+  //     // setRaydiumPoolKeys(poolKeys);
+  //     localStorage.setItem('poolKeys', JSON.stringify(poolKeys));
+  //   });
+  // }, []);
+
   return (
     <>
       <HashRouter basename={'/'}>

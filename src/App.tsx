@@ -10,6 +10,7 @@ import { Routes } from './routes';
 import { PreferencesProvider } from './srm-utils/preferences';
 import { ReferrerProvider } from './srm-utils/referrer';
 import { theme } from './srm-styles/mainTheme';
+import { RaydiumProvider } from './utils/raydium';
 
 declare global {
   interface Window {
@@ -27,9 +28,11 @@ export default function App() {
             <ReferrerProvider>
               <WalletProvider>
                 <PreferencesProvider>
-                  <Suspense fallback={() => <Spin size="large" />}>
-                    <Routes />
-                  </Suspense>
+                  <RaydiumProvider>
+                    <Suspense fallback={() => <Spin size="large" />}>
+                      <Routes />
+                    </Suspense>
+                  </RaydiumProvider>
                 </PreferencesProvider>
               </WalletProvider>
             </ReferrerProvider>

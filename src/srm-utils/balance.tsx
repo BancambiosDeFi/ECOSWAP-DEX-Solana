@@ -15,6 +15,7 @@ export interface ITokenAccount {
 
 export function objectMapEntry<T, V extends [string, any]>(
   target: T | undefined,
+  // eslint-disable-next-line prettier/prettier
   mapper: (entry: [key: keyof T, value: T[keyof T]]) => V): { [P in keyof V[0]]: V[1] } {
   // @ts-expect-error
   return Object.fromEntries(

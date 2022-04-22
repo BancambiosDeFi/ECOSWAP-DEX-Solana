@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Grid } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Wallet from '@project-serum/sol-wallet-adapter';
 import { ConfirmOptions, Connection } from '@solana/web3.js';
-import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
 
 // eslint-disable-next-line import/no-unresolved
 import Swap from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { useWallet } from '../../components/wallet/wallet';
+import { useRadium } from '../../utils/raydium';
 import { NotifyingProvider } from './NotifyingProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    // minHeight: '70vh',
     marginTop: '50px',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function SwapPage({ children }) {
   const styles = useStyles();
   const { wallet } = useWallet();
-  const [tokenList, setTokenList] = useState<TokenListContainer | null>(null);
+  const { tokenList } = useRadium();
 
   const [provider] = useMemo(() => {
     const opts: ConfirmOptions = {
@@ -44,10 +43,6 @@ export default function SwapPage({ children }) {
 
     return [provider];
   }, [wallet]);
-
-  useEffect(() => {
-    new TokenListProvider().resolve().then(setTokenList);
-  }, [setTokenList]);
 
   // TODO: change tokenList any type to something meaningful
   return (

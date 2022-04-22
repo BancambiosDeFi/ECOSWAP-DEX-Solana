@@ -1,7 +1,7 @@
 import { Provider } from '@project-serum/anchor';
-import { OpenOrders } from '@project-serum/serum';
 import { TokenListContainer } from '@solana/spl-token-registry';
 import { PublicKey } from '@solana/web3.js';
+import { OpenOrders } from '../../serum';
 import { DEX_PID, USDC_PUBKEY, USDT_PUBKEY } from './utils';
 
 // Utility class to parse the token list for markets.

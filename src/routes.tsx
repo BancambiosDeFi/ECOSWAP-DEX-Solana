@@ -16,8 +16,20 @@ import SwapContainer from './pages/swap/components/SwapContainer';
 import WithdrawPage from './pages/withdraw';
 import { LiquidityContainer } from './pages/liquidity';
 import TradingView from './pages/trading-view';
+// import { useConnection } from './srm-utils/connection';
+// import { getAllRaydiumPoolKeys } from './utils/raydiumRequests';
 
 export function Routes() {
+  // const connection = useConnection();
+
+  // useEffect(() => {
+  //   console.log('getAllRaydiumPoolKeys() in App()..');
+  //   getAllRaydiumPoolKeys(connection).then(poolKeys => {
+  //     // setRaydiumPoolKeys(poolKeys);
+  //     localStorage.setItem('poolKeys', JSON.stringify(poolKeys));
+  //   });
+  // }, []);
+
   return (
     <>
       <HashRouter basename={'/'}>
@@ -28,6 +40,7 @@ export function Routes() {
           </Route>
           <Route exact path="/market/:marketAddress">
             <Redirect to="/swap" />
+            {/* <TradePage /> */}
           </Route>
           <Route exact path="/orders" component={OpenOrdersPage} />
           <Route exact path="/balances" component={BalancesPage} />
@@ -43,7 +56,8 @@ export function Routes() {
             <PoolPage />
           </Route>
           <Route exact path="/design-system">
-            <DesignSystemPage />
+            <Redirect to="/swap" />
+            {/* <DesignSystemPage /> */}
           </Route>
           {/* <Route exact path="/swap">
             <SwapPage />

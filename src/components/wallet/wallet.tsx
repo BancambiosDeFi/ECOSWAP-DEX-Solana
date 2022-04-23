@@ -39,7 +39,8 @@ export function WalletProvider({ children }) {
   const { endpoint } = useConnectionConfig();
 
   const [autoConnect, setAutoConnect] = useState(false);
-  const [providerUrl, setProviderUrl] = useLocalStorageState('walletProvider');
+  const [providerUrl, setProviderUrl] = useState('https://www.phantom.app');
+  // const [providerUrl, setProviderUrl] = useLocalStorageState('walletProvider');
 
   const provider = useMemo(() => WALLET_PROVIDERS.find(({ url }) => url === providerUrl), [
     providerUrl,

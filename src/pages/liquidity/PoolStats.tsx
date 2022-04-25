@@ -71,10 +71,9 @@ interface PoolStatsProps {
 }
 
 export const PoolStats = ({ poolStats }: PoolStatsProps) => {
-  const styles = useStyles();
   const { baseCoinInfo, quoteCoinInfo, lpSupply, lpWalletAmount } = poolStats;
-
   const sharePercent = lpWalletAmount ? toFraction(lpWalletAmount).div(toFraction(lpSupply)) : null;
+  const styles = useStyles();
 
   return (
     <Box className={styles.swapInfoWrapper}>
@@ -103,14 +102,14 @@ export const PoolStats = ({ poolStats }: PoolStatsProps) => {
       </Box>
       <Box className={styles.swapInfoSideBlock}>
         <Typography className={styles.swapInfoText}>
-          {baseCoinInfo
+          {baseCoinInfo && baseCoinInfo.token.decimals
             ? `${toString(baseCoinInfo || 0, { decimalLength: 2, separator: ',' })} ${
                 baseCoinInfo.currency.symbol ?? ''
               }`
             : '--'}
         </Typography>
         <Typography className={styles.swapInfoText}>
-          {quoteCoinInfo
+          {quoteCoinInfo && quoteCoinInfo.token.decimals
             ? `${toString(quoteCoinInfo || 0, { decimalLength: 2, separator: ',' })} ${
                 quoteCoinInfo.currency.symbol ?? ''
               }`

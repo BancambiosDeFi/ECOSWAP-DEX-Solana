@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import Wallet from '@project-serum/sol-wallet-adapter';
 
 import { useConnectionConfig } from '../../srm-utils/connection';
-import { useLocalStorageState } from '../../srm-utils/utils';
+// import { useLocalStorageState } from '../../srm-utils/utils';
 import { WalletContextValues } from '../../srm-utils/types';
 import { notify } from '../../srm-utils/notifications';
 import { WalletAdapter } from './types';

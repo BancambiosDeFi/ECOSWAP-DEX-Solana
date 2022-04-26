@@ -11,6 +11,7 @@ const useStyles = makeStyles(() => ({
     background: '#202124',
     borderRadius: '8px',
     marginBottom: '20px',
+    boxShadow: '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
   },
   tab: {
     '&&': {

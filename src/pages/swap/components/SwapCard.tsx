@@ -36,11 +36,11 @@ const useStyles = makeStyles(theme => ({
   card: {
     borderRadius: '0 20px 20px 0 !important',
     border: '1px solid #0156FF',
-    boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#0A0C0E !important',
     width: '435px',
     height: '100%',
     padding: '26px 16px',
+    boxShadow: '12px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
   },
   title: {
     fontFamily: 'Saira !important',
@@ -120,6 +120,7 @@ const useStyles = makeStyles(theme => ({
   input: {
     textAlign: 'right',
     color: 'white',
+    fontFamily: '"Saira", sans-serif !important',
     fontSize: '20px !important',
   },
   swapTokenFormContainer: {

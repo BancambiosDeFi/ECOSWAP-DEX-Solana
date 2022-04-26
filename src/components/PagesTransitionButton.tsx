@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '29px',
     borderRadius: '20px 0 0 20px',
     border: '1px solid #0156FF',
-    boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
+    boxShadow: '-11px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
     boxSizing: 'border-box',
     backgroundColor: '#0A0C0E !important',
     marginRight: '4px',

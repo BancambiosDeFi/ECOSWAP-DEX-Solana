@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 
 interface TitleProps {
-  text: string;
+  text?: string;
   style?: SxProps;
 }
 

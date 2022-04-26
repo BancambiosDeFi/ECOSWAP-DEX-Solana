@@ -4,6 +4,7 @@ import { makeStyles } from '@mui/styles';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { Connection } from '@solana/web3.js';
 import CircleIcon from '@mui/icons-material/Circle';
+import { formattedBallance, getBalance } from '../../utils';
 import { useWallet } from './wallet';
 
 const useStyles = makeStyles({
@@ -73,35 +74,17 @@ export default function UserWalletHeaderMenu() {
   const { wallet, providerName, connected, disconnect } = useWallet();
   const [userBalance, setUserBalance] = useState('0');
 
-  const networkMain = 'https://solana-mainnet.phantom.tech';
-  // testnet balance
-  // const networkTest = 'https://api.testnet.solana.com';
-  // devnet balance
-  // const networkDev = 'https://api.devnet.solana.com';
-
   useEffect(() => {
     if (wallet?.publicKey && connected) {
-      const connection = new Connection(networkMain);
-      const balancePromise = getBalance(connection, wallet.publicKey);
+      const connection = new Connection(process.env.REACT_APP_NETWORK as string);
 
-      balancePromise.then(number => {
-        if (number === 0) setUserBalance('0');
-        if (number > 0) setUserBalance(formattedBallance(number));
+      getBalance(connection, wallet.publicKey).then(lamportsBalance => {
+        lamportsBalance > 0
+          ? setUserBalance(formattedBallance(lamportsBalance))
+          : setUserBalance('0');
       });
     }
   }, [wallet, connected]);
-
-  function getBalance(connection, publicKey) {
-    return connection.getBalance(publicKey);
-  }
-
-  function formattedBallance(number) {
-    const string = number.toString();
-
-    return (
-      string.slice(0, string.length - 9) + ',' + string.slice(string.length - 9, string.length - 8)
-    );
-  }
 
   return (
     <div className={classes.wrapperWalletMenu}>

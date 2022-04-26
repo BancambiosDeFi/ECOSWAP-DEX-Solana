@@ -58,7 +58,7 @@ const EXTERNAL_LINKS = {
   '/developer-resources': 'https://serum-academy.com/en/developer-resources/',
   '/explorer': 'https://solscan.io',
   '/srm-faq': 'https://projectserum.com/srm-faq',
-  '/swap': 'https://swap.projectserum.com',
+  // '/swap': 'https://swap.projectserum.com',
 };
 
 export default function TopBar() {
@@ -174,7 +174,6 @@ export default function TopBar() {
             style={{
               borderBottom: 'none',
               backgroundColor: 'transparent',
-              flex: 1,
               justifyContent: 'flex-end',
               paddingBottom: '16px',
             }}

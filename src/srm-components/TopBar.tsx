@@ -19,7 +19,6 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: center;
   padding: 0px 100px;
-  flex-wrap: wrap;
 `;
 const LogoWrapper = styled.div`
   display: flex;
@@ -34,7 +33,7 @@ const LogoWrapper = styled.div`
   }
 `;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   headerItem: {
     'fontFamily': 'Saira',
     'fontStyle': 'normal',
@@ -45,8 +44,13 @@ const useStyles = makeStyles(theme => ({
       color: '#0156ff !important',
     },
     '&:selected': {
-      color: '#0156ff !important',
+      color: '#0156ff ',
     },
+    '@media(max-width: 1050px)': {
+      fontSize: '15px',
+      margin: 'auto 14px !important',
+    },
+    '@media(max-width: 850px)': { fontSize: '14px', margin: 'auto 7px !important' },
   },
 }));
 

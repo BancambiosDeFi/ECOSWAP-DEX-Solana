@@ -174,7 +174,6 @@ export default function TopBar() {
             style={{
               borderBottom: 'none',
               backgroundColor: 'transparent',
-              flex: 1,
               justifyContent: 'flex-end',
               paddingBottom: '16px',
             }}

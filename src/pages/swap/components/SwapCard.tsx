@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Connection, PublicKey, TransactionSignature } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -7,8 +7,9 @@ import { ExpandMore } from '@mui/icons-material';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
 import { useWallet } from '../../../components/wallet/wallet';
-import SwapConfirmationModal from '../../../components/SwapConfirmationModal';
 import { getNetwork } from '../../../utils';
+import { notify } from '../../../srm-utils/notifications';
+import EcoContributionErrorModal from './EcoContributionErrorModal';
 import { TokenIcon } from './TokenIcon';
 // eslint-disable-next-line import/order
 import {
@@ -23,6 +24,8 @@ import {
 import TokenDialog from './TokenDialog';
 import SwapSettingsContainer from './SwapSettingsContainer';
 import SwapButton from './SwapButton';
+import NotificationDescriptionForCompletedSwap from './NotificationDescriptionForCompletedSwap';
+import SwapProgressModal from './SwapProgressModal';
 
 const tokenExistErrorMessage =
   'Your account does not have enough USDT tokens for the specified eco-contribution.\n' +
@@ -33,11 +36,11 @@ const useStyles = makeStyles(theme => ({
   card: {
     borderRadius: '0 20px 20px 0 !important',
     border: '1px solid #0156FF',
-    boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#0A0C0E !important',
     width: '435px',
     height: '100%',
     padding: '26px 16px',
+    boxShadow: '12px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
   },
   title: {
     fontFamily: 'Saira !important',
@@ -117,6 +120,7 @@ const useStyles = makeStyles(theme => ({
   input: {
     textAlign: 'right',
     color: 'white',
+    fontFamily: '"Saira", sans-serif !important',
     fontSize: '20px !important',
   },
   swapTokenFormContainer: {
@@ -162,26 +166,28 @@ export default function SwapCard() {
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
-  const { setImpact, fromAmount, toAmount, fromMint } = useSwapContext();
+  const { setImpact, fromAmount, toAmount, fromMint, toMint } = useSwapContext();
   const { onSwap } = useOnSwap();
   const { connected, wallet } = useWallet();
   const [ecoImpactType, setEcoImpactType] = useState<string>('$');
   const [ecoImpactValue, setEcoImpactValue] = useState<string>('0.5');
-  const [txSignatures, setTxSignatures] = useState<Array<TransactionSignature>>([]);
-  const [open, setOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingTx, setIsLoadingTx] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const tokenMap = useTokenMap();
   const fromTokenInfo = tokenMap.get(fromMint.toString());
+  const toTokenInfo = tokenMap.get(toMint.toString());
+  const fromMintAccount = useMint(fromMint);
+  const toMintAccount = useMint(toMint);
   const [connection, setConnection] = useState<Connection>();
 
-  const handleClose = () => {
-    if (!isLoading || isError) {
-      setOpen(false);
-      setIsError(false);
-      setIsLoading(false);
-    }
+  const handleCloseEcoContributionErrorModal = () => {
+    setIsError(false);
+    setErrorMessage('');
+  };
+
+  const handleCloseSwapProgressModal = () => {
+    setIsLoadingTx(false);
   };
 
   const checkingEcoContributionPossibility = async () => {
@@ -206,35 +212,30 @@ export default function SwapCard() {
                 (ecoImpactType === '$' && tokenBalance.value.uiAmount < Number(ecoImpactValue))
               ) {
                 setImpact(0);
-                setIsError(true);
                 setErrorMessage(tokenExistErrorMessage);
-                setOpen(true);
+                setIsError(true);
               } else {
                 setImpact(
                   ecoImpactType === '$'
                     ? Number(ecoImpactValue)
                     : tokenBalance.value.uiAmount * (Number(ecoImpactValue) / 100),
                 );
-                setOpen(true);
-                setIsLoading(true);
+                setIsLoadingTx(true);
               }
             })
             .catch(() => {
               setImpact(0);
               setErrorMessage(tokenExistErrorMessage);
               setIsError(true);
-              setOpen(true);
             });
         })
         .catch(e => {
           setErrorMessage(e.message);
           setIsError(true);
-          setOpen(true);
         });
     } else {
       setImpact(0);
-      setIsLoading(true);
-      setOpen(true);
+      setIsLoadingTx(true);
     }
   };
 
@@ -245,25 +246,42 @@ export default function SwapCard() {
   }, [wallet, connected]);
 
   const startSwapTransaction = async () => {
-    setIsLoading(true);
-    setIsError(false);
-    setErrorMessage('');
+    handleCloseEcoContributionErrorModal();
 
     const transactionResponse = await onSwap();
+
+    setIsLoadingTx(false);
+
     if (transactionResponse.length > 0) {
-      setTxSignatures(transactionResponse);
-      setIsLoading(false);
+      notify({
+        type: 'success',
+        message: 'SWAP Completed!',
+        description: (
+          <NotificationDescriptionForCompletedSwap
+            signature={transactionResponse[0]}
+            fromAmount={fromAmount}
+            toAmount={toAmount}
+            fromMintAccount={fromMintAccount}
+            toMintAccount={toMintAccount}
+            fromTokenSymbol={fromTokenInfo?.symbol}
+            toTokenSymbol={toTokenInfo?.symbol}
+          />
+        ),
+      });
     } else {
-      setIsError(true);
-      setErrorMessage('Transaction failed');
+      notify({
+        type: 'error',
+        message: 'Transaction failed',
+        description: 'Something went wrong. Please try again later.',
+      });
     }
   };
 
   useEffect(() => {
-    if (isLoading && !isError) {
+    if (isLoadingTx && !isError) {
       startSwapTransaction();
     }
-  }, [isLoading, isError]);
+  }, [isLoadingTx, isError]);
 
   const swapSettingsContainer =
     connected && fromAmount && toAmount ? (
@@ -279,17 +297,13 @@ export default function SwapCard() {
 
   return (
     <>
-      <SwapConfirmationModal
-        {...{
-          open,
-          isError,
-          errorMessage,
-          isLoading,
-          handleClose,
-          startSwapTransaction,
-          txSignatures,
-        }}
+      <EcoContributionErrorModal
+        open={isError}
+        errorMessage={errorMessage}
+        handleClose={handleCloseEcoContributionErrorModal}
+        startSwapTransaction={startSwapTransaction}
       />
+      <SwapProgressModal open={isLoadingTx} handleClose={handleCloseSwapProgressModal} />
       <Card className={styles.card}>
         <div>
           <Typography className={styles.title}>From</Typography>
@@ -300,19 +314,7 @@ export default function SwapCard() {
           </div>
           <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
           {swapSettingsContainer}
-          <SwapButton
-            {...{
-              checkingEcoContributionPossibility,
-              ecoImpactType,
-              ecoImpactValue,
-              setOpen,
-              isLoading,
-              setIsLoading,
-              setIsError,
-              setErrorMessage,
-              startSwapTransaction,
-            }}
-          />
+          <SwapButton {...{ checkingEcoContributionPossibility }} />
         </div>
       </Card>
     </>

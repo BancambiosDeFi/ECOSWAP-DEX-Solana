@@ -21,7 +21,7 @@ export const PoolInfo: React.FC<PoolInfoProps | Record<string, never>> = ({ pool
   const fromMintInfo = useMint(fromMint);
 
   const poolStats = useMemo(() => {
-    if (poolInfo) {
+    if (poolInfo && toMintInfo && fromMintInfo) {
       const toTokenInfo = tokenMap.get(toMint.toString());
       const fromTokenInfo = tokenMap.get(fromMint.toString());
 

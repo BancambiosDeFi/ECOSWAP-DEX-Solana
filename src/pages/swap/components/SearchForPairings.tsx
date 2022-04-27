@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
       // eslint-disable-next-line max-len
       'linear-gradient(#202124, #202124) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #EC26F5 102.3%) border-box !important',
     border: isInputFocus ? '3px solid transparent' : 'none',
+    boxShadow: '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
   }),
   inputBase: {
     '& .MuiOutlinedInput-notchedOutline': {
@@ -43,7 +44,7 @@ const useStyles = makeStyles(theme => ({
       fontFamily: '"Saira", sans-serif !important',
       fontSize: '24px !important',
       fontWeight: '700 !important',
-      opacity: 1,
+      opacity: '1 !important',
       paddingLeft: '15px',
       color: '#BDC1C6 !important',
     },
@@ -70,7 +71,6 @@ const useStyles = makeStyles(theme => ({
       left: '-50px',
       width: 10,
       borderRadius: '8px',
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.3) !important',
     },
     '&::-webkit-scrollbar-track': {
       backgroundColor: '#707070',
@@ -234,7 +234,7 @@ export default function SearchForPairingsComponent({ type, width }) {
               ...params.inputProps,
               autoComplete: 'new-password', // disable autocomplete and autofill
             }}
-            placeholder={'Try : Sol to USDC'}
+            placeholder={'Try : 1 USDC to Sol'}
           />
         )}
       />

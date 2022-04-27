@@ -120,7 +120,7 @@ const SwapConfirmationModal: React.FC<CreateInvestorAccountModalProps> = ({
             <SubtitleText style={{ color: '#FFFFFF' }} text="Swap transaction was successful!" />
             <TypographyStyled>Please see the transactions details:</TypographyStyled>
             {txSignatures.map((signature, index) => (
-              <TransactionLink key={index} signature={signature.toString()} index={index + 1} />
+              <TransactionLink key={index} signature={signature.toString()} /*index={index + 1}*/ />
             ))}
           </Box>
           <Box

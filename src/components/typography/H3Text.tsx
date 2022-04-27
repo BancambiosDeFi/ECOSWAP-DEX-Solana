@@ -9,11 +9,10 @@ interface TitleProps {
 }
 
 const TypographyStyled = styled(Typography)(() => ({
-  fontFamily: '"Saira", sans-serif',
+  fontFamily: 'Saira',
   fontSize: '24px',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  lineHeight: '34px',
+  fontWeight: 700,
+  lineHeight: '38px',
   letterSpacing: '0em',
   textAlign: 'center',
 }));

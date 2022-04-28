@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { Card, Typography, TextField, useTheme, IconButton, Popover } from '@mui/material';
@@ -535,6 +535,14 @@ export function SwapTokenForm({
     setAmount(0);
   }, [mintInfo?.symbol]);
 
+  const handleTextFieldOnChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    if (e.target.value.match(/[^.\d]/g) !== null) {
+      setAmount(0);
+    } else {
+      setAmount(Number(e.target.value));
+    }
+  };
+
   return (
     <div className={styles.swapTokenFormContainer} style={style}>
       <div className={styles.swapTokenSelectorContainer}>
@@ -550,15 +558,12 @@ export function SwapTokenForm({
       <TextField
         type="number"
         value={formattedAmount}
-        onChange={e => setAmount(Number(e.target.value))}
+        onChange={handleTextFieldOnChange}
         inputProps={{
           inputMode: 'numeric',
-          // eslint-disable-next-line
-          // prettier-ignore
-          pattern: '^[0-9]*(\.[0-9]*)?$'
+          pattern: '^[0-9]*(.[0-9]*)?$',
         }}
         InputProps={{
-          // disableUnderline: true,
           classes: {
             root: styles.amountInput,
             input: styles.input,
@@ -577,7 +582,6 @@ export function SwapTokenForm({
 
 function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }) {
   const styles = useStyles();
-  // const theme = useTheme();
 
   return (
     <div onClick={onClick} className={styles.tokenButton}>

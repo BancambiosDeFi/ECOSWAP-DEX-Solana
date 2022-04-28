@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import { makeStyles, styled } from '@mui/styles';
 import {
@@ -10,7 +9,6 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-// eslint-disable-next-line prettier/prettier
 import {
   SettingsOutlined as SettingsIcon,
   CachedOutlined as UpdateIcon,
@@ -40,7 +38,7 @@ import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg'
 import { useRadium } from '../../../utils/raydium';
 import SwapSettingsInfo from './SwapSettingsInfo';
 import SlippageToleranceSettings from './SlippageToleranceSettings';
-import { InfoLabel } from './Info';
+import TokenRatesInfo from './TokenRatesInfo';
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -52,6 +50,7 @@ interface SwapSettingsProps {
   setEcoImpactType: React.Dispatch<React.SetStateAction<string>>;
   ecoImpactValue: string;
   setEcoImpactValue: React.Dispatch<React.SetStateAction<string>>;
+  handleUpdateSwapRates: () => void;
 }
 
 const swapSettingOptions = [
@@ -218,6 +217,7 @@ const StyledTextField = styled(TextField)({
     marginLeft: '9px',
     marginRight: '5px',
     background:
+      // eslint-disable-next-line max-len
       'linear-gradient(#1E2022, #1E2022) padding-box, linear-gradient(to right, #EC26F5, #0156FF ) border-box',
     borderRadius: '8px',
     border: '2px solid transparent',
@@ -274,6 +274,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
   setEcoImpactType,
   ecoImpactValue,
   setEcoImpactValue,
+  handleUpdateSwapRates,
 }) => {
   const styles = useStyles();
   const [isSettings, setIsSettings] = useState<boolean>(false);
@@ -372,13 +373,6 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
             setPriceImpact('');
           });
       } else {
-        // console.error(
-        //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        //   `Price Impact ERROR: "${fromTokenInfo?.symbol}-${toTokenInfo?.symbol}" or ` +
-        //     // eslint-disable-next-line max-len
-        //     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        //     `"${toTokenInfo?.symbol}-${fromTokenInfo?.symbol}" Raydium liquidity pool doesn't exist!`,
-        // );
         setPriceImpact('');
       }
     } else {
@@ -422,10 +416,6 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
 
   const handleEcoImpactSettingsClick = () => {
     setIsEcoImpactSettings(!isEcoImpactSettings);
-  };
-
-  const handleUpdateClick = () => {
-    console.log('Oops!');
   };
 
   const handleSelectEcoImpactType = (event: React.MouseEvent<HTMLElement>, type: string | null) => {
@@ -524,10 +514,10 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
     <Box className={styles.wrapper}>
       <Box className={styles.infoHeader}>
         <Box className={styles.infoHeaderBlock}>
-          <InfoLabel />
+          <TokenRatesInfo />
         </Box>
         <Box className={styles.infoHeaderBlock}>
-          <IconButton className={styles.headerIconWrapper} onClick={handleUpdateClick}>
+          <IconButton className={styles.headerIconWrapper} onClick={handleUpdateSwapRates}>
             <UpdateIcon fontSize="large" className={styles.icon} />
           </IconButton>
           <IconButton className={styles.headerIconWrapper} onClick={handleSettingsClick}>

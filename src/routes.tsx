@@ -39,8 +39,7 @@ export function Routes() {
             <Redirect to="/swap" />
           </Route>
           <Route exact path="/market/:marketAddress">
-            <Redirect to="/swap" />
-            {/* <TradePage /> */}
+            <TradePage />
           </Route>
           <Route exact path="/orders" component={OpenOrdersPage} />
           <Route exact path="/balances" component={BalancesPage} />
@@ -56,8 +55,7 @@ export function Routes() {
             <PoolPage />
           </Route>
           <Route exact path="/design-system">
-            <Redirect to="/swap" />
-            {/* <DesignSystemPage /> */}
+            <DesignSystemPage />
           </Route>
           {/* <Route exact path="/swap">
             <SwapPage />

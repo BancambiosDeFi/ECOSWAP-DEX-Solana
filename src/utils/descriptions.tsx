@@ -38,3 +38,10 @@ export const getEcoContributionDescription = (): string => {
     'Producer Responsibility sector (EPR).'
   );
 };
+
+export const getExpiresInDescription = (seconds: number): string => {
+  return (
+    `Displayed data will be auto-refresh after ${50 - seconds} seconds. ` +
+    'Click the update button to update manually.'
+  );
+};

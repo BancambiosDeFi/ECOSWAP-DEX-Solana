@@ -39,11 +39,11 @@ const useStyles = makeStyles(theme => ({
   card: {
     borderRadius: '0 20px 20px 0 !important',
     border: '1px solid #0156FF',
-    boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#0A0C0E !important',
     width: '435px',
     height: '100%',
     padding: '26px 16px',
+    boxShadow: '12px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
   },
   fromTitleContainer: {
     display: 'flex',
@@ -138,6 +138,7 @@ const useStyles = makeStyles(theme => ({
   input: {
     textAlign: 'right',
     color: 'white',
+    fontFamily: '"Saira", sans-serif !important',
     fontSize: '20px !important',
   },
   swapTokenFormContainer: {
@@ -519,14 +520,20 @@ export function SwapTokenForm({
   const formattedAmount =
     mintAccount && amount
       ? parseFloat(
-          amount
-            .toLocaleString('en-IN', {
-              maximumFractionDigits: mintAccount.decimals,
-              useGrouping: false,
-            })
-            .replace(/,/, '.'),
+          amount.toLocaleString('en-IN', {
+            maximumFractionDigits: mintAccount.decimals,
+            useGrouping: false,
+          }),
         )
-      : amount;
+          .toString()
+          .replace(/,/, '.')
+      : amount.toString().replace(/,/, '.');
+  const tokenMap = useTokenMap();
+  const mintInfo = tokenMap.get(mint.toString());
+
+  useEffect(() => {
+    setAmount(0);
+  }, [mintInfo?.symbol]);
 
   return (
     <div className={styles.swapTokenFormContainer} style={style}>
@@ -543,15 +550,7 @@ export function SwapTokenForm({
       <TextField
         type="number"
         value={formattedAmount}
-        onChange={e => {
-          if (e.target.value === '') {
-            setAmount(0);
-          }
-          const newValue = parseFloat(e.target.value || '0');
-          if (!isNaN(newValue)) {
-            setAmount(newValue);
-          }
-        }}
+        onChange={e => setAmount(Number(e.target.value))}
         inputProps={{
           inputMode: 'numeric',
           // eslint-disable-next-line

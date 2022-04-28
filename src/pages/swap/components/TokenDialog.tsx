@@ -38,14 +38,24 @@ const useStyles = makeStyles(() => ({
   },
   dialogWrapper: {
     '&&': {
-      backgroundColor: '#040506',
-      position: 'absolute',
-      top: '100px',
-      width: '390px',
-      maxHeight: '660px',
-      padding: '20px',
-      border: '1px solid #0156FF',
-      borderRadius: '8px',
+      'backgroundColor': '#040506',
+      'position': 'absolute',
+      'top': '100px',
+      'width': '390px',
+      'maxHeight': '660px',
+      'padding': '20px',
+      'border': '1px solid #0156FF',
+      'borderRadius': '8px',
+      '@media(max-height: 900px)': {
+        maxHeight: '550px',
+      },
+      '@media(max-height: 820px)': {
+        maxHeight: '450px',
+      },
+      '@media(max-height: 690px)': {
+        maxHeight: '350px',
+      },
+      'boxShadow': '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
     },
   },
   dialogContent: {

@@ -4,7 +4,6 @@ import { makeStyles } from '@mui/styles';
 import { Box, Typography, Card } from '@mui/material';
 
 import {
-  useSwapContext,
   useMint,
   useTokenMap,
   // eslint-disable-next-line import/no-unresolved
@@ -15,7 +14,7 @@ import { useConnection } from '../../srm-utils/connection';
 import { getLpTokens, ITokenAccount } from '../../srm-utils/balance';
 import { getWalletTokenAccounts } from '../../srm-utils/getWalletTokenAccounts';
 import { notify } from '../../srm-utils/notifications';
-import { createToken, createTokenAmount } from '../../utils/raydiumRequests';
+import { createToken, createTokenAmount, getRaydiumPoolInfo } from '../../utils/raydiumRequests';
 
 import { PoolStats } from './PoolStats';
 
@@ -69,18 +68,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface PoolInfoProps {
-  poolInfo: LiquidityPoolInfo | null;
-  poolKey: LiquidityPoolKeysV4 | null;
   poolKeys: LiquidityPoolKeysV4[];
 }
 
-export const YourLiquidity = ({ poolInfo, poolKey, poolKeys }: PoolInfoProps) => {
+export const YourLiquidity = ({ poolKeys }: PoolInfoProps) => {
+  const [lpPoolKey, setPoolKey] = useState<LiquidityPoolKeysV4 | null>(null);
+  const [lpPoolInfo, setPoolInfo] = useState<LiquidityPoolInfo | null>(null);
   const [tokenAccounts, setTokenAccounts] = useState<ITokenAccount[]>([]);
   const connection = useConnection();
-  const { fromMint, toMint } = useSwapContext();
   const tokenMap = useTokenMap();
-  const toMintInfo = useMint(toMint);
-  const fromMintInfo = useMint(fromMint);
+  const toMintInfo = useMint(lpPoolKey?.baseMint);
+  const fromMintInfo = useMint(lpPoolKey?.quoteMint);
   const { wallet, connected } = useWallet();
   const styles = useStyles();
 
@@ -91,7 +89,11 @@ export const YourLiquidity = ({ poolInfo, poolKey, poolKeys }: PoolInfoProps) =>
           connection,
           owner: (wallet as WalletAdapter).publicKey,
         });
+        const lpPoolKey = poolKeys.find(({ lpMint }) =>
+          accounts.find(({ mint }) => mint && mint.toString() === lpMint.toString()),
+        );
         setTokenAccounts(accounts);
+        setPoolKey(lpPoolKey || null);
       } catch (error) {
         notify({
           type: 'error',
@@ -101,40 +103,57 @@ export const YourLiquidity = ({ poolInfo, poolKey, poolKeys }: PoolInfoProps) =>
       }
     };
     fetchTokenAccountsFromWallet();
-  }, [connection, wallet?.publicKey]);
+  }, [connection, wallet?.publicKey, poolKeys, tokenMap]);
+
+  useEffect(() => {
+    const fetchPoolInfo = async () => {
+      try {
+        const currentPoolInfo = await getRaydiumPoolInfo({
+          connection,
+          poolKeys: lpPoolKey as LiquidityPoolKeysV4,
+        });
+        setPoolInfo(currentPoolInfo);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (lpPoolKey) {
+      fetchPoolInfo();
+    }
+  }, [connection, lpPoolKey]);
 
   const poolStats = useMemo(() => {
-    if (poolInfo && poolKey && poolKeys.length) {
-      const toTokenInfo = tokenMap.get(toMint.toString());
-      const fromTokenInfo = tokenMap.get(fromMint.toString());
+    if (lpPoolInfo && lpPoolKey && poolKeys.length) {
+      const toTokenInfo = tokenMap.get(lpPoolKey.quoteMint.toString());
+      const fromTokenInfo = tokenMap.get(lpPoolKey.baseMint.toString());
 
       const baseCoinInfo = createTokenAmount(
         createToken(
-          fromMint.toString(),
+          lpPoolKey.baseMint.toString(),
           fromMintInfo?.decimals as number,
           fromTokenInfo?.symbol,
           fromTokenInfo?.name,
         ),
-        poolInfo.baseReserve,
+        lpPoolInfo.baseReserve,
       );
       const quoteCoinInfo = createTokenAmount(
         createToken(
-          toMint.toString(),
+          lpPoolKey.quoteMint.toString(),
           toMintInfo?.decimals as number,
           toTokenInfo?.symbol,
           toTokenInfo?.name,
         ),
-        poolInfo.quoteReserve,
+        lpPoolInfo.quoteReserve,
       );
-      const lpSupply = (poolInfo.lpSupply.toNumber() / 10 ** poolInfo.lpDecimals).toFixed(
-        poolInfo.lpDecimals,
+      const lpSupply = (lpPoolInfo.lpSupply.toNumber() / 10 ** lpPoolInfo.lpDecimals).toFixed(
+        lpPoolInfo.lpDecimals,
       );
 
       let lpWalletAmount: TokenAmount | null = null;
       const lpTokens = getLpTokens(poolKeys, tokenMap);
-      const lpToken = lpTokens[poolKey.lpMint.toString()];
+      const lpToken = lpTokens[lpPoolKey.lpMint.toString()];
       const lpWalletTokenAccount = tokenAccounts.find(
-        ({ mint }) => mint && mint.toString() === poolKey.lpMint.toString(),
+        ({ mint }) => mint && mint.toString() === lpPoolKey.lpMint.toString(),
       );
       if (lpWalletTokenAccount) {
         lpWalletAmount = createTokenAmount(lpToken, lpWalletTokenAccount.amount);
@@ -142,41 +161,45 @@ export const YourLiquidity = ({ poolInfo, poolKey, poolKeys }: PoolInfoProps) =>
 
       return { baseCoinInfo, quoteCoinInfo, lpWalletAmount, lpSupply };
     }
-  }, [poolInfo, poolKeys, toMint, toMintInfo, fromMint, fromMintInfo, tokenAccounts]);
+  }, [lpPoolInfo, lpPoolKey, poolKeys, toMintInfo, fromMintInfo, tokenAccounts]);
 
-  if (!poolStats || !connected || !poolKey) {
+  if (!poolStats || !connected || !lpPoolKey) {
     return null;
   }
 
-  const fromTokenInfo = tokenMap.get(poolKey.baseMint.toString());
-  const toTokenInfo = tokenMap.get(poolKey.quoteMint.toString());
+  const fromTokenInfo = tokenMap.get(lpPoolKey.baseMint.toString());
+  const toTokenInfo = tokenMap.get(lpPoolKey.quoteMint.toString());
 
   return (
     <Box>
       <h2 className={styles.cardLabel}>Your Liquidity</h2>
       <Card className={styles.card}>
-        <Box className={styles.tokensWrap}>
-          <Box className={styles.logoWrap}>
-            <img
-              loading="lazy"
-              width="30px"
-              src={fromTokenInfo?.logoURI}
-              alt=""
-              className={`${styles.logo} ${styles.logoFrom}`}
-            />
-            <img
-              loading="lazy"
-              width="30px"
-              src={toTokenInfo?.logoURI}
-              alt=""
-              className={styles.logo}
-            />
-          </Box>
-          <Typography className={styles.infoText}>
-            {poolStats.baseCoinInfo.currency.symbol} - {poolStats.quoteCoinInfo.currency.symbol}
-          </Typography>
-        </Box>
-        <PoolStats poolStats={poolStats} />
+        {lpPoolKey && (
+          <>
+            <Box className={styles.tokensWrap}>
+              <Box className={styles.logoWrap}>
+                <img
+                  loading="lazy"
+                  width="30px"
+                  src={fromTokenInfo?.logoURI}
+                  alt=""
+                  className={`${styles.logo} ${styles.logoFrom}`}
+                />
+                <img
+                  loading="lazy"
+                  width="30px"
+                  src={toTokenInfo?.logoURI}
+                  alt=""
+                  className={styles.logo}
+                />
+              </Box>
+              <Typography className={styles.infoText}>
+                {poolStats.baseCoinInfo.currency.symbol} - {poolStats.quoteCoinInfo.currency.symbol}
+              </Typography>
+            </Box>
+            <PoolStats poolStats={poolStats} />
+          </>
+        )}
         <Typography className={styles.infoText}>
           If you staked your LP tokens in a farm, unstake them to see them here
         </Typography>

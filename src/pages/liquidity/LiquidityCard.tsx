@@ -228,12 +228,17 @@ export default () => {
 
   const fetchPoolInfo = useCallback(async () => {
     setLoading(true);
-    const currentPoolInfo = await getRaydiumPoolInfo({
-      connection,
-      poolKeys: poolKey as LiquidityPoolKeysV4,
-    });
-    setPoolInfo(currentPoolInfo);
-    setLoading(false);
+    try {
+      const currentPoolInfo = await getRaydiumPoolInfo({
+        connection,
+        poolKeys: poolKey as LiquidityPoolKeysV4,
+      });
+      setPoolInfo(currentPoolInfo);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   }, [connection, poolKey]);
 
   useEffect(() => {
@@ -302,7 +307,7 @@ export default () => {
           loading={loading}
         />
       </Card>
-      <YourLiquidity poolInfo={poolInfo} poolKeys={poolKeys} poolKey={poolKey} />
+      <YourLiquidity poolKeys={poolKeys} />
       {/* <div>
         <h2 className={styles.cardLabel}>Create Pool</h2>
         <Card className={styles.card}>

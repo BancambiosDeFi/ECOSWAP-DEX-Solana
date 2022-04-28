@@ -395,14 +395,20 @@ export function SwapTokenForm({
   const formattedAmount =
     mintAccount && amount
       ? parseFloat(
-          amount
-            .toLocaleString('en-IN', {
-              maximumFractionDigits: mintAccount.decimals,
-              useGrouping: false,
-            })
-            .replace(/,/, '.'),
+          amount.toLocaleString('en-IN', {
+            maximumFractionDigits: mintAccount.decimals,
+            useGrouping: false,
+          }),
         )
-      : amount;
+          .toString()
+          .replace(/,/, '.')
+      : amount.toString().replace(/,/, '.');
+  const tokenMap = useTokenMap();
+  const mintInfo = tokenMap.get(mint.toString());
+
+  useEffect(() => {
+    setAmount(0);
+  }, [mintInfo?.symbol]);
 
   return (
     <div className={styles.swapTokenFormContainer} style={style}>
@@ -419,15 +425,7 @@ export function SwapTokenForm({
       <TextField
         type="number"
         value={formattedAmount}
-        onChange={e => {
-          if (e.target.value === '') {
-            setAmount(0);
-          }
-          const newValue = parseFloat(e.target.value || '0');
-          if (!isNaN(newValue)) {
-            setAmount(newValue);
-          }
-        }}
+        onChange={e => setAmount(Number(e.target.value))}
         inputProps={{
           inputMode: 'numeric',
           // eslint-disable-next-line

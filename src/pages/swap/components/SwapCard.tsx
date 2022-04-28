@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
-import { Card, Typography, TextField, useTheme, IconButton } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Card, Typography, TextField, useTheme, IconButton, Popover } from '@mui/material';
+import { makeStyles, styled } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
-import { useWallet } from '../../../components/wallet/wallet';
-import { getNetwork } from '../../../utils';
-import { notify } from '../../../srm-utils/notifications';
-import EcoContributionErrorModal from './EcoContributionErrorModal';
-import { TokenIcon } from './TokenIcon';
-// eslint-disable-next-line import/order
 import {
   useSwapContext,
   useTokenMap,
@@ -19,10 +12,20 @@ import {
   useOwnedTokenAccount,
   useSwappableTokens,
   useOnSwap,
+  useSwapFair,
   // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
-import TokenDialog from './TokenDialog';
+import { useWallet } from '../../../components/wallet/wallet';
+import { getNetwork } from '../../../utils';
+import { notify } from '../../../srm-utils/notifications';
+import CircularProgressBar from '../../../components/CircularProgressBar';
+import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
+import { ReactComponent as ExpiresInfoIcon } from '../../../assets/icons/expires-info-icon.svg';
+import { getExpiresInDescription } from '../../../utils/descriptions';
 import SwapSettingsContainer from './SwapSettingsContainer';
+import EcoContributionErrorModal from './EcoContributionErrorModal';
+import { TokenIcon } from './TokenIcon';
+import TokenDialog from './TokenDialog';
 import SwapButton from './SwapButton';
 import NotificationDescriptionForCompletedSwap from './NotificationDescriptionForCompletedSwap';
 import SwapProgressModal from './SwapProgressModal';
@@ -42,6 +45,11 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     padding: '26px 16px',
   },
+  fromTitleContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: {
     fontFamily: 'Saira !important',
     fontSize: '24px !important',
@@ -53,11 +61,21 @@ const useStyles = makeStyles(theme => ({
     color: '#FFFFFF',
     marginBottom: '0px',
   },
-  expires: {
-    fontFamily: 'Saira !important',
-    fontSize: '24px !important',
-    fontWeight: '100 !important',
-    color: '#FFFFFF',
+  expiresInContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  expiresInText: {
+    color: 'rgba(174, 174, 175, 1)',
+    marginRight: '4px !important',
+  },
+  expiresInfoButton: {
+    width: 'fit-content !important',
+    height: 'fit-content !important',
+    padding: '0 !important',
+    marginLeft: '4px !important',
   },
   flexTypography: {
     display: 'flex',
@@ -159,13 +177,42 @@ const useStyles = makeStyles(theme => ({
     height: '45px',
     width: '45px !important',
   },
+  swapInfoText: {
+    fontFamily: 'Saira !important',
+    fontStyle: 'normal',
+    fontWeight: '400 !important',
+    fontSize: '16px !important',
+    lineHeight: '29px !important',
+    textAlign: 'left',
+    color: '#FFFFFF',
+  },
+}));
+
+const StyledPopover = styled(Popover)(() => ({
+  '& .MuiPopover-paper': {
+    width: 'fit-content',
+    height: 'fit-content',
+    maxWidth: '453px',
+    padding: '8px 16px',
+    backgroundColor: 'rgba(53, 54, 58, 1)',
+  },
 }));
 
 export default function SwapCard() {
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
-  const { setImpact, fromAmount, toAmount, fromMint, toMint } = useSwapContext();
+  const {
+    setImpact,
+    fromAmount,
+    setFromAmount,
+    toAmount,
+    fromMint,
+    toMint,
+    fairOverride,
+    setFairOverride,
+  } = useSwapContext();
+  const fair = useSwapFair();
   const { onSwap } = useOnSwap();
   const { connected, wallet } = useWallet();
   const [ecoImpactType, setEcoImpactType] = useState<string>('$');
@@ -179,6 +226,11 @@ export default function SwapCard() {
   const fromMintAccount = useMint(fromMint);
   const toMintAccount = useMint(toMint);
   const [connection, setConnection] = useState<Connection>();
+  const [seconds, setSeconds] = useState<number>(0);
+  const [infoText, setInfoText] = useState<string>(getExpiresInDescription(seconds));
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const open = Boolean(anchorEl);
+  const popoverId = open ? 'simple-popover' : undefined;
 
   const handleCloseEcoContributionErrorModal = () => {
     setIsError(false);
@@ -282,6 +334,45 @@ export default function SwapCard() {
     }
   }, [isLoadingTx, isError]);
 
+  const handleUpdateSwapRates = () => {
+    if (fair) {
+      setFairOverride(fair);
+      setFromAmount(fromAmount);
+      setSeconds(0);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prevValue => (prevValue === 50 ? 0 : prevValue + 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    setInfoText(getExpiresInDescription(seconds));
+    if (seconds === 50 && fair) {
+      setFairOverride(fair);
+      setFromAmount(fromAmount);
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    if (fairOverride) {
+      setFairOverride(null);
+    }
+  }, [fairOverride]);
+
+  const handleInfoButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setInfoText('');
+  };
+
   const swapSettingsContainer =
     connected && fromAmount && toAmount ? (
       <SwapSettingsContainer
@@ -290,6 +381,7 @@ export default function SwapCard() {
           setEcoImpactType,
           ecoImpactValue,
           setEcoImpactValue,
+          handleUpdateSwapRates,
         }}
       />
     ) : null;
@@ -305,7 +397,24 @@ export default function SwapCard() {
       <SwapProgressModal open={isLoadingTx} handleClose={handleCloseSwapProgressModal} />
       <Card className={styles.card}>
         <div>
-          <Typography className={styles.title}>From</Typography>
+          <div className={styles.fromTitleContainer}>
+            <Typography className={styles.title}>From</Typography>
+            <div className={styles.expiresInContainer}>
+              <Typography className={`${styles.title} ${styles.expiresInText}`}>
+                Expires in
+              </Typography>
+              <CircularProgressBar value={seconds * 2} />
+              <IconButton
+                className={styles.expiresInfoButton}
+                size="small"
+                aria-describedby={popoverId}
+                onClick={handleInfoButtonClick}
+                id="expires-in"
+              >
+                <ExpiresInfoIcon />
+              </IconButton>
+            </div>
+          </div>
           <SwapFromForm tokenList={tokenList} />
           <div className={styles.switchBlock}>
             <Typography className={styles.switchTitle}>To (Estimate)</Typography>
@@ -315,6 +424,22 @@ export default function SwapCard() {
           {swapSettingsContainer}
           <SwapButton {...{ checkingEcoContributionPossibility }} />
         </div>
+        <StyledPopover
+          id={popoverId}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'center',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'center',
+            horizontal: 'left',
+          }}
+        >
+          <Typography className={styles.swapInfoText}>{infoText}</Typography>
+        </StyledPopover>
       </Card>
     </>
   );

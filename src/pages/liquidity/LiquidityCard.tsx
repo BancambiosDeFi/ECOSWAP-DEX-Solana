@@ -217,10 +217,15 @@ export default () => {
           transaction,
           signers,
           timeout: ADD_LIQUIDITY_TIMEOUT,
+          sentMessage: 'Add Liquidity Transaction Sent',
+          successMessage: 'Transaction has been confirmed',
         });
 
         if (isNotWarn) {
-          setNoWarnPools([...noWarnPools, poolKey.id.toString()]);
+          const noWarnPoolsToUpdate = [...noWarnPools, poolKey.id.toString()];
+
+          setNoWarnPools(noWarnPoolsToUpdate);
+          localStorage.setItem('noWarnPools', JSON.stringify(noWarnPoolsToUpdate));
         }
       }
     }
@@ -263,6 +268,10 @@ export default () => {
   useEffect(() => {
     if (poolKey) {
       fetchPoolInfo();
+
+      if (noWarnPools.includes(poolKey.id.toString())) {
+        setConfirmed(true);
+      }
     }
   }, [poolKey]);
 
@@ -292,7 +301,7 @@ export default () => {
           </Box>
         )}
         {isPoolExist && <PoolInfo poolInfo={poolInfo} />}
-        {!(poolKey && noWarnPools.includes(poolKey.id.toString())) ? (
+        {poolKey && !isConfirmed ? (
           <ConfirmationBlock
             isConfirmed={isConfirmed}
             setConfirmed={setConfirmed}

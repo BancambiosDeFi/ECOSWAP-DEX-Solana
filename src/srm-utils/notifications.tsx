@@ -11,9 +11,15 @@ const getNotificationData = (
   type: 'success' | 'error' | 'info',
   message: string,
 ): { icon: JSX.Element; notificationMessage: JSX.Element } => {
-  const successMessage = <H3Text style={{ color: 'rgba(236, 38, 245, 1)' }} text={message} />;
-  const infoMessage = <H3Text style={{ color: 'rgba(1, 86, 255, 1)' }} text={message} />;
-  const errorMessage = <H3Text style={{ color: 'rgba(238, 60, 153, 1)' }} text={message} />;
+  const successMessage = (
+    <H3Text style={{ color: 'rgba(236, 38, 245, 1)', textAlign: 'left' }} text={message} />
+  );
+  const infoMessage = (
+    <H3Text style={{ color: 'rgba(1, 86, 255, 1)', textAlign: 'left' }} text={message} />
+  );
+  const errorMessage = (
+    <H3Text style={{ color: 'rgba(238, 60, 153, 1)', textAlign: 'left' }} text={message} />
+  );
   const successIcon = (
     <SuccessIcon
       style={{ height: '30px', width: '30px', marginTop: '3px', stroke: 'rgba(236, 38, 245, 1)' }}

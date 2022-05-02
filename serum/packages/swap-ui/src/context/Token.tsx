@@ -154,7 +154,7 @@ export function useOwnedTokenAccount(
         provider.connection.removeAccountChangeListener(listener);
       }
     };
-  }, [provider.connection, tokenAccount]);
+  }, [provider.connection, provider.wallet.publicKey, tokenAccount, isSol]);
 
   if (mint === undefined) {
     return undefined;

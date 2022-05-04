@@ -46,13 +46,16 @@ const useStyles = makeStyles(() => ({
       'padding': '20px',
       'border': '1px solid #0156FF',
       'borderRadius': '8px',
-      '@media(max-height: 900px)': {
+      '@media(max-height: 800px)': {
         maxHeight: '550px',
       },
-      '@media(max-height: 820px)': {
+      '@media(max-height: 700px)': {
         maxHeight: '450px',
       },
-      '@media(max-height: 690px)': {
+      '@media(max-height: 620px)': {
+        maxHeight: '420px',
+      },
+      '@media(max-height: 560px)': {
         maxHeight: '350px',
       },
       'boxShadow': '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
@@ -75,7 +78,6 @@ const useStyles = makeStyles(() => ({
       'display': 'flex',
       'width': '100%',
       'color': '#fff',
-
       '&:hover': {
         backgroundColor: 'rgb(189,193,198, 0.1)',
       },
@@ -86,13 +88,19 @@ const useStyles = makeStyles(() => ({
   },
   dialogListTokenName: {
     '&&': {
-      fontSize: '20px',
-      lineHeight: '40px',
-      fontWeight: 700,
-      fontFamily: '"Saira", sans-serif',
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
+      'fontSize': '20px',
+      'lineHeight': '40px',
+      'fontWeight': 700,
+      'fontFamily': '"Saira", sans-serif',
+      'textOverflow': 'ellipsis',
+      'overflow': 'hidden',
+      'whiteSpace': 'nowrap',
+      '@media(max-height: 700px)': {
+        fontSize: '17px',
+      },
+      '@media(max-height: 620px)': {
+        fontSize: '14px',
+      },
     },
   },
   dialogTitle: {
@@ -110,11 +118,25 @@ const useStyles = makeStyles(() => ({
       },
     },
   },
+  dialogInputBlogTitleWrap: {
+    '@media(max-height: 700px)': {
+      maxHeight: '90px',
+    },
+    '@media(max-height: 620px)': {
+      maxHeight: '75px',
+    },
+  },
   dialogInputBlogTitle: {
-    fontSize: '20px',
-    fontFamily: '"Saira", sans-serif',
-    color: '#FFFFFF',
-    fontWeight: '800',
+    'fontSize': '20px',
+    'fontFamily': '"Saira", sans-serif',
+    'color': '#FFFFFF',
+    'fontWeight': '800',
+    '@media(max-height: 700px)': {
+      fontSize: '17px',
+    },
+    '@media(max-height: 620px)': {
+      fontSize: '14px',
+    },
   },
   dialogTitleInput: {
     '&&': {
@@ -131,22 +153,74 @@ const useStyles = makeStyles(() => ({
         opacity: 1,
         paddingLeft: '15px',
       },
+      '@media(max-height: 700px)': {
+        'padding': '12px 14px 12px 42px',
+        '&::placeholder': {
+          fontSize: '16px',
+        },
+      },
+      '@media(max-height: 620px)': {
+        'padding': '10px 12px 10px 38px',
+        '&::placeholder': {
+          fontSize: '14px',
+        },
+      },
     },
   },
   dialogTitleSearchIcon: {
     '&&': {
-      position: 'absolute',
-      width: '25px',
-      height: '25px',
-      top: '50%',
-      left: '25px',
-      transform: 'translate(0, -50%)',
+      'position': 'absolute',
+      'width': '25px',
+      'height': '25px',
+      'top': '50%',
+      'left': '25px',
+      'transform': 'translate(0, -50%)',
+      '@media(max-height: 700px)': {
+        width: '20px',
+        height: '20px',
+        top: '40%',
+      },
+      '@media(max-height: 620px)': {
+        width: '16px',
+        height: '16px',
+        top: '40%',
+      },
     },
   },
-  tokenIconSmall: { '&&': { width: '25px', height: '25px', borderRadius: '15px' } },
-  tokenIconBig: { '&&': { width: '40px', height: '40px', borderRadius: '15px' } },
+  tokenIconSmall: {
+    '&&': {
+      'width': '25px',
+      'height': '25px',
+      'borderRadius': '15px',
+      '@media(max-height: 700px)': {
+        width: '20px',
+        height: '20px',
+      },
+    },
+  },
+  tokenIconBig: {
+    '&&': {
+      'width': '40px',
+      'height': '40px',
+      'borderRadius': '15px',
+      '@media(max-height: 700px)': {
+        width: '35px',
+        height: '35px',
+      },
+      '@media(max-height: 620px)': {
+        width: '30px',
+        height: '30px',
+      },
+    },
+  },
   dialogActions: {
-    '&&': { marginBottom: '30px', padding: 0 },
+    '&&': { marginBottom: '30px', padding: 0,
+    '@media(max-height: 700px)': {
+      marginBottom: '20px'
+    },
+    '@media(max-height: 620px)': {
+      marginBottom: '10px'
+    }, },
   },
   commonBaseWrap: {
     '&&': {
@@ -163,21 +237,35 @@ const useStyles = makeStyles(() => ({
   },
   commonBaseTitle: {
     '&&': {
-      fontFamily: '"Saira", sans-serif',
-      color: '#AEAEAF',
-      fontSize: '18px',
-      fontWeight: '800',
-      marginBottom: '10px',
+      'fontFamily': '"Saira", sans-serif',
+      'color': '#AEAEAF',
+      'fontSize': '18px',
+      'fontWeight': '800',
+      'marginBottom': '10px',
+      '@media(max-height: 700px)': {
+        fontSize: '16px',
+        marginBottom: '6px',
+      },
+      '@media(max-height: 620px)': {
+        fontSize: '14px',
+        marginBottom: '3px',
+      },
     },
   },
   commonBaseToken: {
     '&&': {
-      display: 'flex',
-      alignItems: 'center',
-      borderRadius: '8px',
-      background: '#707070',
-      padding: '8px 20px',
-      cursor: 'pointer',
+      'display': 'flex',
+      'alignItems': 'center',
+      'borderRadius': '8px',
+      'background': '#707070',
+      'padding': '8px 20px',
+      'cursor': 'pointer',
+      '@media(max-height: 700px)': {
+        padding: '8px 18px',
+      },
+      '@media(max-height: 620px)': {
+        padding: '4px 14px',
+      },
     },
   },
   commonBaseTokenNameWrap: {
@@ -187,11 +275,17 @@ const useStyles = makeStyles(() => ({
   },
   commonBaseTokenName: {
     '&&': {
-      fontSize: '16px',
-      lineHeight: '16px',
-      fontWeight: 700,
-      fontFamily: '"Saira", sans-serif',
-      color: '#fff',
+      'fontSize': '16px',
+      'lineHeight': '16px',
+      'fontWeight': 700,
+      'fontFamily': '"Saira", sans-serif',
+      'color': '#fff',
+      '@media(max-height: 700px)': {
+        fontSize: '14px',
+      },
+      '@media(max-height: 620px)': {
+        fontSize: '12px',
+      },
     },
   },
 }));
@@ -240,7 +334,7 @@ export default function TokenDialog({
         className: styles.dialogWrapper,
       }}
     >
-      <div>
+      <div className={styles.dialogInputBlogTitleWrap}>
         <h3 className={styles.dialogInputBlogTitle}>Select a Coin</h3>
         <DialogTitle className={styles.dialogTitle}>
           <TextField

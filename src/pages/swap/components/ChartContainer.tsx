@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { TinyArea } from '@ant-design/plots';
 import { makeStyles } from '@mui/styles';
-// eslint-disable-next-line import/no-unresolved
-import { useTokenMap } from '@serum/swap-ui';
 import { Box, Typography } from '@mui/material';
 import { PublicKey } from '@solana/web3.js';
 import moment from 'moment';
 import { AxiosResponse } from 'axios';
+import { useTokenMap } from '@serum/swap-ui';
 import { getQuotesHistorical } from '../../../services/api';
 import { SwapType } from '../../../types';
 import { TokenName } from './SwapCard';

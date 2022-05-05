@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Select, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { TOKEN_MINTS } from '@serum/serum';
 import apps from '@project-serum/awesome-serum';
+import { TOKEN_MINTS } from '@serum/serum';
 
 const { Option } = Select;
 

@@ -13,7 +13,6 @@ import {
   useSwappableTokens,
   useOnSwap,
   useSwapFair,
-  // eslint-disable-next-line import/no-unresolved
 } from '@serum/swap-ui';
 import { useWallet } from '../../../components/wallet/wallet';
 import { getNetwork } from '../../../utils';

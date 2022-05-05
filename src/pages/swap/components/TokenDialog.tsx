@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-// eslint-disable-next-line import/no-unresolved
 import { useTokenMap } from '@serum/swap-ui';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 

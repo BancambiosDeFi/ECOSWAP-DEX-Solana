@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-// eslint-disable-next-line import/no-unresolved
-import { useMarket, useOnSwap, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { Box } from '@mui/material';
-// eslint-disable-next-line import/no-unresolved
-import { useRouteVerbose } from '@serum/swap-ui/lib/context/Dex';
+
+import { useMarket, useOnSwap, useSwapContext, useTokenMap, useRouteVerbose } from '@serum/swap-ui';
 import { useWallet } from '../../../components/wallet/wallet';
 import ButtonComponent from '../../../srm-components/Button/Button';
 import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';

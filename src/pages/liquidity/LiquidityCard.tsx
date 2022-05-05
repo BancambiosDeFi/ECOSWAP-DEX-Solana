@@ -8,12 +8,7 @@ import {
 } from '@raydium-io/raydium-sdk';
 import { Card, Typography, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import {
-  useSwappableTokens,
-  useSwapContext,
-  useTokenMap,
-  // eslint-disable-next-line import/no-unresolved
-} from '@serum/swap-ui';
+import { useSwappableTokens, useSwapContext, useTokenMap } from '@serum/swap-ui';
 
 import {
   createToken,

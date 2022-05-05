@@ -47,7 +47,12 @@ module.exports = {
     ],
     'eqeqeq': ['error', 'always'],
     'no-console': 'off',
-    'import/no-unresolved': [1, { caseSensitive: false }],
+    'import/no-unresolved': [2, { caseSensitive: false }],
     '@typescript-eslint/ban-ts-comment': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
   },
 };

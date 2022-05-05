@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-unresolved
-import { getPoolBasket, PoolInfo } from '@serum/pool';
 import React from 'react';
 import { Typography } from 'antd';
 import tuple from 'immutable-tuple';
+import { getPoolBasket, PoolInfo } from '@serum/pool';
 import FloatingElement from '../../../srm-components/layout/FloatingElement';
 import { MintInfo } from '../../../srm-utils/tokens';
 import { useAsyncData } from '../../../srm-utils/fetch-loop';

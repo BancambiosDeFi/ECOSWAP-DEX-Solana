@@ -14,10 +14,10 @@ import {
   CachedOutlined as UpdateIcon,
 } from '@mui/icons-material';
 import NumberFormat from 'react-number-format';
-// eslint-disable-next-line import/no-unresolved
-import { useMint, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { PublicKey } from '@solana/web3.js';
+
+import { useMint, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import {
   convertToBN,
   convertToPercent,

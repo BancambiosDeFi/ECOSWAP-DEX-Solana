@@ -4,7 +4,6 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Wallet from '@project-serum/sol-wallet-adapter';
 import { ConfirmOptions, Connection } from '@solana/web3.js';
-// eslint-disable-next-line import/no-unresolved
 import Swap from '@serum/swap-ui';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { useWallet } from '../../components/wallet/wallet';

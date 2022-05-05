@@ -1,9 +1,7 @@
 import { createChart } from 'lightweight-charts';
 import React, { useRef, useEffect } from 'react';
 import moment from 'moment';
-// eslint-disable-next-line import/no-unresolved
 import { PublicKey } from '@solana/web3.js';
-// eslint-disable-next-line import/no-unresolved
 import { useTokenMap } from '@serum/swap-ui';
 import { chart_api_key } from '../../utils';
 

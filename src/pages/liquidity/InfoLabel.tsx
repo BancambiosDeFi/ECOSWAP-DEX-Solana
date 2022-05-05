@@ -1,13 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import {
-  useTokenMap,
-  useSwapContext,
-  useSwapFair,
-  useMint,
-  // eslint-disable-next-line import/no-unresolved
-} from '@serum/swap-ui';
+import { useTokenMap, useSwapContext, useSwapFair, useMint } from '@serum/swap-ui';
 
 const useStyles = makeStyles(() => ({
   infoLabel: {

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, Modal, Row, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
-// eslint-disable-next-line import/no-unresolved
-import { Market, MARKETS, TOKEN_MINTS } from '@serum/serum';
 import { LoadingOutlined } from '@ant-design/icons';
+import { Market, MARKETS, TOKEN_MINTS } from '@serum/serum';
 import { notify } from '../srm-utils/notifications';
 import { isValidPublicKey } from '../srm-utils/utils';
 import { useAccountInfo, useConnection } from '../srm-utils/connection';

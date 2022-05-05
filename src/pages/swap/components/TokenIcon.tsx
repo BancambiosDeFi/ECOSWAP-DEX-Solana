@@ -1,6 +1,6 @@
 import React from 'react';
 import { PublicKey } from '@solana/web3.js';
-// eslint-disable-next-line import/no-unresolved
+
 import { useTokenMap } from '@serum/swap-ui';
 
 export function TokenIcon({

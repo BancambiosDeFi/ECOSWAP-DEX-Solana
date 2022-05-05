@@ -1,9 +1,8 @@
 import React from 'react';
-// eslint-disable-next-line import/no-unresolved
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Box } from '@mui/material';
-// eslint-disable-next-line import/no-unresolved
+
 import { useSwapContext } from '@serum/swap-ui';
 import { SwapType } from '../../../types';
 import { useWallet } from '../../../components/wallet/wallet';

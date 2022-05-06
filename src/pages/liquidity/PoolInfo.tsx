@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo } from 'react';
 import { LiquidityPoolInfo } from '@raydium-io/raydium-sdk';
+import BN from 'bn.js';
 import { useSwapContext, useMint, useTokenMap } from '@serum/swap-ui';
 import { createToken, createTokenAmount } from '../../utils/raydiumRequests';
+import { div } from '../../srm-utils/priceHelper';
 import { PoolStats } from './PoolStats';
 
 interface PoolInfoProps {
@@ -38,9 +40,13 @@ export const PoolInfo: React.FC<PoolInfoProps | Record<string, never>> = ({ pool
         ),
         poolInfo.quoteReserve,
       );
-      const lpSupply = (poolInfo.lpSupply.toNumber() / 10 ** poolInfo.lpDecimals).toFixed(
+      const r = 10 ** poolInfo.lpDecimals;
+      // console.log(poolInfo.lpSupply.div(new BN(10)).pow(new BN(poolInfo.lpDecimals)).toString());
+      // const lpSupply = (poolInfo.lpSupply.toNumber() / r).toFixed(poolInfo.lpDecimals);
+      const lpSupply = div(poolInfo.lpSupply, 10 ** poolInfo.lpDecimals).toFixed(
         poolInfo.lpDecimals,
       );
+      console.log(lpSupply);
 
       return { baseCoinInfo, quoteCoinInfo, lpSupply };
     }

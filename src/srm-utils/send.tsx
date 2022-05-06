@@ -14,6 +14,7 @@ import {
 } from '@solana/web3.js';
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import BN from 'bn.js';
+import { struct } from 'superstruct';
 import {
   DexInstructions,
   Market,
@@ -21,11 +22,8 @@ import {
   parseInstructionErrorResponse,
   TOKEN_MINTS,
   TokenInstructions,
-  // eslint-disable-next-line import/no-unresolved
 } from '@serum/serum';
-// eslint-disable-next-line import/no-unresolved
 import { Order } from '@serum/serum/lib/market';
-import { struct } from 'superstruct';
 import { WalletAdapter } from '../components/wallet/types';
 import { SelectedTokenAccounts, TokenAccount } from './types';
 import { getSelectedTokenAccountForMint } from './markets';

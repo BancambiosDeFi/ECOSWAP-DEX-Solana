@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { MintInfo } from '@solana/spl-token';
 import { BN } from '@project-serum/anchor';
-import { OpenOrders } from '@serum/serum';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { Close } from '@mui/icons-material';
+import { OpenOrders } from '@serum/serum';
 import {
   useMarket,
   useOpenOrders,
@@ -85,6 +85,7 @@ function OpenOrdersAccounts() {
   const openOrdersEntries: Array<[PublicKey, OpenOrders[]]> = useMemo(() => {
     return Array.from(openOrders.entries()).map(([market, oo]) => [new PublicKey(market), oo]);
   }, [openOrders]);
+
   return (
     <TableContainer component={Paper} elevation={0}>
       <Table className={styles.table} aria-label="simple table">
@@ -228,5 +229,6 @@ function toDisplay(mintInfo: MintInfo | undefined | null, value: BN): string {
   if (!mintInfo) {
     return value.toNumber().toString();
   }
+
   return (value.toNumber() / 10 ** mintInfo.decimals).toFixed(mintInfo.decimals);
 }

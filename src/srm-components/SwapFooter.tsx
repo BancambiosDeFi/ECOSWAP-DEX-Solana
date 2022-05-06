@@ -38,8 +38,9 @@ export const SwapFooter = () => {
                 style={{
                   color: '#FFFFFF',
                   textTransform: 'none',
-                  fontFamily: '"Spy Agency", sans-serif',
-                  fontSize: '14px',
+                  fontFamily: 'Saira',
+                  fontSize: '16px',
+                  fontWeight: '600',
                   fontStyle: 'normal',
                 }}
                 external

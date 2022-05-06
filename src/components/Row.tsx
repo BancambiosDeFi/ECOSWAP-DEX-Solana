@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
     background: 'linear-gradient(232deg, #0156FF 10%, #EC26F5 100%)',
   },
   container: {
-    padding: '22px 15px',
+    padding: '25px 15px',
     background: '#0a0c0f',
     borderRadius: '18px',
   },
@@ -59,7 +59,11 @@ const useStyles = makeStyles(() => ({
   text: {
     fontWeight: 400,
     fontSize: '16px',
+    fontFamily: 'Saira',
     lineHeight: '16px',
+  },
+  value: {
+    marginTop: '7px',
   },
 }));
 
@@ -77,20 +81,20 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
           </Grid>
           <Grid container direction="column" xs={2} item>
             <span className={styles.text}>PENDING REWARD</span>
-            <span className={styles.text}>{reward}</span>
+            <span className={`${styles.text} ${styles.value}`}>{reward}</span>
           </Grid>
           <Grid container direction="column" xs={2} item>
             <span className={styles.text}>STAKED</span>
-            <span className={styles.text}>{staked}</span>
+            <span className={`${styles.text} ${styles.value}`}>{staked}</span>
           </Grid>
           <Grid container direction="column" xs={2} item>
             <span className={styles.text}>APR</span>
-            <span className={styles.text}>{arp}</span>
+            <span className={`${styles.text} ${styles.value}`}>{arp}</span>
           </Grid>
           <Grid container alignItems="center" xs={2} item>
             <Grid container direction="column" flexBasis="content">
               <span className={styles.text}>LIQUIDITY</span>
-              <span className={styles.text}>{liquidity}</span>
+              <span className={`${styles.text} ${styles.value}`}>{liquidity}</span>
             </Grid>
             <button
               className={showDetails ? styles.rotateArrow : styles.arrow}

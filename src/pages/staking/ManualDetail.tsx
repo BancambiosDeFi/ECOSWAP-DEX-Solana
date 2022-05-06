@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   subtitle: {
     fontWeight: 800,
     fontSize: '16px',
+    fontFamily: 'Saira',
   },
   img: {
     width: '30px',
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background:
       'linear-gradient(232deg, rgba(236, 38, 245, 0.3) 50%, rgba(159, 90, 229, 0.3) 100%)',
     border: 'none',
-    margin: '10px 0 15px',
+    margin: '15px 0 15px',
     height: '1px',
   },
   disabledBtn: {
@@ -108,12 +109,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     fontWeight: 400,
     fontSize: '16px',
+    fontFamily: 'Saira',
     border: '0.15px solid #5145FB',
     background: '#1E2022',
     borderRadius: '8px',
     color: '#fff',
     padding: '7px 35px',
     cursor: 'pointer',
+  },
+  btnAllowed: {
+    '&:hover': {
+      cursor: 'pointer',
+      background:
+        // eslint-disable-next-line max-len
+        'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
+      boxShadow: '0px 0px 16px #9F5AE5',
+    },
+  },
+  btnDisabled: {
+    cursor: 'not-allowed',
+    color: '#7C8498',
   },
 }));
 
@@ -144,14 +159,9 @@ export default function ManualDetail({
                   </Typography>
                   <div className={styles.btnWrapper}>
                     {connected ? (
-                      <button className={styles.btn}>Claim</button>
+                      <button className={`${styles.btn} ${styles.btnAllowed}`}>Claim</button>
                     ) : (
-                      <button
-                        style={{ cursor: 'not-allowed', color: '#7C8498' }}
-                        className={styles.btn}
-                      >
-                        Auto
-                      </button>
+                      <button className={`${styles.btn} ${styles.btnDisabled}`}>Auto</button>
                     )}
                   </div>
                 </Grid>
@@ -171,7 +181,7 @@ export default function ManualDetail({
                   {!connected ? (
                     <Grid item xs={12}>
                       <Grid container className={styles.btnWrapper}>
-                        <button onClick={connect} className={styles.btn}>
+                        <button onClick={connect} className={`${styles.btn} ${styles.btnAllowed}`}>
                           Connect wallet
                         </button>
                       </Grid>

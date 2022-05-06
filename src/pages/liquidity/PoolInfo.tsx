@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo } from 'react';
 import { LiquidityPoolInfo } from '@raydium-io/raydium-sdk';
-import {
-  useSwapContext,
-  useMint,
-  useTokenMap,
-  // eslint-disable-next-line import/no-unresolved
-} from '@serum/swap-ui';
+import BN from 'bn.js';
+import { useSwapContext, useMint, useTokenMap } from '@serum/swap-ui';
 import { createToken, createTokenAmount } from '../../utils/raydiumRequests';
+import { div } from '../../srm-utils/priceHelper';
 import { PoolStats } from './PoolStats';
 
 interface PoolInfoProps {
@@ -43,7 +40,7 @@ export const PoolInfo: React.FC<PoolInfoProps | Record<string, never>> = ({ pool
         ),
         poolInfo.quoteReserve,
       );
-      const lpSupply = (poolInfo.lpSupply.toNumber() / 10 ** poolInfo.lpDecimals).toFixed(
+      const lpSupply = div(poolInfo.lpSupply, 10 ** poolInfo.lpDecimals).toFixed(
         poolInfo.lpDecimals,
       );
 

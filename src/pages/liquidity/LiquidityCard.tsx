@@ -8,12 +8,7 @@ import {
 } from '@raydium-io/raydium-sdk';
 import { Card, Typography, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import {
-  useSwappableTokens,
-  useSwapContext,
-  useTokenMap,
-  // eslint-disable-next-line import/no-unresolved
-} from '@serum/swap-ui';
+import { useSwappableTokens, useSwapContext, useTokenMap } from '@serum/swap-ui';
 
 import {
   createToken,
@@ -29,7 +24,6 @@ import { useWallet } from '../../components/wallet/wallet';
 // import { InfoLabel } from '../swap/components/Info';
 import { SwapFromForm, SwapToForm, SwitchButton } from '../swap/components/SwapCard';
 import { PoolInfo } from './PoolInfo';
-import { ConfirmationBlock } from './ConfirmationBlock';
 import { InfoLabel } from './InfoLabel';
 import { AddLiquidityButton } from './AddLiquidityButton';
 import { ExpiresInBlock } from './ExpiresInBlock';
@@ -45,7 +39,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    margin: '15px 0',
+    margin: '20px 0',
   },
   cardLabel: {
     fontFamily: 'Saira',
@@ -54,13 +48,13 @@ const useStyles = makeStyles(() => ({
     margin: '0 0 15px 30px',
   },
   card: {
-    borderRadius: '8px !important',
+    borderRadius: '20px !important',
     border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#0A0C0E !important',
-    width: '486px',
+    width: '468px',
     height: 'fit-content',
-    padding: '9px 25px',
+    padding: '26px 16px',
     marginBottom: '43px',
   },
   swapCard: {
@@ -104,7 +98,6 @@ const useStyles = makeStyles(() => ({
   },
   fromBlock: {
     position: 'relative',
-    marginBottom: '8px',
   },
   createPoolText: {
     fontFamily: 'Saira !important',
@@ -149,9 +142,6 @@ export default () => {
   const [poolKeys, setPoolKeys] = useState<LiquidityPoolKeysV4[]>([]);
   const [poolKey, setPoolKey] = useState<LiquidityPoolKeysV4 | null>(null);
   const [poolInfo, setPoolInfo] = useState<LiquidityPoolInfo | null>(null);
-  const [noWarnPools, setNoWarnPools] = useState<string[]>([]);
-  const [isConfirmed, setConfirmed] = useState(false);
-  const [isNotWarn, setNotWarn] = useState(false);
   const [isPoolExist, setPoolExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const { swappableTokens: tokenList } = useSwappableTokens();
@@ -220,16 +210,9 @@ export default () => {
           sentMessage: 'Add Liquidity Transaction Sent',
           successMessage: 'Transaction has been confirmed',
         });
-
-        if (isNotWarn) {
-          const noWarnPoolsToUpdate = [...noWarnPools, poolKey.id.toString()];
-
-          setNoWarnPools(noWarnPoolsToUpdate);
-          localStorage.setItem('noWarnPools', JSON.stringify(noWarnPoolsToUpdate));
-        }
       }
     }
-  }, [connection, wallet, poolKey, poolInfo, isNotWarn, noWarnPools, fromAmount, toAmount]);
+  }, [connection, wallet, poolKey, poolInfo, fromAmount, toAmount]);
 
   const fetchPoolInfo = useCallback(async () => {
     setLoading(true);
@@ -268,19 +251,8 @@ export default () => {
   useEffect(() => {
     if (poolKey) {
       fetchPoolInfo();
-
-      if (noWarnPools.includes(poolKey.id.toString())) {
-        setConfirmed(true);
-      }
     }
   }, [poolKey]);
-
-  useEffect(() => {
-    const noWarnPools = localStorage.getItem('noWarnPools');
-    if (noWarnPools) {
-      setNoWarnPools(JSON.parse(noWarnPools));
-    }
-  }, []);
 
   return (
     <Box className={styles.root}>
@@ -301,16 +273,8 @@ export default () => {
           </Box>
         )}
         {isPoolExist && <PoolInfo poolInfo={poolInfo} />}
-        {poolKey && !isConfirmed ? (
-          <ConfirmationBlock
-            isConfirmed={isConfirmed}
-            setConfirmed={setConfirmed}
-            isNotWarn={isNotWarn}
-            setNotWarn={setNotWarn}
-          />
-        ) : null}
         <AddLiquidityButton
-          disabled={!isConfirmed || !isPoolExist || !fromAmount || !toAmount}
+          disabled={!isPoolExist || !fromAmount || !toAmount}
           onClick={onLiquidityAdd}
           title={isPoolExist ? 'Add Liquidity' : 'Pool not found'}
           loading={loading}

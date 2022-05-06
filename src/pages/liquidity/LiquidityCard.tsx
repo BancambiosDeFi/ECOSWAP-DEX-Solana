@@ -24,7 +24,6 @@ import { useWallet } from '../../components/wallet/wallet';
 // import { InfoLabel } from '../swap/components/Info';
 import { SwapFromForm, SwapToForm, SwitchButton } from '../swap/components/SwapCard';
 import { PoolInfo } from './PoolInfo';
-import { ConfirmationBlock } from './ConfirmationBlock';
 import { InfoLabel } from './InfoLabel';
 import { AddLiquidityButton } from './AddLiquidityButton';
 import { ExpiresInBlock } from './ExpiresInBlock';
@@ -144,9 +143,6 @@ export default () => {
   const [poolKeys, setPoolKeys] = useState<LiquidityPoolKeysV4[]>([]);
   const [poolKey, setPoolKey] = useState<LiquidityPoolKeysV4 | null>(null);
   const [poolInfo, setPoolInfo] = useState<LiquidityPoolInfo | null>(null);
-  const [noWarnPools, setNoWarnPools] = useState<string[]>([]);
-  const [isConfirmed, setConfirmed] = useState(false);
-  const [isNotWarn, setNotWarn] = useState(false);
   const [isPoolExist, setPoolExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const { swappableTokens: tokenList } = useSwappableTokens();
@@ -215,16 +211,9 @@ export default () => {
           sentMessage: 'Add Liquidity Transaction Sent',
           successMessage: 'Transaction has been confirmed',
         });
-
-        if (isNotWarn) {
-          const noWarnPoolsToUpdate = [...noWarnPools, poolKey.id.toString()];
-
-          setNoWarnPools(noWarnPoolsToUpdate);
-          localStorage.setItem('noWarnPools', JSON.stringify(noWarnPoolsToUpdate));
-        }
       }
     }
-  }, [connection, wallet, poolKey, poolInfo, isNotWarn, noWarnPools, fromAmount, toAmount]);
+  }, [connection, wallet, poolKey, poolInfo, fromAmount, toAmount]);
 
   const fetchPoolInfo = useCallback(async () => {
     setLoading(true);
@@ -263,19 +252,8 @@ export default () => {
   useEffect(() => {
     if (poolKey) {
       fetchPoolInfo();
-
-      if (noWarnPools.includes(poolKey.id.toString())) {
-        setConfirmed(true);
-      }
     }
   }, [poolKey]);
-
-  useEffect(() => {
-    const noWarnPools = localStorage.getItem('noWarnPools');
-    if (noWarnPools) {
-      setNoWarnPools(JSON.parse(noWarnPools));
-    }
-  }, []);
 
   return (
     <Box className={styles.root}>
@@ -296,16 +274,8 @@ export default () => {
           </Box>
         )}
         {isPoolExist && <PoolInfo poolInfo={poolInfo} />}
-        {poolKey && !isConfirmed ? (
-          <ConfirmationBlock
-            isConfirmed={isConfirmed}
-            setConfirmed={setConfirmed}
-            isNotWarn={isNotWarn}
-            setNotWarn={setNotWarn}
-          />
-        ) : null}
         <AddLiquidityButton
-          disabled={!isConfirmed || !isPoolExist || !fromAmount || !toAmount}
+          disabled={!isPoolExist || !fromAmount || !toAmount}
           onClick={onLiquidityAdd}
           title={isPoolExist ? 'Add Liquidity' : 'Pool not found'}
           loading={loading}

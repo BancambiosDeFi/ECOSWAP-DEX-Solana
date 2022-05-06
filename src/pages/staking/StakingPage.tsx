@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
-import logo from '../../srm-assets/banc-logo.png';
+import logo from '../../assets/icons/banc-logo.png';
 import infoIcon from '../../srm-assets/info.svg';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
@@ -18,18 +18,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '18px',
   },
   root: {
+    padding: '0 235px',
     minHeight: '100vh',
-    padding: theme.spacing(0, 1),
   },
   title: {
     padding: theme.spacing(6, 0, 2, 2),
     fontSize: '24px',
-    fontWeight: 800,
+    fontWeight: 700,
+    fontFamily: 'Saira',
   },
   expiresTitle: {
     padding: theme.spacing(6, 2, 2, 0),
     color: '#AEAEAF',
     fontSize: '24px',
+    fontFamily: 'Saira',
   },
 }));
 
@@ -121,8 +123,8 @@ export default function StakingPage() {
               detailValue={15}
               detailMenu={
                 <ManualDetail
-                  detailTitle="title 1"
-                  detailValue={1}
+                  detailTitle="PENDING REWARD"
+                  detailValue={0}
                   handleChangeClaim={handleChangeClaim}
                   claimValue={claimValue}
                 />
@@ -149,8 +151,8 @@ export default function StakingPage() {
                 <AutoDetail
                   claimValue={claimValue}
                   handleChangeClaim={handleChangeClaim}
-                  detailTitle="title 2"
-                  detailValue={1}
+                  detailTitle="Auto-Compound"
+                  detailValue={0}
                   checkedOption={checkedOption}
                   setPeriod={setPeriod}
                   options={options}

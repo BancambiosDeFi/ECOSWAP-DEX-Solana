@@ -21,12 +21,13 @@ const useStyles = makeStyles(() => ({
   subtitle: {
     fontWeight: 800,
     fontSize: '16px',
+    fontFamily: 'Saira',
   },
   divider: {
     background:
       'linear-gradient(232deg, rgba(236, 38, 245, 0.3) 50%, rgba(159, 90, 229, 0.3) 100%)',
     border: 'none',
-    margin: '10px 0 15px',
+    margin: '15px 0 15px',
     height: '1px',
   },
   inner: {
@@ -49,15 +50,26 @@ const useStyles = makeStyles(() => ({
     background: 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
   },
   btn: {
+    padding: '7px 35px',
+    width: '100%',
+    border: 'none',
+    fontSize: '16px',
+    background: '#202124',
+    borderRadius: '8px',
+    fontFamily: 'Saira',
+  },
+  btnAllowed: {
     '&:hover': {
       cursor: 'pointer',
+      background:
+        // eslint-disable-next-line max-len
+        'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
+      boxShadow: '0px 0px 16px #9F5AE5',
     },
-    'padding': '7px 35px',
-    'width': '100%',
-    'border': 'none',
-    'fontSize': '16px',
-    'background': '#202124',
-    'borderRadius': '8px',
+  },
+  btnDisabled: {
+    cursor: 'not-allowed',
+    color: '#7C8498',
   },
 }));
 
@@ -88,8 +100,8 @@ export default function ManualDetail({
                   </Typography>
                   <div className={styles.btnWrapper}>
                     <button
-                      style={{ cursor: 'not-allowed', color: '#7C8498' }}
-                      className={styles.btn}
+                      // style={{ cursor: 'not-allowed', color: '#7C8498' }}
+                      className={`${styles.btn} ${styles.btnDisabled}`}
                     >
                       Week Auto Compound
                     </button>
@@ -105,7 +117,7 @@ export default function ManualDetail({
                   {!connected ? (
                     <Grid item xs={12}>
                       <Grid container className={styles.btnWrapper}>
-                        <button onClick={connect} className={styles.btn}>
+                        <button onClick={connect} className={`${styles.btn} ${styles.btnAllowed}`}>
                           Connect wallet
                         </button>
                       </Grid>
@@ -127,7 +139,7 @@ export default function ManualDetail({
                       </Grid>
                       <Grid item xs={10}>
                         <Grid container className={styles.btnWrapper}>
-                          <button className={styles.btn}>Claim</button>
+                          <button className={`${styles.btn} ${styles.btnAllowed}`}>Claim</button>
                         </Grid>
                       </Grid>
                     </>

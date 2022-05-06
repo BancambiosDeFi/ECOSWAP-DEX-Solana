@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@mui/styles';
-// eslint-disable-next-line import/no-unresolved
-import { useMarket, useSwapContext, useTokenMap } from '@serum/swap-ui';
-// eslint-disable-next-line import/no-unresolved
-import { useRouteVerbose } from '@serum/swap-ui/lib/context/Dex';
 import { Box, IconButton, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+import { useMarket, useSwapContext, useTokenMap, useRouteVerbose } from '@serum/swap-ui';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 
 interface SwapSettingsProps {

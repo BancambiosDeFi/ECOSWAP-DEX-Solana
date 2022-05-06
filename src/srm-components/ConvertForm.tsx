@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Row, Select, Typography } from 'antd';
 import styled from 'styled-components';
 // eslint-disable-next-line import/no-unresolved
-import { Orderbook } from '@serum/serum';
 import { SwapOutlined } from '@ant-design/icons';
+import { Orderbook } from '@serum/serum';
 import {
   getExpectedFillPrice,
   getMarketDetails,

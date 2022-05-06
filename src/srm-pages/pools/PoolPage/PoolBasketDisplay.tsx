@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-unresolved
-import { Basket, PoolInfo } from '@serum/pool';
 import React from 'react';
 import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
 import { Spin } from 'antd';
+import { Basket, PoolInfo } from '@serum/pool';
 import { useAccountInfo } from '../../../srm-utils/connection';
 import { parseTokenMintData } from '../../../srm-utils/tokens';
 import { MintName } from '../../../srm-components/MintName';

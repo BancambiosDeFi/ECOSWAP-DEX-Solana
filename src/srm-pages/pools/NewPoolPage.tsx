@@ -3,8 +3,8 @@ import { AutoComplete, Button, Form, Input, Switch, Tooltip, Typography } from '
 import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';
 // eslint-disable-next-line import/no-unresolved
-import { PoolTransactions } from '@serum/pool';
 import BN from 'bn.js';
+import { PoolTransactions } from '@serum/pool';
 import { useConnection } from '../../srm-utils/connection';
 import FloatingElement from '../../srm-components/layout/FloatingElement';
 import { useWallet } from '../../components/wallet/wallet';

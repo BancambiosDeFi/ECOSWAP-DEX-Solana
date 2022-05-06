@@ -1,12 +1,11 @@
 import * as BufferLayout from 'buffer-layout';
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 // eslint-disable-next-line import/no-unresolved
-import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
-// eslint-disable-next-line import/no-unresolved
-import { TOKEN_MINTS } from '@serum/serum';
 import tuple from 'immutable-tuple';
 import BN from 'bn.js';
 import { useMemo } from 'react';
+import { TOKEN_MINTS } from '@serum/serum';
+import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
 import { TokenAccount } from './types';
 import { useAllMarkets, useCustomMarkets, useTokenAccounts } from './markets';
 import { getMultipleSolanaAccounts } from './send';
@@ -28,9 +27,7 @@ export const MINT_LAYOUT = BufferLayout.struct([
   BufferLayout.blob(36),
 ]);
 
-export function parseTokenAccountData(
-  data: Buffer,
-): {
+export function parseTokenAccountData(data: Buffer): {
   mint: PublicKey;
   owner: PublicKey;
   amount: number;

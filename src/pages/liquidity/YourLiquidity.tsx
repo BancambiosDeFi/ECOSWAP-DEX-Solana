@@ -3,11 +3,7 @@ import { LiquidityPoolKeysV4, LiquidityPoolInfo, TokenAmount } from '@raydium-io
 import { makeStyles } from '@mui/styles';
 import { Box, Typography, Card } from '@mui/material';
 
-import {
-  useMint,
-  useTokenMap,
-  // eslint-disable-next-line import/no-unresolved
-} from '@serum/swap-ui';
+import { useMint, useTokenMap } from '@serum/swap-ui';
 import { useWallet } from '../../components/wallet/wallet';
 import { WalletAdapter } from '../../components/wallet/types';
 import { useConnection } from '../../srm-utils/connection';

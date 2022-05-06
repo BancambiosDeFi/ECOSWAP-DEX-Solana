@@ -2,8 +2,8 @@ import { PublicKey } from '@solana/web3.js';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { ValidateStatus } from 'antd/lib/form/FormItem';
 // eslint-disable-next-line import/no-unresolved
-import { TokenInstructions } from '@serum/serum';
 import { AutoComplete, Form, Tooltip } from 'antd';
+import { TokenInstructions } from '@serum/serum';
 import { useAccountInfo } from '../srm-utils/connection';
 import { isValidPublicKey } from '../srm-utils/utils';
 import { parseTokenMintData, useMintToTickers } from '../srm-utils/tokens';

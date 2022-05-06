@@ -14,6 +14,7 @@ import {
 } from '@solana/web3.js';
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import BN from 'bn.js';
+import { struct } from 'superstruct';
 import {
   DexInstructions,
   Market,
@@ -21,11 +22,8 @@ import {
   parseInstructionErrorResponse,
   TOKEN_MINTS,
   TokenInstructions,
-  // eslint-disable-next-line import/no-unresolved
 } from '@serum/serum';
-// eslint-disable-next-line import/no-unresolved
 import { Order } from '@serum/serum/lib/market';
-import { struct } from 'superstruct';
 import { WalletAdapter } from '../components/wallet/types';
 import { SelectedTokenAccounts, TokenAccount } from './types';
 import { getSelectedTokenAccountForMint } from './markets';
@@ -141,16 +139,14 @@ export async function settleFunds({
       referrerQuoteWallet = usdcRef;
     }
   }
-  const {
-    transaction: settleFundsTransaction,
-    signers: settleFundsSigners,
-  } = await market.makeSettleFundsTransaction(
-    connection,
-    openOrders,
-    baseCurrencyAccountPubkey,
-    quoteCurrencyAccountPubkey,
-    referrerQuoteWallet,
-  );
+  const { transaction: settleFundsTransaction, signers: settleFundsSigners } =
+    await market.makeSettleFundsTransaction(
+      connection,
+      openOrders,
+      baseCurrencyAccountPubkey,
+      quoteCurrencyAccountPubkey,
+      referrerQuoteWallet,
+    );
 
   const transaction = mergeTransactions([createAccountTransaction, settleFundsTransaction]);
 
@@ -399,26 +395,22 @@ export async function placeOrder({
   const signers: Account[] = [];
 
   if (!baseCurrencyAccount) {
-    const {
-      transaction: createAccountTransaction,
-      newAccountPubkey,
-    } = await createTokenAccountTransaction({
-      connection,
-      wallet,
-      mintPublicKey: market.baseMintAddress,
-    });
+    const { transaction: createAccountTransaction, newAccountPubkey } =
+      await createTokenAccountTransaction({
+        connection,
+        wallet,
+        mintPublicKey: market.baseMintAddress,
+      });
     transaction.add(createAccountTransaction);
     baseCurrencyAccount = newAccountPubkey;
   }
   if (!quoteCurrencyAccount) {
-    const {
-      transaction: createAccountTransaction,
-      newAccountPubkey,
-    } = await createTokenAccountTransaction({
-      connection,
-      wallet,
-      mintPublicKey: market.quoteMintAddress,
-    });
+    const { transaction: createAccountTransaction, newAccountPubkey } =
+      await createTokenAccountTransaction({
+        connection,
+        wallet,
+        mintPublicKey: market.quoteMintAddress,
+      });
     transaction.add(createAccountTransaction);
     quoteCurrencyAccount = newAccountPubkey;
   }
@@ -446,10 +438,8 @@ export async function placeOrder({
   const matchOrderstransaction = market.makeMatchOrdersTransaction(5);
   transaction.add(matchOrderstransaction);
   const startTime = getUnixTs();
-  const {
-    transaction: placeOrderTx,
-    signers: placeOrderSigners,
-  } = await market.makePlaceOrderTransaction(connection, params, 120_000, 120_000);
+  const { transaction: placeOrderTx, signers: placeOrderSigners } =
+    await market.makePlaceOrderTransaction(connection, params, 120_000, 120_000);
   const endTime = getUnixTs();
   console.log(`Creating order transaction took ${endTime - startTime}`);
   transaction.add(placeOrderTx);

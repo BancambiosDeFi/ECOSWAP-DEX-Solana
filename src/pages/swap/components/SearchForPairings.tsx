@@ -6,7 +6,6 @@ import { makeStyles } from '@mui/styles';
 import { Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 
-// eslint-disable-next-line import/no-unresolved
 import { useTokenMap, useSwapContext } from '@serum/swap-ui';
 import { getRaydiumAllPoolKeysFetcher } from '../../../utils/raydiumRequests';
 import { useConnection } from '../../../srm-utils/connection';

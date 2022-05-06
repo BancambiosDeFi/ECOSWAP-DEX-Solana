@@ -1,3 +1,7 @@
+import { PublicKey } from '@solana/web3.js';
+import React, { useContext, useEffect, useState } from 'react';
+import tuple from 'immutable-tuple';
+import BN from 'bn.js';
 import {
   Market,
   MARKETS,
@@ -5,15 +9,8 @@ import {
   Orderbook,
   TOKEN_MINTS,
   TokenInstructions,
-  // eslint-disable-next-line import/no-unresolved
 } from '@serum/serum';
-import { PublicKey } from '@solana/web3.js';
-import React, { useContext, useEffect, useState } from 'react';
-import tuple from 'immutable-tuple';
-import BN from 'bn.js';
-// eslint-disable-next-line import/no-unresolved
 import { WRAPPED_SOL_MINT } from '@serum/serum/lib/token-instructions';
-// eslint-disable-next-line import/no-unresolved
 import { Order } from '@serum/serum/lib/market';
 import { useWallet } from '../components/wallet/wallet';
 import {
@@ -163,9 +160,8 @@ export function useUnmigratedOpenOrdersAccounts() {
 }
 
 // eslint-disable-next-line max-len
-const MarketContext: React.Context<null | MarketContextValues> = React.createContext<null | MarketContextValues>(
-  null,
-);
+const MarketContext: React.Context<null | MarketContextValues> =
+  React.createContext<null | MarketContextValues>(null);
 
 const _VERY_SLOW_REFRESH_INTERVAL = 5000 * 1000;
 
@@ -299,9 +295,8 @@ export function useSelectedTokenAccounts(): [
   SelectedTokenAccounts,
   (newSelectedTokenAccounts: SelectedTokenAccounts) => void,
 ] {
-  const [selectedTokenAccounts, setSelectedTokenAccounts] = useLocalStorageState<
-    SelectedTokenAccounts
-  >('selectedTokenAccounts', {});
+  const [selectedTokenAccounts, setSelectedTokenAccounts] =
+    useLocalStorageState<SelectedTokenAccounts>('selectedTokenAccounts', {});
 
   return [selectedTokenAccounts, setSelectedTokenAccounts];
 }

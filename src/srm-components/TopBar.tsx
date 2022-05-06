@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
   headerItem: {
     'fontFamily': 'Saira',
     'fontStyle': 'normal',
-    'fontWeight': '800',
+    'fontWeight': '600',
     'fontSize': '16px',
     'lineHeight': '250%',
     '&:hover': {
@@ -159,7 +159,7 @@ export default function TopBar() {
           width: '100%',
         }}
       >
-        <LogoWrapper style={{ paddingBottom: '10px' }} onClick={() => history.push(tradePageUrl)}>
+        <LogoWrapper style={{ paddingBottom: '10px' }} onClick={() => history.push('/swap')}>
           <img src={logo} alt="" />
         </LogoWrapper>
         <div

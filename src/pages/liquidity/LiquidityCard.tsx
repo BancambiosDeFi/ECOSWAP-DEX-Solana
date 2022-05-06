@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    margin: '15px 0',
+    margin: '20px 0',
   },
   cardLabel: {
     fontFamily: 'Saira',
@@ -48,13 +48,13 @@ const useStyles = makeStyles(() => ({
     margin: '0 0 15px 30px',
   },
   card: {
-    borderRadius: '8px !important',
+    borderRadius: '20px !important',
     border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#0A0C0E !important',
-    width: '486px',
+    width: '468px',
     height: 'fit-content',
-    padding: '9px 25px',
+    padding: '26px 16px',
     marginBottom: '43px',
   },
   swapCard: {
@@ -98,7 +98,6 @@ const useStyles = makeStyles(() => ({
   },
   fromBlock: {
     position: 'relative',
-    marginBottom: '8px',
   },
   createPoolText: {
     fontFamily: 'Saira !important',

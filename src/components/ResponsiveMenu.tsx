@@ -98,7 +98,7 @@ const EXTERNAL_LINKS = {
   // '/swap': 'https://swap.projectserum.com',
 };
 
-const TopBar: React.FC = () => {
+const ResponsiveMenu: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { connected, wallet } = useWallet();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -256,4 +256,4 @@ const TopBar: React.FC = () => {
   );
 };
 
-export default TopBar;
+export default ResponsiveMenu;

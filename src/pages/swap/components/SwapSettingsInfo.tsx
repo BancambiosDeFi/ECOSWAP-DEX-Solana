@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-import { useMarket, useSwapContext, useTokenMap, useRouteVerbose } from '@serum/swap-ui';
+import { useMarket, useRouteVerbose, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { ReactComponent as InfoIcon } from '../../../assets/icons/info-icon.svg';
 
 interface SwapSettingsProps {

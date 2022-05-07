@@ -1,5 +1,6 @@
-import EventEmitter from 'eventemitter3';
 import { PublicKey, Transaction } from '@solana/web3.js';
+// eslint-disable-next-line import/no-named-as-default
+import EventEmitter from 'eventemitter3';
 import { notify } from '../../srm-utils/notifications';
 import { DEFAULT_PUBLIC_KEY, WalletAdapter } from './types';
 

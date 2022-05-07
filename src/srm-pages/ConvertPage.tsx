@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
+import { Col, Row } from 'antd';
 import ConvertForm from '../srm-components/ConvertForm';
 import { DEFAULT_MARKET, MarketProvider } from '../srm-utils/markets';
 import { useLocalStorageState } from '../srm-utils/utils';

@@ -1,12 +1,12 @@
 import { Provider } from '@project-serum/anchor';
 import Wallet from '@project-serum/sol-wallet-adapter';
 import {
-  Signer,
   ConfirmOptions,
   Connection,
+  PublicKey,
+  Signer,
   Transaction,
   TransactionSignature,
-  PublicKey,
 } from '@solana/web3.js';
 
 // Cast wallet to AnchorWallet in order to be compatible with Anchor's Provider class

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { makeStyles, styled } from '@mui/styles';
 import {
   Box,
@@ -161,7 +161,7 @@ const StyledTextField = styled(TextField)({
   },
 });
 
-const NumberFormatCustom = React.forwardRef<NumberFormat<CustomProps>, CustomProps>(
+const NumberFormatCustom = forwardRef<NumberFormat<CustomProps>, CustomProps>(
   function NumberFormatCustom(props, ref) {
     const { onChange, ...other } = props;
 

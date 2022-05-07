@@ -1,4 +1,3 @@
-import React from 'react';
 import { StakingTabs } from '../../components/StakingTabs';
 import SearchForPairingsComponent from '../swap/components/SearchForPairings';
 import LiquidityCard from './LiquidityCard';

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo } from 'react';
 import { LiquidityPoolInfo } from '@raydium-io/raydium-sdk';
-import { useSwapContext, useMint, useTokenMap } from '@serum/swap-ui';
+import { useMint, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { createToken, createTokenAmount } from '../../utils/raydiumRequests';
 import { PoolStats } from './PoolStats';
 

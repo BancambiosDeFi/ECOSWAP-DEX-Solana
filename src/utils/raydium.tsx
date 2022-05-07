@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Context, createContext, useContext, useEffect, useState } from 'react';
 import { LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
-import { TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
+import { Strategy, TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
 import axios from 'axios';
 
 interface RaydiumContextValues {
@@ -9,7 +9,7 @@ interface RaydiumContextValues {
 }
 
 // eslint-disable-next-line max-len
-const RaydiumContext: React.Context<null | RaydiumContextValues> = React.createContext<null | RaydiumContextValues>(
+const RaydiumContext: Context<null | RaydiumContextValues> = createContext<null | RaydiumContextValues>(
   null,
 );
 
@@ -33,7 +33,7 @@ export const RaydiumProvider = ({ children }) => {
           mintSet.add(key.quoteMint);
         });
 
-        const nonFilteredTokenList = await new TokenListProvider().resolve();
+        const nonFilteredTokenList = await new TokenListProvider().resolve(Strategy.GitHub);
 
         const filteredTokenList = nonFilteredTokenList
           .getList()

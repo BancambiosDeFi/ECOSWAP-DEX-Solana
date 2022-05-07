@@ -1,4 +1,3 @@
-import React from 'react';
 import { PublicKey } from '@solana/web3.js';
 
 import { useTokenMap } from '@serum/swap-ui';

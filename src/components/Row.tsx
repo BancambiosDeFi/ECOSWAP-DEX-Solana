@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { cloneElement, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 
@@ -98,7 +98,7 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
             />
           </Grid>
         </Grid>
-        {React.cloneElement(detailMenu, { showDetails })}
+        {cloneElement(detailMenu, { showDetails })}
       </Grid>
     </Grid>
   );

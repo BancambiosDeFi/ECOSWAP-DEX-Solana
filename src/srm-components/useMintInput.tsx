@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import React, { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import { ValidateStatus } from 'antd/lib/form/FormItem';
 // eslint-disable-next-line import/no-unresolved
 import { AutoComplete, Form, Tooltip } from 'antd';

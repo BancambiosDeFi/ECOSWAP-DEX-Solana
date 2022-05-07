@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Input, Spin, Tabs, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
 import tuple from 'immutable-tuple';

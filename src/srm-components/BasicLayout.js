@@ -1,17 +1,18 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
-import queryString from 'query-string';
+import { parse } from 'query-string';
 import { useLocation } from 'react-router-dom';
 import { useReferrer } from '../srm-utils/referrer';
 import { notify } from '../srm-utils/notifications';
 import { SwapFooter } from './SwapFooter';
 import TopBar from './TopBar';
+
 const { Header, Content } = Layout;
 
 export default function BasicLayout({ children }) {
   const { refCode, setRefCode, allowRefLink } = useReferrer();
   const { search } = useLocation();
-  const parsed = queryString.parse(search);
+  const parsed = parse(search);
 
   useEffect(() => {
     if (!!parsed.refCode && parsed.refCode !== refCode && allowRefLink) {

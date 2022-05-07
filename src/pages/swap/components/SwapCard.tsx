@@ -1,18 +1,18 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
-import { Card, Typography, TextField, useTheme, IconButton, Popover } from '@mui/material';
+import { Card, IconButton, Popover, TextField, Typography, useTheme } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
 import { ExpandMore } from '@mui/icons-material';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import {
-  useSwapContext,
-  useTokenMap,
   useMint,
-  useOwnedTokenAccount,
-  useSwappableTokens,
   useOnSwap,
+  useOwnedTokenAccount,
+  useSwapContext,
   useSwapFair,
+  useSwappableTokens,
+  useTokenMap,
 } from '@serum/swap-ui';
 import { useWallet } from '../../../components/wallet/wallet';
 import { getNetwork } from '../../../utils';
@@ -202,6 +202,7 @@ export default function SwapCard() {
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
+  // const { tokenList } = useTokenListContext();
   const {
     setImpact,
     fromAmount,
@@ -228,7 +229,7 @@ export default function SwapCard() {
   const [connection, setConnection] = useState<Connection>();
   const [seconds, setSeconds] = useState<number>(0);
   const [infoText, setInfoText] = useState<string>(getExpiresInDescription(seconds));
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const popoverId = open ? 'simple-popover' : undefined;
 

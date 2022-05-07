@@ -61,6 +61,15 @@ export function TokenListContextProvider(props: any) {
         t.extensions?.serumV3Usdt || t.extensions?.serumV3Usdc;
       return isUsdxQuoted;
     });
+
+    // Will need to be removed!!!
+    tokens.push(
+      tokenList.filter(
+        (token: { symbol: string }) => token.symbol === 'BXS',
+      )[0],
+    );
+    // Will need to be removed!!!
+
     tokens.sort((a: TokenInfo, b: TokenInfo) =>
       a.symbol < b.symbol ? -1 : a.symbol > b.symbol ? 1 : 0,
     );
@@ -127,7 +136,10 @@ export function useTokenMap(): Map<string, TokenInfo> {
 }
 
 export function useSwappableTokens() {
-  const { swappableTokens, swappableTokensWormhole, swappableTokensSollet } =
-    useTokenListContext();
+  const {
+    swappableTokens,
+    swappableTokensWormhole,
+    swappableTokensSollet,
+  } = useTokenListContext();
   return { swappableTokens, swappableTokensWormhole, swappableTokensSollet };
 }

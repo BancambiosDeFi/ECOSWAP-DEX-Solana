@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import {
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  TextField,
+  DialogContent,
+  DialogTitle,
   List,
   ListItem,
+  TextField,
   Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -229,6 +229,8 @@ export default function TokenDialog({
       );
     }
   }, [tokens, commonBaseTokens]);
+
+  // console.log('Tokens = ', tokens);
 
   return (
     <Dialog

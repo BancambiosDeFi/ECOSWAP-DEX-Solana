@@ -1,4 +1,3 @@
-import React from 'react';
 import { Typography } from '@mui/material';
 import ButtonComponent from '../srm-components/Button/Button';
 import WalletConnectSwap from '../components/wallet/WalletConnectSwap';

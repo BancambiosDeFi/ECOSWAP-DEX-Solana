@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Liquidity,
+  LiquidityPoolInfo,
+  LiquidityPoolKeysV4,
   Percent,
   Token,
-  LiquidityPoolKeysV4,
-  LiquidityPoolInfo,
 } from '@raydium-io/raydium-sdk';
-import { Card, Typography, Box } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useSwappableTokens, useSwapContext, useTokenMap } from '@serum/swap-ui';
+import { useSwapContext, useSwappableTokens, useTokenMap } from '@serum/swap-ui';
 
 import {
+  convertToBN,
   createToken,
   createTokenAmount,
   getAllRaydiumPoolKeys,
   getRaydiumPoolInfo,
-  convertToBN,
 } from '../../utils/raydiumRequests';
 import { useConnection } from '../../srm-utils/connection';
 import { sendTransaction } from '../../srm-utils/send';

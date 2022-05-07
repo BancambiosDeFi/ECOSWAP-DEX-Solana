@@ -1,6 +1,5 @@
 import type Transport from '@ledgerhq/hw-transport';
 import type { Transaction } from '@solana/web3.js';
-
 import { PublicKey } from '@solana/web3.js';
 
 const INS_GET_PUBKEY = 0x05;

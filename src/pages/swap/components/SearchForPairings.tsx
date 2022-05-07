@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { Box, List, Popper, TextField, Typography } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 
-import { useTokenMap, useSwapContext } from '@serum/swap-ui';
+import { useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { getRaydiumAllPoolKeysFetcher } from '../../../utils/raydiumRequests';
 import { useConnection } from '../../../srm-utils/connection';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';

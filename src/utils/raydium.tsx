@@ -1,6 +1,11 @@
 import React, { Context, createContext, useContext, useEffect, useState } from 'react';
 import { LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
-import { Strategy, TokenListContainer, TokenListProvider } from '@solana/spl-token-registry';
+import {
+  Strategy,
+  TokenInfo,
+  TokenListContainer,
+  TokenListProvider,
+} from '@solana/spl-token-registry';
 import axios from 'axios';
 
 interface RaydiumContextValues {
@@ -35,11 +40,26 @@ export const RaydiumProvider = ({ children }) => {
 
         const nonFilteredTokenList = await new TokenListProvider().resolve(Strategy.GitHub);
 
-        const filteredTokenList = nonFilteredTokenList
+        const filteredByPoolsTokenList = nonFilteredTokenList
           .getList()
           .filter(token => mintSet.has(token.address));
 
-        setTokenList(new TokenListContainer(filteredTokenList));
+        filteredByPoolsTokenList.sort((a: TokenInfo, b: TokenInfo) =>
+          a.symbol < b.symbol ? -1 : a.symbol > b.symbol ? 1 : 0,
+        );
+
+        const filteredByRepeatsTokenList: TokenInfo[] = new Array(filteredByPoolsTokenList[0]);
+
+        for (let i = 1; i < filteredByPoolsTokenList.length; i++) {
+          if (
+            filteredByRepeatsTokenList[filteredByRepeatsTokenList.length - 1].address !==
+            filteredByPoolsTokenList[i].address
+          ) {
+            filteredByRepeatsTokenList.push(filteredByPoolsTokenList[i]);
+          }
+        }
+
+        setTokenList(new TokenListContainer(filteredByRepeatsTokenList));
       } catch (error) {
         console.error('Get Raydium pools error!', error);
       }

@@ -230,8 +230,6 @@ export default function TokenDialog({
     }
   }, [tokens, commonBaseTokens]);
 
-  // console.log('Tokens = ', tokens);
-
   return (
     <Dialog
       open={open}

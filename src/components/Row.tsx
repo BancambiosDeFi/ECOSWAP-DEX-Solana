@@ -65,7 +65,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu }: RowProp) {
   const styles = useStyles();
-  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
   const toggleShowDetails = () => setShowDetails(!showDetails);
 
   return (

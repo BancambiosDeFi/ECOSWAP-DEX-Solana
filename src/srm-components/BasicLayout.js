@@ -24,7 +24,7 @@ export default function BasicLayout({ children }) {
   return (
     <React.Fragment>
       <Layout style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
-        <Header style={{ padding: 0, minHeight: 64, height: 'unset' }}>
+        <Header style={{ padding: 0, minHeight: 54, height: 'unset' }}>
           <TopBar />
         </Header>
         <Content style={{ flex: 1 }}>{children}</Content>

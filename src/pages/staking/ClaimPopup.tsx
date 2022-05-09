@@ -77,6 +77,15 @@ const useStyles = makeStyles(() => ({
     textAlign: 'right',
     margin: '-10px 0 0 0',
   },
+  btnAllowed: {
+    '&:hover': {
+      cursor: 'pointer',
+      background:
+        // eslint-disable-next-line max-len
+        'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
+      boxShadow: '0px 0px 16px #9F5AE5',
+    },
+  },
 }));
 
 const MemoClaimPopup = memo(function ClaimPopup({
@@ -97,7 +106,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
   return (
     <>
       <Grid container justifyContent="space-between">
-        <button className={styles.btn} onClick={showModal}>
+        <button className={`${styles.btn} ${styles.btnAllowed}`} onClick={showModal}>
           {title}
         </button>
       </Grid>
@@ -146,7 +155,11 @@ const MemoClaimPopup = memo(function ClaimPopup({
             {claimValue > balance && <p className={styles.validation}>too much bro</p>}
           </Grid>
           <Grid className={styles.btnWrapper}>
-            <Button className={styles.controlBtn} type="primary" onClick={showModal}>
+            <Button
+              className={`${styles.controlBtn} ${styles.btnAllowed}`}
+              type="primary"
+              onClick={showModal}
+            >
               {ifStake ? 'Stake BSX' : 'Un-Stake BSX'}
             </Button>
           </Grid>

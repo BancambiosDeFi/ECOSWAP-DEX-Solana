@@ -5,31 +5,57 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
-import logo from '../../srm-assets/banc-logo.png';
+import logo from '../../assets/icons/banc-logo.png';
 import infoIcon from '../../srm-assets/info.svg';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
+import { useScreenSize } from '../../utils/screenSize';
 import ManualDetail from './ManualDetail';
 import AutoDetail from './AutoDetail';
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    padding: '22px 15px',
+    // padding: '22px 15px',
     borderRadius: '18px',
   },
   root: {
-    minHeight: '100vh',
-    padding: theme.spacing(0, 1),
+    'justifyContent': 'center',
+    'padding': '0 235px',
+    'minHeight': '100vh',
+    'marginBottom': '24px',
+    '@media (max-width: 785px)': {
+      padding: '0 12px',
+      justifyContent: 'start',
+    },
   },
   title: {
-    padding: theme.spacing(6, 0, 2, 2),
-    fontSize: '24px',
-    fontWeight: 800,
+    'padding': theme.spacing(6, 0, 2, 2),
+    'fontFamily': 'Saira',
+    'fontWeight': 700,
+    'fontSize': '24px',
+    'lineHeight': '60px',
+    'color': '#FFFFFF',
+    '@media (max-width: 785px)': {
+      padding: '15px 0 15px 0',
+      fontFamily: 'Saira',
+      fontWeight: 600,
+      fontSize: '16px',
+      lineHeight: '40px',
+    },
   },
   expiresTitle: {
-    padding: theme.spacing(6, 2, 2, 0),
-    color: '#AEAEAF',
-    fontSize: '24px',
+    'padding': theme.spacing(6, 2, 2, 0),
+    'color': '#AEAEAF',
+    'fontSize': '24px',
+    'fontFamily': 'Saira',
+    '@media (max-width: 785px)': {
+      padding: '15px 6px 15px 0',
+    },
+  },
+  expiresTitleBlock: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '15px 6px 15px 0',
   },
 }));
 
@@ -53,8 +79,8 @@ const options = [
 
 export default function StakingPage() {
   const styles = useStyles();
+  const { isScreenLess } = useScreenSize();
   const [checkedOption, setCheckedOption] = useState({});
-
   const [claimValue, setClaimValue] = useState<number>(0);
 
   const handleChangeClaim = useCallback(
@@ -75,36 +101,45 @@ export default function StakingPage() {
     [setCheckedOption],
   );
 
+  const expiresInComponent = isScreenLess ? (
+    <div className={styles.expiresTitleBlock}>
+      <CircularProgress
+        thickness={7}
+        variant="determinate"
+        color="primary"
+        size={22}
+        value={63}
+        style={{ margin: '0 5px' }}
+      />
+    </div>
+  ) : (
+    <Typography variant="inherit" className={styles.expiresTitle}>
+      Expires in
+      <CircularProgress
+        thickness={7}
+        variant="determinate"
+        color="primary"
+        size={15}
+        value={63}
+        style={{ margin: '0 5px' }}
+      />
+      <Tooltip title="Delete aaa" placement="top-start">
+        <>
+          <img src={infoIcon} alt="" />
+        </>
+      </Tooltip>
+    </Typography>
+  );
+
   return (
     <BasicLayout>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        className={styles.root}
-      >
+      <Grid container direction="column" alignItems="center" className={styles.root}>
         <Grid container direction="column">
           <Grid container justifyContent="space-between">
             <Typography variant="inherit" className={styles.title}>
               Manual staking BXS
             </Typography>
-            <Typography variant="inherit" className={styles.expiresTitle}>
-              Expires in
-              <CircularProgress
-                thickness={7}
-                variant="determinate"
-                color="primary"
-                size={15}
-                value={63}
-                style={{ margin: '0 5px' }}
-              />
-              <Tooltip title="Delete aaa" placement="top-start">
-                <>
-                  <img src={infoIcon} alt="" />
-                </>
-              </Tooltip>
-            </Typography>
+            {expiresInComponent}
           </Grid>
           <Grid container alignItems="center" direction="row" className={styles.wrapper}>
             <Row
@@ -121,8 +156,8 @@ export default function StakingPage() {
               detailValue={15}
               detailMenu={
                 <ManualDetail
-                  detailTitle="title 1"
-                  detailValue={1}
+                  detailTitle="PENDING REWARD"
+                  detailValue={0}
                   handleChangeClaim={handleChangeClaim}
                   claimValue={claimValue}
                 />
@@ -149,8 +184,8 @@ export default function StakingPage() {
                 <AutoDetail
                   claimValue={claimValue}
                   handleChangeClaim={handleChangeClaim}
-                  detailTitle="title 2"
-                  detailValue={1}
+                  detailTitle="Auto-Compound"
+                  detailValue={0}
                   checkedOption={checkedOption}
                   setPeriod={setPeriod}
                   options={options}

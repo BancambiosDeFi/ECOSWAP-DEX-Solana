@@ -25,8 +25,7 @@ import { notify } from '../srm-utils/notifications';
 import WalletConnect from '../components/wallet/WalletConnect';
 import { getTradePageUrl } from '../srm-utils/markets';
 import UserWalletHeaderMenu from '../components/wallet/UserWalletHeaderMenu';
-
-const RESPONSIVE_SIZE = 785;
+import { useScreenSize } from '../utils/screenSize';
 
 const pages = [
   {
@@ -83,7 +82,7 @@ const useStyles = makeStyles(() => ({
   headerItem: {
     'fontFamily': 'Saira',
     'fontStyle': 'normal',
-    'fontWeight': '800',
+    'fontWeight': '600',
     'fontSize': '16px',
     'lineHeight': '250%',
     '&:hover': {
@@ -133,11 +132,8 @@ const StyledListItemText = styled(ListItemText)(() => ({
 }));
 
 const TopBar: React.FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { connected, connect, disconnect, wallet } = useWallet();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { connected, connect, disconnect } = useWallet();
   const {
-    // endpoint,
     endpointInfo,
     setEndpoint,
     availableEndpoints,
@@ -151,25 +147,13 @@ const TopBar: React.FC = () => {
   const history = useHistory();
   const classes = useStyles();
 
-  const [isScreenLess, setIsScreenLess] = useState<boolean>(window.innerWidth < RESPONSIVE_SIZE);
+  const { isScreenLess } = useScreenSize();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('');
 
   const handleDrawerToggle = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
-
-  const resizeHandler = (): void => {
-    setIsScreenLess(window.innerWidth < RESPONSIVE_SIZE);
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', resizeHandler);
-
-    return () => {
-      window.removeEventListener('resize', resizeHandler);
-    };
-  }, [resizeHandler]);
 
   const handleClick = useCallback(
     e => {
@@ -357,7 +341,7 @@ const TopBar: React.FC = () => {
             width: '100%',
           }}
         >
-          <LogoWrapper style={{ paddingBottom: '10px' }} onClick={() => history.push(tradePageUrl)}>
+          <LogoWrapper style={{ paddingBottom: '10px' }} onClick={() => history.push('/swap')}>
             <img src={logo} alt="" />
           </LogoWrapper>
           <div

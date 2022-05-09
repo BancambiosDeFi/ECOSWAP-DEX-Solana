@@ -53,14 +53,14 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     position: 'absolute',
-    left: '-317px',
+    left: '-254px',
     color: 'white',
     border: '1px solid #0156FF',
     borderRadius: '8px',
     background: '#0A0C0E !important',
     marginTop: '5px',
     padding: '15px',
-    width: '600px',
+    width: '468px',
     justifyContent: 'center !important',
   },
   listBox: {
@@ -125,7 +125,6 @@ export default function SearchForPairingsComponent({ type, width }) {
   const [loader, setLoader] = useState<boolean>(false);
   const connection = useConnection();
   const tokenMap = useTokenMap();
-  const widthComponent = width === 'auto' ? '430' : 600;
   const marginComponent = width === 'auto' ? '18px' : '0px';
 
   const handleFocus = () => {
@@ -191,7 +190,7 @@ export default function SearchForPairingsComponent({ type, width }) {
         p: '2px 4px',
         display: 'flex !important',
         alignItems: 'center !important',
-        width: widthComponent,
+        width: width,
         height: 60,
         borderRadius: '8px',
         background: '#202124',
@@ -268,8 +267,8 @@ function ListItem({ props, option }) {
       style={{
         width: '100%',
         height: '75px',
-        display: errorDownloading ? 'none' : 'grid',
-        gridTemplateColumns: '1.5fr 1fr 1fr',
+        display: errorDownloading ? 'none' : 'flex',
+        justifyContent: 'space-around',
       }}
       component="li"
       onClickCapture={() => {
@@ -279,11 +278,14 @@ function ListItem({ props, option }) {
       key={`${option.from.symbol}/${option.to.symbol}`}
       {...props}
     >
-      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+      <Box
+        width="100px"
+        style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}
+      >
         <img
           loading="lazy"
-          width="45px"
-          height="45px"
+          width="35x"
+          height="35px"
           src={option.fromImg}
           alt=""
           onError={() => setErrorDownloading(true)}
@@ -292,8 +294,8 @@ function ListItem({ props, option }) {
           style={{
             paddingLeft: '9px',
             fontFamily: '"Saira", sans-serif',
-            fontSize: '24px',
-            fontWeight: 700,
+            fontSize: '18px',
+            fontWeight: 600,
             color: 'white',
           }}
         >
@@ -301,10 +303,10 @@ function ListItem({ props, option }) {
         </Typography>
       </Box>
       <ArrowRightIcon />
-      <Box width="105" style={{ display: 'flex', justifyContent: 'column', alignItems: 'end' }}>
+      <Box width="100px" style={{ display: 'flex', justifyContent: 'column', alignItems: 'end' }}>
         <img
           loading="lazy"
-          width="45px"
+          width="35px"
           src={option.toImg}
           alt=""
           onError={() => setErrorDownloading(true)}
@@ -313,8 +315,8 @@ function ListItem({ props, option }) {
           style={{
             paddingLeft: '9px',
             fontFamily: '"Saira", sans-serif',
-            fontSize: '24px',
-            fontWeight: 700,
+            fontSize: '18px',
+            fontWeight: 600,
             color: 'white',
           }}
         >

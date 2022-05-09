@@ -6,7 +6,7 @@ export const LiquidityContainer = () => {
   return (
     <>
       <StakingTabs />
-      <SearchForPairingsComponent type={'none'} width={'600'} />
+      <SearchForPairingsComponent type={'none'} width={'468px'} />
       <LiquidityCard />
     </>
   );

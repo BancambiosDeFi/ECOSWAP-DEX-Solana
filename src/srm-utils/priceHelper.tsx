@@ -105,7 +105,18 @@ export function mul(a: Numberish | undefined, b: Numberish | undefined): Fractio
 
   return fa.mul(fb);
 }
-export const multiply = mul;
+export function div(a: Numberish, b: Numberish): Fraction;
+export function div(a: Numberish | undefined, b: Numberish | undefined): Fraction | undefined;
+export function div(a: Numberish | undefined, b: Numberish | undefined): Fraction | undefined {
+  if (a === null || a === undefined || b === null || b === undefined) return undefined;
+  const fa = toFraction(a);
+  const fb = toFraction(b);
+  try {
+    return fa.div(fb); // if fb is zero , operation will throw error
+  } catch {
+    return fa;
+  }
+}
 
 export function isString(val: unknown): val is string {
   return typeof val === 'string';

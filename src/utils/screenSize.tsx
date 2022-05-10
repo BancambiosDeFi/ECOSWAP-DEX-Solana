@@ -4,7 +4,7 @@ interface ScreenSizeContextValues {
   isScreenLess: boolean;
 }
 
-const RESPONSIVE_SIZE = 785;
+const RESPONSIVE_SIZE = 540; // surface duo size - max mobile screen width
 
 // eslint-disable-next-line max-len
 const ScreenSizeContext: Context<null | ScreenSizeContextValues> = createContext<null | ScreenSizeContextValues>(
@@ -12,10 +12,10 @@ const ScreenSizeContext: Context<null | ScreenSizeContextValues> = createContext
 );
 
 export const ScreenSizeProvider = ({ children }) => {
-  const [isScreenLess, setIsScreenLess] = useState<boolean>(window.innerWidth < RESPONSIVE_SIZE);
+  const [isScreenLess, setIsScreenLess] = useState<boolean>(window.innerWidth <= RESPONSIVE_SIZE);
 
   const resizeHandler = (): void => {
-    setIsScreenLess(window.innerWidth < RESPONSIVE_SIZE);
+    setIsScreenLess(window.innerWidth <= RESPONSIVE_SIZE);
   };
 
   useEffect(() => {

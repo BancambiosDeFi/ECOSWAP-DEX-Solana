@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     'lineHeight': '40px',
     'letterSpacing': '0em',
     'textAlign': 'left',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       fontWeight: 700,
       fontSize: '10px',
       lineHeight: '25px',
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     'padding': '15px 15px 5px',
     'borderRadius': '8px',
     'background': '#0a0c0f',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       padding: '0 16px',
       width: '100%',
       display: 'flex',
@@ -64,7 +64,7 @@ const useStyles = makeStyles(() => ({
     'height': '100%',
     'borderRadius': '8px',
     'background': '#0a0c0f',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       padding: '0 8px',
     },
   },
@@ -73,7 +73,7 @@ const useStyles = makeStyles(() => ({
     'padding': '0.5px',
     'borderRadius': '8px',
     'background': 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       margin: '20px 0',
     },
   },
@@ -139,9 +139,7 @@ export default function AutoDetail({
                     </Typography>
                   </div>
                   <div className={styles.btnWrapper}>
-                    <button className={`${styles.btn} ${styles.btnDisabled}`}>
-                      Week Auto Compound
-                    </button>
+                    <button className={`${styles.btn} ${styles.btnDisabled}`}>Claim</button>
                   </div>
                 </Grid>
               </Grid>

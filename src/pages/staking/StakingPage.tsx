@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'padding': '0 235px',
     'minHeight': '100vh',
     'marginBottom': '24px',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       padding: '0 12px',
       justifyContent: 'start',
     },
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'fontSize': '24px',
     'lineHeight': '60px',
     'color': '#FFFFFF',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       padding: '15px 0 15px 0',
       fontFamily: 'Saira',
       fontWeight: 600,
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'color': '#AEAEAF',
     'fontSize': '24px',
     'fontFamily': 'Saira',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       padding: '15px 6px 15px 0',
     },
   },

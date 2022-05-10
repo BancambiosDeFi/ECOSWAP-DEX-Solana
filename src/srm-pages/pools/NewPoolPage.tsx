@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AutoComplete, Button, Form, Input, Switch, Tooltip, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';

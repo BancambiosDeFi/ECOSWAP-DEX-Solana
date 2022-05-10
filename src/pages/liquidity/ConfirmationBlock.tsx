@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Typography, Link } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';

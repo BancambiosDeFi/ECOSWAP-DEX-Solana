@@ -1,7 +1,6 @@
 import { Col, Row } from 'antd';
-import React from 'react';
 import styled from 'styled-components';
-import { useMarket, useBonfidaTrades } from '../srm-utils/markets';
+import { useBonfidaTrades, useMarket } from '../srm-utils/markets';
 import { getDecimalCount } from '../srm-utils/utils';
 import { BonfidaTrade } from '../srm-utils/types';
 import FloatingElement from './layout/FloatingElement';

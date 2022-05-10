@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Col, Input, Modal, Row } from 'antd';
 import { EndpointInfo } from '../srm-utils/types';
 

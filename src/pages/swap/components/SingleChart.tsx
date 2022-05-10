@@ -1,6 +1,6 @@
 import { createChart } from 'lightweight-charts';
-import React, { useRef, useEffect } from 'react';
-import moment from 'moment';
+import { useEffect, useRef } from 'react';
+import { unix } from 'moment';
 import { PublicKey } from '@solana/web3.js';
 import { useTokenMap } from '@serum/swap-ui';
 import { chart_api_key } from '../../utils';
@@ -58,7 +58,7 @@ const SingleChart = ({ mint }: { mint: PublicKey }) => {
         const prepeared = data?.Data.map(({ time, volume }) => {
           return {
             value: volume,
-            time: moment.unix(time).format('YYYY-MMM-DD'),
+            time: unix(time).format('YYYY-MMM-DD'),
           };
         });
         newSeries.setData(prepeared);

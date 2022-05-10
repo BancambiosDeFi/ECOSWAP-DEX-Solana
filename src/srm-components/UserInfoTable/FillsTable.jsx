@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Tag } from 'antd';
+import { Col, Row, Tag } from 'antd';
 import { useFills, useMarket } from '../../srm-utils/markets';
 import DataTable from '../layout/DataTable';
 

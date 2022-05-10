@@ -4,6 +4,19 @@ import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Connection } from '@solana/web3.js';
 import { makeStyles } from '@mui/styles';
+import {
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import { ReactComponent as KebubMenuIcon } from '../assets/icons/Kabab_Menu.svg';
+import { ReactComponent as WalletIcon } from '../assets/icons/Wallet.svg';
+import { ReactComponent as CloseIcon } from '../assets/icons/Close_icon.svg';
 import logo from '../srm-assets/logo.png';
 import { useWallet } from '../components/wallet/wallet';
 import { ENDPOINTS, useConnectionConfig } from '../srm-utils/connection';
@@ -12,6 +25,39 @@ import { notify } from '../srm-utils/notifications';
 import WalletConnect from '../components/wallet/WalletConnect';
 import { getTradePageUrl } from '../srm-utils/markets';
 import UserWalletHeaderMenu from '../components/wallet/UserWalletHeaderMenu';
+
+const RESPONSIVE_SIZE = 785;
+
+const pages = [
+  {
+    label: 'Home',
+    key: '/home',
+  },
+  {
+    label: 'Stableswap',
+    key: '/swap',
+  },
+  {
+    label: 'Staking',
+    key: '/staking',
+  },
+  {
+    label: 'Alphatrade',
+    key: getTradePageUrl(),
+  },
+  {
+    label: 'Catapult',
+    key: '/catapult',
+  },
+  {
+    label: 'NFT',
+    key: '/nft',
+  },
+  {
+    label: 'Token Sale',
+    key: '/tokenSale',
+  },
+];
 
 const Wrapper = styled.div`
   background-color: #04030a;
@@ -65,9 +111,30 @@ const EXTERNAL_LINKS = {
   // '/swap': 'https://swap.projectserum.com',
 };
 
-export default function TopBar() {
+const StyledDrawer = styled(Drawer)(() => ({
+  '& .MuiDrawer-paper': {
+    width: '191px',
+    backgroundColor: 'rgba(30, 32, 34, 1)',
+  },
+}));
+
+const StyledListItemText = styled(ListItemText)(() => ({
+  '& .MuiTypography-root': {
+    fontFamily: 'Saira',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: '16px',
+    lineHeight: '40px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+    color: '#FFFFFF',
+    paddingLeft: '16px',
+  },
+}));
+
+const TopBar: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { connected, wallet } = useWallet();
+  const { connected, connect, disconnect, wallet } = useWallet();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {
     // endpoint,
@@ -77,12 +144,32 @@ export default function TopBar() {
     setCustomEndpoints,
   } = useConnectionConfig();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [addEndpointVisible, setAddEndpointVisible] = useState(false);
+  const [addEndpointVisible, setAddEndpointVisible] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [testingConnection, setTestingConnection] = useState(false);
+  const [testingConnection, setTestingConnection] = useState<boolean>(false);
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
+
+  const [isScreenLess, setIsScreenLess] = useState<boolean>(window.innerWidth < RESPONSIVE_SIZE);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [selectedTab, setSelectedTab] = useState<string>('');
+
+  const handleDrawerToggle = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  const resizeHandler = (): void => {
+    setIsScreenLess(window.innerWidth < RESPONSIVE_SIZE);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeHandler);
+
+    return () => {
+      window.removeEventListener('resize', resizeHandler);
+    };
+  }, [resizeHandler]);
 
   const handleClick = useCallback(
     e => {
@@ -92,6 +179,12 @@ export default function TopBar() {
     },
     [history],
   );
+
+  const handleClickDrawer = pageKey => {
+    if (!(pageKey in EXTERNAL_LINKS)) {
+      history.push(pageKey);
+    }
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onAddCustomEndpoint = (info: EndpointInfo) => {
@@ -148,65 +241,160 @@ export default function TopBar() {
     ? location.pathname
     : getTradePageUrl();
 
-  return (
+  useEffect(() => {
+    const pageIndex = pages.findIndex(page => page.key === location.pathname);
+    if (pageIndex !== -1) {
+      setSelectedTab(pages[pageIndex].label);
+    }
+  }, [location.pathname]);
+
+  const smallScreenTopBar = (
     <>
       <Wrapper
         style={{
-          height: '95px',
-          background: '#04030A',
+          height: '54px',
+          background: '#1E2022',
           display: 'flex',
-          alignItems: 'flex-end',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           width: '100%',
+          minHeight: '54px',
+          padding: '0 20px',
         }}
       >
-        <LogoWrapper style={{ paddingBottom: '10px' }} onClick={() => history.push('/swap')}>
-          <img src={logo} alt="" />
-        </LogoWrapper>
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerToggle}
+          edge="start"
+          sx={{ mr: 2, ...(isDrawerOpen && { display: 'none' }) }}
+        >
+          <KebubMenuIcon />
+        </IconButton>
+        <Typography
+          sx={{
+            fontFamily: 'Saira',
+            fontStyle: 'normal',
+            fontWeight: '700',
+            fontSize: '20px',
+            lineHeight: '31px',
+            letterSpacing: '0em',
+            textAlign: 'left',
+            color: '#FFFFFF',
           }}
         >
-          <Menu
-            mode="horizontal"
-            onClick={handleClick}
-            selectedKeys={[location.pathname]}
-            style={{
-              borderBottom: 'none',
-              backgroundColor: 'transparent',
-              justifyContent: 'flex-end',
-              paddingBottom: '16px',
+          {selectedTab}
+        </Typography>
+        <IconButton
+          color="inherit"
+          aria-label="connect wallet"
+          onClick={connected ? disconnect : connect}
+          edge="start"
+        >
+          <WalletIcon />
+        </IconButton>
+      </Wrapper>
+      <StyledDrawer anchor="left" open={isDrawerOpen} onClose={handleDrawerToggle}>
+        <Box role="presentation" onClick={handleDrawerToggle} onKeyDown={handleDrawerToggle}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '19px 14px 13px 24px',
             }}
           >
-            <Menu.Item key="/home" className={classes.headerItem}>
-              Home
-            </Menu.Item>
-            <Menu.Item key="/swap" className={classes.headerItem}>
-              Stableswap
-            </Menu.Item>
-            <Menu.Item key="/staking" className={classes.headerItem}>
-              Staking
-            </Menu.Item>
-            <Menu.Item key={tradePageUrl} className={classes.headerItem}>
-              Alphatrade
-            </Menu.Item>
-            <Menu.Item key="/catapult" className={classes.headerItem}>
-              Catapult
-            </Menu.Item>
-            <Menu.Item key="/nft" className={classes.headerItem}>
-              NFT
-            </Menu.Item>
-            <Menu.Item key="/tokenSale" className={classes.headerItem}>
-              Token Sale
-            </Menu.Item>
-          </Menu>
-          {!connected ? <WalletConnect /> : <UserWalletHeaderMenu />}
-        </div>
-      </Wrapper>
+            <Box sx={{ marginLeft: '2px' }} onClick={() => history.push(tradePageUrl)}>
+              <img src={logo} alt="" style={{ width: '107px', height: '29px' }} />
+            </Box>
+            <IconButton
+              color="inherit"
+              aria-label="close drawer"
+              onClick={handleDrawerToggle}
+              sx={{ padding: 0 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Divider
+            sx={{
+              border: '0.5px solid',
+              borderImage:
+                'linear-gradient(to right, rgba(236, 38, 245, 0.5), rgba(1, 86, 255, 0.5)) 0.5',
+            }}
+          />
+          <List>
+            {pages.map(page => (
+              <ListItem
+                button
+                onClick={() => {
+                  handleClickDrawer(page.key);
+                }}
+                key={page.key}
+              >
+                <StyledListItemText primary={page.label} />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </StyledDrawer>
     </>
   );
-}
+
+  return (
+    <>
+      {isScreenLess ? (
+        smallScreenTopBar
+      ) : (
+        <Wrapper
+          style={{
+            height: '95px',
+            background: '#04030A',
+            display: 'flex',
+            alignItems: 'flex-end',
+            width: '100%',
+          }}
+        >
+          <LogoWrapper style={{ paddingBottom: '10px' }} onClick={() => history.push(tradePageUrl)}>
+            <img src={logo} alt="" />
+          </LogoWrapper>
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}
+          >
+            <Menu
+              mode="horizontal"
+              onClick={handleClick}
+              selectedKeys={[location.pathname]}
+              style={{
+                borderBottom: 'none',
+                backgroundColor: 'transparent',
+                justifyContent: 'flex-end',
+                paddingBottom: '16px',
+              }}
+            >
+              {pages.map(page => (
+                <Menu.Item
+                  key={page.label === 'Alphatrade' ? tradePageUrl : page.key}
+                  className={classes.headerItem}
+                >
+                  {page.label}
+                </Menu.Item>
+              ))}
+            </Menu>
+            {!connected ? <WalletConnect /> : <UserWalletHeaderMenu />}
+          </div>
+        </Wrapper>
+      )}
+    </>
+  );
+};
+
+export default TopBar;

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
@@ -18,20 +18,43 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '18px',
   },
   root: {
-    padding: '0 235px',
-    minHeight: '100vh',
+    'justifyContent': 'center',
+    'padding': '0 235px',
+    'minHeight': '100vh',
+    'marginBottom': '24px',
+    '@media (max-width: 540px)': {
+      padding: '0 12px',
+      justifyContent: 'start',
+    },
   },
   title: {
-    padding: theme.spacing(6, 0, 2, 2),
-    fontSize: '24px',
-    fontWeight: 700,
-    fontFamily: 'Saira',
+    'padding': theme.spacing(6, 0, 2, 2),
+    'fontFamily': 'Saira',
+    'fontWeight': 700,
+    'fontSize': '24px',
+    'lineHeight': '60px',
+    'color': '#FFFFFF',
+    '@media (max-width: 540px)': {
+      padding: '15px 0 15px 0',
+      fontFamily: 'Saira',
+      fontWeight: 600,
+      fontSize: '16px',
+      lineHeight: '40px',
+    },
   },
   expiresTitle: {
-    padding: theme.spacing(6, 2, 2, 0),
-    color: '#AEAEAF',
-    fontSize: '24px',
-    fontFamily: 'Saira',
+    'padding': theme.spacing(6, 2, 2, 0),
+    'color': '#AEAEAF',
+    'fontSize': '24px',
+    'fontFamily': 'Saira',
+    '@media (max-width: 540px)': {
+      padding: '15px 6px 15px 0',
+    },
+  },
+  expiresTitleBlock: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '15px 6px 15px 0',
   },
 }));
 

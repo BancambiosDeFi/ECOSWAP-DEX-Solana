@@ -1,8 +1,8 @@
-import React from 'react';
-import { Layout, Row, Col, Grid } from 'antd';
+import { Col, Grid, Layout, Row } from 'antd';
 import { useReferrer } from '../srm-utils/referrer';
 import Link from './Link';
 import { helpUrls } from './HelpUrls';
+
 const { Footer } = Layout;
 const { useBreakpoint } = Grid;
 

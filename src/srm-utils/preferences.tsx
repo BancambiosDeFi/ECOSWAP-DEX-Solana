@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { Market } from '@serum/serum';
 import { useWallet } from '../components/wallet/wallet';
@@ -11,7 +11,7 @@ import { PreferencesContextValues } from './types';
 
 export const AUTO_SETTLE_DISABLED_OVERRIDE = true;
 
-const PreferencesContext = React.createContext<PreferencesContextValues | null>(null);
+const PreferencesContext = createContext<PreferencesContextValues | null>(null);
 
 export function PreferencesProvider({ children }) {
   const [autoSettleEnabled, setAutoSettleEnabled] = useLocalStorageState('autoSettleEnabled', true);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { cloneElement, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 
@@ -69,7 +69,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu }: RowProp) {
   const styles = useStyles();
-  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
   const toggleShowDetails = () => setShowDetails(!showDetails);
 
   return (
@@ -102,7 +102,7 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
             />
           </Grid>
         </Grid>
-        {React.cloneElement(detailMenu, { showDetails })}
+        {cloneElement(detailMenu, { showDetails })}
       </Grid>
     </Grid>
   );

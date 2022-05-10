@@ -1,6 +1,6 @@
 import { createChart, CrosshairMode } from 'lightweight-charts';
-import React, { useRef, useEffect, useState } from 'react';
-import moment from 'moment';
+import { useEffect, useRef, useState } from 'react';
+import { unix } from 'moment';
 
 import { useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { chart_api_key } from '../utils';
@@ -74,7 +74,7 @@ const Chart = () => {
         setData(true);
         const prepared = data?.Data?.Data?.map(({ time, low, high, open, close, volumefrom }) => {
           return {
-            time: moment.unix(time).format('YYYY-MMM-DD'),
+            time: unix(time).format('YYYY-MMM-DD'),
             low,
             high,
             open,

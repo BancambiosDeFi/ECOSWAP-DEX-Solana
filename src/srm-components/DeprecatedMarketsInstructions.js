@@ -3,8 +3,8 @@ import React from 'react';
 import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
 import SyncOutlined from '@ant-design/icons/lib/icons/SyncOutlined';
 import {
-  useGetOpenOrdersForDeprecatedMarkets,
   useBalancesForDeprecatedMarkets,
+  useGetOpenOrdersForDeprecatedMarkets,
   useUnmigratedOpenOrdersAccounts,
 } from '../srm-utils/markets';
 import FloatingElement from './layout/FloatingElement';

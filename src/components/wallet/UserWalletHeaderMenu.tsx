@@ -38,6 +38,13 @@ const useStyles = makeStyles({
     '&:hover': {
       background: 'rgba(1, 86, 255, 0.3)',
     },
+    '@media(max-width: 1250px)': {
+      width: '100px',
+      margin: 'auto 5px !important',
+    },
+    '@media(max-width: 1125px)': {
+      width:'90px',
+    }
   },
   publicKey: {
     width: '100%',
@@ -45,6 +52,12 @@ const useStyles = makeStyles({
     lineHeight: '25px',
     fontFamily: '"Saira", sans-serif',
     fontWeight: '400',
+    '@media(max-width: 1250px)': {
+      fontSize: '14px',
+    },
+    '@media(max-width: 1125px)': {
+      fontSize: '12px',
+    }
   },
   expandMore: {
     lineHeight: '0',
@@ -59,6 +72,9 @@ const useStyles = makeStyles({
     fontFamily: '"Saira", sans-serif',
     fontSize: '14px',
     fontWeight: '600',
+    '@media(max-width: 1125px)': {
+      fontSize: '12px',
+    }
   },
   modalContainer: {
     display: 'flex',
@@ -66,6 +82,22 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
     background: 'red',
+  },
+  textBalance: {
+    width: '60px',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    lineHeight: '46px',
+    fontFamily: '"Saira", sans-serif',
+    '@media(max-width: 1250px)': {
+      fontSize: '14px',
+      width: '40px',
+    },
+    '@media(max-width: 1125px)': {
+      fontSize: '12px',
+      width: '35px',
+    }
   },
 });
 
@@ -98,18 +130,7 @@ export default function UserWalletHeaderMenu() {
       >
         🌏
       </Typography>
-      <Typography
-        style={{
-          width: '80px',
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          fontSize: '16px',
-          lineHeight: '46px',
-          margin: '10px',
-        }}
-      >
-        {userBalance} SOL
-      </Typography>
+      <Typography variant="inherit" className={classes.textBalance}>{userBalance} SOL</Typography>
       <Box className={classes.containerButton} onClick={disconnect}>
         <Box style={{ gridArea: 'publicKey' }}>
           <Typography variant="inherit" align="center" noWrap className={classes.publicKey}>

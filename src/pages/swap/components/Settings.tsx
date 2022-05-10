@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-  Popover,
-  IconButton,
-  Typography,
   Button,
-  TextField,
-  InputAdornment,
-  Switch,
   FormControlLabel,
   FormGroup,
+  IconButton,
+  InputAdornment,
+  Popover,
+  Switch,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { SettingsOutlined as Settings } from '@mui/icons-material';
-import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
-import { useSwapContext, useSwapFair, useDexContext } from '@serum/swap-ui';
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
+import { useDexContext, useSwapContext, useSwapFair } from '@serum/swap-ui';
 import OpenOrdersDialog from './OpenOrdersDialog';
 
 const useStyles = makeStyles(theme => ({

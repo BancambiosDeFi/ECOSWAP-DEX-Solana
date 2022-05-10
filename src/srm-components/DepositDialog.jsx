@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal } from 'antd';
 import {
-  useSelectedBaseCurrencyAccount,
   useMarket,
+  useSelectedBaseCurrencyAccount,
   useSelectedQuoteCurrencyAccount,
 } from '../srm-utils/markets';
 import { useWallet } from '../components/wallet/wallet';

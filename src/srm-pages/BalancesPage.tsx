@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tabs } from 'antd';
 import { useAllOpenOrdersBalances, useWalletBalancesForAllMarkets } from '../srm-utils/markets';
 import FloatingElement from '../srm-components/layout/FloatingElement';

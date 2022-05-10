@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { MintInfo } from '@solana/spl-token';
-import { getFormattedAmount } from '../../../utils';
 import TransactionLink from '../../../components/TransactionLink';
+import { getFormattedAmount } from '../../../utils';
 
 interface CompletedSwapDescriptionProps {
   signature: string;

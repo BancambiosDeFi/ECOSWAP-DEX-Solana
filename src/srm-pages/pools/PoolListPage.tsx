@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Input, Typography } from 'antd';
 import { useHistory } from 'react-router-dom';
 import FloatingElement from '../../srm-components/layout/FloatingElement';

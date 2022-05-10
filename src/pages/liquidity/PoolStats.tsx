@@ -1,9 +1,8 @@
-import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, Typography } from '@mui/material';
 import { TokenAmount } from '@raydium-io/raydium-sdk';
 
-import { toString, toPercentString, toFraction } from '../../srm-utils/priceHelper';
+import { toFraction, toPercentString, toString } from '../../srm-utils/priceHelper';
 
 const useStyles = makeStyles(() => ({
   swapInfoWrapper: {

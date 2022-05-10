@@ -1,4 +1,3 @@
-import React from 'react';
 import { notification } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { makeStyles } from '@mui/styles';

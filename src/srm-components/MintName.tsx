@@ -1,4 +1,3 @@
-import React from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { Popover } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';

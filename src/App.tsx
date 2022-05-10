@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import './App.less';
 import { Spin } from 'antd';
 import { ThemeProvider } from '@mui/material';

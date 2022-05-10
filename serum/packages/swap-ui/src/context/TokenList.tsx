@@ -56,15 +56,26 @@ export function TokenListContextProvider(props: any) {
 
   // Tokens with USD(x) quoted markets.
   const swappableTokens = useMemo(() => {
-    const tokens = tokenList.filter((t: TokenInfo) => {
-      const isUsdxQuoted =
-        t.extensions?.serumV3Usdt || t.extensions?.serumV3Usdc;
-      return isUsdxQuoted;
-    });
-    tokens.sort((a: TokenInfo, b: TokenInfo) =>
-      a.symbol < b.symbol ? -1 : a.symbol > b.symbol ? 1 : 0,
-    );
-    return tokens;
+    // const tokens = tokenList.filter((t: TokenInfo) => {
+    //   // const isUsdxQuoted =
+    //   //   t.extensions?.serumV3Usdt || t.extensions?.serumV3Usdc;
+    //   const isUsdxQuoted =
+    //     t.extensions?.serumV3Usdt || t.extensions?.serumV3Usdc;
+    //   return isUsdxQuoted;
+    // });
+
+    // // Will need to be removed!!!
+    // tokens.push(
+    //   tokenList.filter(
+    //     (token: { symbol: string }) => token.symbol === 'BXS',
+    //   )[0],
+    // );
+    // // Will need to be removed!!!
+
+    // tokens.sort((a: TokenInfo, b: TokenInfo) =>
+    //   a.symbol < b.symbol ? -1 : a.symbol > b.symbol ? 1 : 0,
+    // );
+    return tokenList;
   }, [tokenList, tokenMap]);
 
   // Sollet wrapped tokens.
@@ -127,7 +138,10 @@ export function useTokenMap(): Map<string, TokenInfo> {
 }
 
 export function useSwappableTokens() {
-  const { swappableTokens, swappableTokensWormhole, swappableTokensSollet } =
-    useTokenListContext();
+  const {
+    swappableTokens,
+    swappableTokensWormhole,
+    swappableTokensSollet,
+  } = useTokenListContext();
   return { swappableTokens, swappableTokensWormhole, swappableTokensSollet };
 }

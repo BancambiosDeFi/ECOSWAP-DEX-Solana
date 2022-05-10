@@ -1,5 +1,4 @@
-import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
-import React from 'react';
+import { HashRouter, Redirect, Route, Switch } from 'react-router-dom';
 import TradePage from './srm-pages/TradePage';
 import OpenOrdersPage from './srm-pages/OpenOrdersPage';
 import BalancesPage from './srm-pages/BalancesPage';

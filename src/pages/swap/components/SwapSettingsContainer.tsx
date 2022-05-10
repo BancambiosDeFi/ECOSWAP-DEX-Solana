@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { makeStyles, styled } from '@mui/styles';
 import {
   Box,
@@ -10,8 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  SettingsOutlined as SettingsIcon,
   CachedOutlined as UpdateIcon,
+  SettingsOutlined as SettingsIcon,
 } from '@mui/icons-material';
 import NumberFormat from 'react-number-format';
 import CloseIcon from '@mui/icons-material/Close';
@@ -245,7 +245,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
   },
 }));
 
-const NumberFormatCustom = React.forwardRef<NumberFormat<CustomProps>, CustomProps>(
+const NumberFormatCustom = forwardRef<NumberFormat<CustomProps>, CustomProps>(
   function NumberFormatCustom(props, ref) {
     const { onChange, ...other } = props;
 
@@ -290,7 +290,7 @@ const SwapSettingsContainer: React.FC<SwapSettingsProps> = ({
   const [minimumReceived, setMinimumReceived] = useState<number>(toAmount);
   const [priceImpact, setPriceImpact] = useState<string>('');
   const [infoText, setInfoText] = useState<string>('');
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const popoverId = open ? 'simple-popover' : undefined;
 

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './index.css';
 import {
-  widget,
   ChartingLibraryWidgetOptions,
   IChartingLibraryWidget,
+  widget,
 } from '../../charting_library';
-import { useMarket, USE_MARKETS } from '../../srm-utils/markets';
+import { USE_MARKETS, useMarket } from '../../srm-utils/markets';
 import * as saveLoadAdapter from './saveLoadAdapter';
 import { flatten } from '../../srm-utils/utils';
 import { BONFIDA_DATA_FEED } from '../../srm-utils/bonfidaConnector';

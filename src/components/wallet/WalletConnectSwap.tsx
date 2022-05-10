@@ -1,4 +1,3 @@
-import React from 'react';
 import ButtonComponent from '../../srm-components/Button/Button';
 import { useWallet } from './wallet';
 

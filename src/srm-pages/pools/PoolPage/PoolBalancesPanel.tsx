@@ -1,5 +1,4 @@
 // eslint-disable-next-line import/no-unresolved
-import React from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { Button, Spin, Tabs } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';

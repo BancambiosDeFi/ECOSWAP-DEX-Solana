@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, IconButton } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useTokenMap, useSwapContext, useMint, useFairRoute } from '@serum/swap-ui';
+import { useFairRoute, useMint, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
 
 const useStyles = makeStyles(() => ({

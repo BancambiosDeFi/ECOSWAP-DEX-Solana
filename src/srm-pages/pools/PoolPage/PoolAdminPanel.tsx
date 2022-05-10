@@ -1,4 +1,4 @@
-import React, { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { Account, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import { AutoComplete, Button, Input, Select, Tabs } from 'antd';

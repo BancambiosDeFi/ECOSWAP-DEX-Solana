@@ -1,5 +1,4 @@
 // eslint-disable-next-line import/no-unresolved
-import React from 'react';
 import { Typography } from 'antd';
 import tuple from 'immutable-tuple';
 import { getPoolBasket, PoolInfo } from '@serum/pool';

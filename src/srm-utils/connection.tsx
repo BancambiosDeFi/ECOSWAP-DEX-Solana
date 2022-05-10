@@ -1,5 +1,5 @@
 import { Account, AccountInfo, Connection, PublicKey } from '@solana/web3.js';
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { Context, createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import tuple from 'immutable-tuple';
 import { setCache, useAsyncData } from './fetch-loop';
 import { useLocalStorageState } from './utils';
@@ -17,7 +17,7 @@ export const ENDPOINTS: EndpointInfo[] = [
 const accountListenerCount = new Map();
 
 // eslint-disable-next-line max-len
-const ConnectionContext: React.Context<null | ConnectionContextValues> = React.createContext<null | ConnectionContextValues>(
+const ConnectionContext: Context<null | ConnectionContextValues> = createContext<null | ConnectionContextValues>(
   null,
 );
 

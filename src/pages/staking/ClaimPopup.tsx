@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { memo, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Modal, Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { makeStyles } from '@mui/styles';
 
 type ClaimPopup = {
@@ -88,7 +88,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MemoClaimPopup = React.memo(function ClaimPopup({
+const MemoClaimPopup = memo(function ClaimPopup({
   balance,
   ifStake,
   claimValue,

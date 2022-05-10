@@ -289,7 +289,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const COMMON_BASE_TOKENS: string[] = ['Native SOL', 'USDT', 'USD Coin'];
+const COMMON_BASE_TOKENS: string[] = ['Native SOL', 'Bancambios AX', 'USD Coin'];
 
 export default function TokenDialog({
   open,

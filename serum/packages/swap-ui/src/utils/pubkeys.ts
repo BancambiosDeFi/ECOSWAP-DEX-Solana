@@ -12,6 +12,10 @@ export const SRM_MINT = new PublicKey(
   'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt',
 );
 
+export const BXS_MINT = new PublicKey(
+  'pH5wWJc3KhdeVQSt86DU31pdcL9c8P88x2FQoKEJVHC',
+);
+
 export const USDC_MINT = new PublicKey(
   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
 );

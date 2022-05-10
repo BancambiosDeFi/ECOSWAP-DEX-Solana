@@ -16,7 +16,7 @@ import {
 } from '@solana/spl-token';
 import { BN, Provider } from '@project-serum/anchor';
 import { Market } from '../../../serum';
-import { SRM_MINT, USDC_MINT, USDT_MINT } from '../utils/pubkeys';
+import { BXS_MINT, SRM_MINT, USDC_MINT, USDT_MINT } from '../utils/pubkeys';
 import {
   useFairRoute,
   useRouteVerbose,
@@ -94,7 +94,7 @@ export type SwapContext = {
 const _SwapContext = React.createContext<null | SwapContext>(null);
 
 export function SwapContextProvider(props: any) {
-  const [fromMint, setFromMint] = useState(props.fromMint ?? SRM_MINT);
+  const [fromMint, setFromMint] = useState(props.fromMint ?? BXS_MINT);
   const [toMint, setToMint] = useState(props.toMint ?? USDC_MINT);
   const [fromAmount, _setFromAmount] = useState(props.fromAmount ?? 0);
   const [toAmount, _setToAmount] = useState(props.toAmount ?? 0);

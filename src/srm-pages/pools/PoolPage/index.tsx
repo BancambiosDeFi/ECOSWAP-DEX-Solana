@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { Col, PageHeader, Row, Spin, Typography } from 'antd';
 import { PublicKey } from '@solana/web3.js';
 // eslint-disable-next-line import/no-unresolved

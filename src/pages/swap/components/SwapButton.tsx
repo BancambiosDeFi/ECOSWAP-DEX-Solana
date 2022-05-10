@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 
-import { useMarket, useOnSwap, useSwapContext, useTokenMap, useRouteVerbose } from '@serum/swap-ui';
+import { useMarket, useOnSwap, useRouteVerbose, useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { useWallet } from '../../../components/wallet/wallet';
 import ButtonComponent from '../../../srm-components/Button/Button';
 import WalletConnectSwap from '../../../components/wallet/WalletConnectSwap';

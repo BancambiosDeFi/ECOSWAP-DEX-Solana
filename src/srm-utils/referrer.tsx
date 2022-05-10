@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { Context, createContext, useContext, useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import {
-  NameRegistryState,
   getHashedName,
   getNameAccountKey,
   getTwitterRegistry,
+  NameRegistryState,
 } from '@solana/spl-name-service';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { useConnection } from './connection';
@@ -19,7 +19,7 @@ interface ReferrerContextValues {
 }
 
 // eslint-disable-next-line max-len
-const ReferrerContext: React.Context<null | ReferrerContextValues> = React.createContext<null | ReferrerContextValues>(
+const ReferrerContext: Context<null | ReferrerContextValues> = createContext<null | ReferrerContextValues>(
   null,
 );
 

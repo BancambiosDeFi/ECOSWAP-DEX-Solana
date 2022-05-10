@@ -2,12 +2,11 @@ import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { Box } from '@mui/material';
-
 import { useSwapContext } from '@serum/swap-ui';
-import { SwapType } from '../../../types';
 import { useWallet } from '../../../components/wallet/wallet';
 import { PagesTransitionButton } from '../../../components/PagesTransitionButton';
 import { StakingTabs } from '../../../components/StakingTabs';
+import { SwapType } from '../../../types';
 import SearchForPairingsComponent from './SearchForPairings';
 import SwapCard from './SwapCard';
 import { ChartContainer } from './ChartContainer';

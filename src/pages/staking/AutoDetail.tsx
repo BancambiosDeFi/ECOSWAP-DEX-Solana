@@ -1,4 +1,3 @@
-import React from 'react';
 import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -19,9 +18,17 @@ interface showDetailsProps {
 
 const useStyles = makeStyles(() => ({
   subtitle: {
-    fontWeight: 800,
-    fontSize: '16px',
-    fontFamily: 'Saira',
+    'fontFamily': 'Saira',
+    'fontWeight': 800,
+    'fontSize': '16px',
+    'lineHeight': '40px',
+    'letterSpacing': '0em',
+    'textAlign': 'left',
+    '@media (max-width: 540px)': {
+      fontWeight: 700,
+      fontSize: '10px',
+      lineHeight: '25px',
+    },
   },
   divider: {
     background:
@@ -38,16 +45,35 @@ const useStyles = makeStyles(() => ({
       'linear-gradient(232deg, rgba(236, 38, 245, 0.3) 50%, rgba(159, 90, 229, 0.3) 100%)',
   },
   innerWrapper: {
-    height: '100%',
-    padding: '15px 15px 5px',
-    borderRadius: '8px',
-    background: '#0a0c0f',
+    'height': '100%',
+    'padding': '15px 15px 5px',
+    'borderRadius': '8px',
+    'background': '#0a0c0f',
+    '@media (max-width: 540px)': {
+      padding: '0 16px',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+  },
+  connectWalletWrapper: {
+    'height': '100%',
+    'borderRadius': '8px',
+    'background': '#0a0c0f',
+    '@media (max-width: 540px)': {
+      padding: '0 8px',
+    },
   },
   btnWrapper: {
-    marginBottom: '10px',
-    padding: '0.5px',
-    borderRadius: '8px',
-    background: 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
+    'marginBottom': '10px',
+    'padding': '0.5px',
+    'borderRadius': '8px',
+    'background': 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
+    '@media (max-width: 540px)': {
+      margin: '20px 0',
+    },
   },
   btn: {
     padding: '7px 35px',
@@ -99,12 +125,7 @@ export default function ManualDetail({
                     {detailValue}
                   </Typography>
                   <div className={styles.btnWrapper}>
-                    <button
-                      // style={{ cursor: 'not-allowed', color: '#7C8498' }}
-                      className={`${styles.btn} ${styles.btnDisabled}`}
-                    >
-                      Week Auto Compound
-                    </button>
+                    <button className={`${styles.btn} ${styles.btnDisabled}`}>Claim</button>
                   </div>
                 </Grid>
               </Grid>

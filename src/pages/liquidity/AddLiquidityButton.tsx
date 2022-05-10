@@ -1,4 +1,3 @@
-import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { useWallet } from '../../components/wallet/wallet';
 import ButtonComponent from '../../srm-components/Button/Button';

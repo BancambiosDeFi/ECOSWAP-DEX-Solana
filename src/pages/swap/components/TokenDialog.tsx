@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import {
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  TextField,
+  DialogContent,
+  DialogTitle,
   List,
   ListItem,
+  TextField,
   Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -289,7 +289,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const COMMON_BASE_TOKENS: string[] = ['Native SOL', 'USDT', 'USD Coin'];
+const COMMON_BASE_TOKENS: string[] = ['Native SOL', 'Bancambios AX', 'USD Coin'];
 
 export default function TokenDialog({
   open,

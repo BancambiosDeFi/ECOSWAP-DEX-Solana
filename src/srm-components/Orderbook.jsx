@@ -1,9 +1,9 @@
 import { Col, Row } from 'antd';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import { useMarket, useOrderbook, useMarkPrice } from '../srm-utils/markets';
-import { isEqual, getDecimalCount } from '../srm-utils/utils';
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { useMarket, useMarkPrice, useOrderbook } from '../srm-utils/markets';
+import { getDecimalCount, isEqual } from '../srm-utils/utils';
 import { useInterval } from '../srm-utils/useInterval';
 import usePrevious from '../srm-utils/usePrevious';
 import FloatingElement from './layout/FloatingElement';
@@ -141,7 +141,7 @@ export default function Orderbook({ smallScreen, depth = 7, onPrice, onSize }) {
   );
 }
 
-const OrderbookRow = React.memo(
+const OrderbookRow = memo(
   ({ side, price, size, sizePercent, onSizeClick, onPriceClick }) => {
     const element = useRef();
 
@@ -188,7 +188,7 @@ const OrderbookRow = React.memo(
   (prevProps, nextProps) => isEqual(prevProps, nextProps, ['price', 'size', 'sizePercent']),
 );
 
-const MarkPriceComponent = React.memo(
+const MarkPriceComponent = memo(
   ({ markPrice }) => {
     const { market } = useMarket();
     const previousMarkPrice = usePrevious(markPrice);

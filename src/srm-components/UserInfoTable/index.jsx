@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Typography } from 'antd';
 import FloatingElement from '../layout/FloatingElement';
-import { useOpenOrders, useBalances, useMarket } from '../../srm-utils/markets';
+import { useBalances, useMarket, useOpenOrders } from '../../srm-utils/markets';
 import BalancesTable from './BalancesTable';
 import OpenOrderTable from './OpenOrderTable';
 import FillsTable from './FillsTable';

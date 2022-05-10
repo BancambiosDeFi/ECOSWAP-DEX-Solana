@@ -1,5 +1,4 @@
 // eslint-disable-next-line import/no-unresolved
-import React from 'react';
 import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
 import { Spin } from 'antd';

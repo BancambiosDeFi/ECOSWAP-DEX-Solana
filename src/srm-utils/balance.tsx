@@ -1,4 +1,4 @@
-import { Token, LiquidityPoolKeysV4 } from '@raydium-io/raydium-sdk';
+import { LiquidityPoolKeysV4, Token } from '@raydium-io/raydium-sdk';
 import { PublicKey } from '@solana/web3.js';
 import { TokenInfo } from '@solana/spl-token-registry';
 import BN from 'bn.js';

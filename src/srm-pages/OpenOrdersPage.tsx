@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Row } from 'antd';
 import FloatingElement from '../srm-components/layout/FloatingElement';
 import { useAllMarkets, useAllOpenOrders, useMarketInfos } from '../srm-utils/markets';

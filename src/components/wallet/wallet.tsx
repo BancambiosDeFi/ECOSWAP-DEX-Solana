@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Button } from '@mui/material';
 
@@ -33,7 +33,7 @@ export const WALLET_PROVIDERS = [
   },
 ];
 
-const WalletContext = React.createContext<null | WalletContextValues>(null);
+const WalletContext = createContext<null | WalletContextValues>(null);
 
 export function WalletProvider({ children }) {
   const { endpoint } = useConnectionConfig();

@@ -94,8 +94,8 @@ export type SwapContext = {
 const _SwapContext = React.createContext<null | SwapContext>(null);
 
 export function SwapContextProvider(props: any) {
-  const [fromMint, setFromMint] = useState(props.fromMint ?? BXS_MINT);
-  const [toMint, setToMint] = useState(props.toMint ?? USDC_MINT);
+  const [fromMint, setFromMint] = useState(props.fromMint ?? USDC_MINT);
+  const [toMint, setToMint] = useState(props.toMint ?? BXS_MINT);
   const [fromAmount, _setFromAmount] = useState(props.fromAmount ?? 0);
   const [toAmount, _setToAmount] = useState(props.toAmount ?? 0);
   const [isClosingNewAccounts, setIsClosingNewAccounts] = useState(false);

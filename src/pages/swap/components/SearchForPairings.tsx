@@ -268,7 +268,7 @@ function ListItem({ props, option }) {
         width: '100%',
         height: '75px',
         display: errorDownloading ? 'none' : 'flex',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
       }}
       component="li"
       onClickCapture={() => {
@@ -278,7 +278,10 @@ function ListItem({ props, option }) {
       key={`${option.from.symbol}/${option.to.symbol}`}
       {...props}
     >
-      <Box width="100px" style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}>
+      <Box
+        width="100px"
+        style={{ display: 'flex', justifyContent: 'column', alignItems: 'center' }}
+      >
         <img
           loading="lazy"
           width="35x"

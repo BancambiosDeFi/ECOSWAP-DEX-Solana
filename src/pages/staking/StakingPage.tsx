@@ -9,12 +9,12 @@ import logo from '../../assets/icons/banc-logo.png';
 import infoIcon from '../../srm-assets/info.svg';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
+import { useScreenSize } from '../../utils/screenSize';
 import ManualDetail from './ManualDetail';
 import AutoDetail from './AutoDetail';
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    padding: '22px 15px',
     borderRadius: '18px',
   },
   root: {
@@ -78,8 +78,8 @@ const options = [
 
 export default function StakingPage() {
   const styles = useStyles();
+  const { isScreenLess } = useScreenSize();
   const [checkedOption, setCheckedOption] = useState({});
-
   const [claimValue, setClaimValue] = useState<number>(0);
 
   const handleChangeClaim = useCallback(
@@ -100,36 +100,45 @@ export default function StakingPage() {
     [setCheckedOption],
   );
 
+  const expiresInComponent = isScreenLess ? (
+    <div className={styles.expiresTitleBlock}>
+      <CircularProgress
+        thickness={7}
+        variant="determinate"
+        color="primary"
+        size={22}
+        value={63}
+        style={{ margin: '0 5px' }}
+      />
+    </div>
+  ) : (
+    <Typography variant="inherit" className={styles.expiresTitle}>
+      Expires in
+      <CircularProgress
+        thickness={7}
+        variant="determinate"
+        color="primary"
+        size={15}
+        value={63}
+        style={{ margin: '0 5px' }}
+      />
+      <Tooltip title="Delete aaa" placement="top-start">
+        <>
+          <img src={infoIcon} alt="" />
+        </>
+      </Tooltip>
+    </Typography>
+  );
+
   return (
     <BasicLayout>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        className={styles.root}
-      >
+      <Grid container direction="column" alignItems="center" className={styles.root}>
         <Grid container direction="column">
           <Grid container justifyContent="space-between">
             <Typography variant="inherit" className={styles.title}>
               Manual staking BXS
             </Typography>
-            <Typography variant="inherit" className={styles.expiresTitle}>
-              Expires in
-              <CircularProgress
-                thickness={7}
-                variant="determinate"
-                color="primary"
-                size={15}
-                value={63}
-                style={{ margin: '0 5px' }}
-              />
-              <Tooltip title="Delete aaa" placement="top-start">
-                <>
-                  <img src={infoIcon} alt="" />
-                </>
-              </Tooltip>
-            </Typography>
+            {expiresInComponent}
           </Grid>
           <Grid container alignItems="center" direction="row" className={styles.wrapper}>
             <Row

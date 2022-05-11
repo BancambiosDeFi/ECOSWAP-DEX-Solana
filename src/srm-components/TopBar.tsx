@@ -146,7 +146,7 @@ const TopBar: React.FC = () => {
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
-  const { isScreenLess } = useScreenSize();
+  const { isMobile, isDesktop } = useScreenSize();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('');
 
@@ -328,7 +328,7 @@ const TopBar: React.FC = () => {
 
   return (
     <>
-      {isScreenLess ? (
+      {isMobile ? (
         smallScreenTopBar
       ) : (
         <Wrapper

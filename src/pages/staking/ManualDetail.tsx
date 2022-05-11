@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'lineHeight': '40px',
     'letterSpacing': '0em',
     'textAlign': 'left',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       fontWeight: 700,
       fontSize: '10px',
       lineHeight: '25px',
@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'padding': '15px 15px 5px',
     'borderRadius': '8px',
     'background': '#0a0c0f',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       padding: '0 16px',
       width: '100%',
       display: 'flex',
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'height': '100%',
     'borderRadius': '8px',
     'background': '#0a0c0f',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       padding: '0 8px',
     },
   },
@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'padding': '0.5px',
     'borderRadius': '8px',
     'background': 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       margin: '20px 0',
     },
   },
@@ -163,7 +163,7 @@ export default function ManualDetail({
   claimValue,
 }: showDetailsProps) {
   const styles = useStyles();
-  const { isScreenLess } = useScreenSize();
+  const { isMobile } = useScreenSize();
   const { connected, connect } = useWallet();
 
   return (
@@ -173,7 +173,7 @@ export default function ManualDetail({
       timeout="auto"
       unmountOnExit
     >
-      {isScreenLess ? (
+      {isMobile ? (
         <Grid container direction="column">
           <Grid container>
             <Grid item sx={{ width: '100%', marginBottom: '12px', padding: '0 3px' }}>

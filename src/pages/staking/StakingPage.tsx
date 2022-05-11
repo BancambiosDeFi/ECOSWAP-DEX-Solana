@@ -15,7 +15,6 @@ import AutoDetail from './AutoDetail';
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    // padding: '22px 15px',
     borderRadius: '18px',
   },
   root: {

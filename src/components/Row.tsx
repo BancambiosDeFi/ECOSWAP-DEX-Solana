@@ -62,7 +62,7 @@ const useStyles = makeStyles(() => ({
   img: {
     'width': '30px',
     'height': '30px',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       width: '34px',
       height: '34px',
     },
@@ -125,7 +125,7 @@ const useStyles = makeStyles(() => ({
     'letterSpacing': '0em',
     'textAlign': 'left',
     'color': 'rgba(222, 227, 243, 1)',
-    '@media (max-width: 785px)': {
+    '@media (max-width: 540px)': {
       fontSize: '10px',
       lineHeight: '18px',
     },

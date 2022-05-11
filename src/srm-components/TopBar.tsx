@@ -146,7 +146,6 @@ const TopBar: React.FC = () => {
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
-
   const { isScreenLess } = useScreenSize();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('');

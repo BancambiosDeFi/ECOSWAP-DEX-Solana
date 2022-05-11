@@ -437,6 +437,7 @@ export function useRouteVerbose(
 ): { markets: Array<PublicKey>; kind: RouteKind } | null {
   const { swapClient } = useDexContext();
   const { wormholeMap, solletMap } = useTokenListContext();
+
   const asyncRoute = useAsync(async () => {
     const swapMarket = await wormholeSwapMarket(
       swapClient.program.provider.connection,
@@ -454,6 +455,7 @@ export function useRouteVerbose(
       fromMint.equals(SOL_MINT) ? WRAPPED_SOL_MINT : fromMint,
       toMint.equals(SOL_MINT) ? WRAPPED_SOL_MINT : toMint,
     );
+
     if (markets === null) {
       return null;
     }

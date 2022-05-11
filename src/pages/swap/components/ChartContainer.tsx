@@ -43,7 +43,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    marginLeft: theme.spacing(1),
   },
   tokenNameAndDiffWrapper: {
     display: 'flex',
@@ -187,10 +186,7 @@ export const ChartContainer: React.FC<ChartProps> = ({ mint, swapType }) => {
         <TokenIcon mint={mint} style={{ width: '45px' }} />
         <Box className={styles.tokenInfoWrapper}>
           <Box className={styles.tokenNameAndDiffWrapper}>
-            <TokenName
-              mint={mint}
-              style={{ textAlign: 'left', fontSize: 20, fontWeight: 700, margin: 0 }}
-            />
+            <TokenName mint={mint} />
             {triangleComponent}
             {percentageChangeComponent}
           </Box>

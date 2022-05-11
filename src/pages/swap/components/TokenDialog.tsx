@@ -213,13 +213,16 @@ const useStyles = makeStyles(() => ({
     },
   },
   dialogActions: {
-    '&&': { marginBottom: '30px', padding: 0,
-    '@media(max-height: 700px)': {
-      marginBottom: '20px'
+    '&&': {
+      'marginBottom': '30px',
+      'padding': 0,
+      '@media(max-height: 700px)': {
+        marginBottom: '20px',
+      },
+      '@media(max-height: 620px)': {
+        marginBottom: '10px',
+      },
     },
-    '@media(max-height: 620px)': {
-      marginBottom: '10px'
-    }, },
   },
   commonBaseWrap: {
     '&&': {

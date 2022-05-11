@@ -11,6 +11,7 @@ import { PreferencesProvider } from './srm-utils/preferences';
 import { ReferrerProvider } from './srm-utils/referrer';
 import { theme } from './srm-styles/mainTheme';
 import { RaydiumProvider } from './utils/raydium';
+import { ScreenSizeProvider } from './utils/screenSize';
 
 declare global {
   interface Window {
@@ -24,19 +25,21 @@ export default function App() {
       <Suspense fallback={() => <Spin size="large" />}>
         <GlobalStyle />
         <ErrorBoundary>
-          <ConnectionProvider>
-            <ReferrerProvider>
-              <WalletProvider>
-                <PreferencesProvider>
-                  <RaydiumProvider>
-                    <Suspense fallback={() => <Spin size="large" />}>
-                      <Routes />
-                    </Suspense>
-                  </RaydiumProvider>
-                </PreferencesProvider>
-              </WalletProvider>
-            </ReferrerProvider>
-          </ConnectionProvider>
+          <ScreenSizeProvider>
+            <ConnectionProvider>
+              <ReferrerProvider>
+                <WalletProvider>
+                  <PreferencesProvider>
+                    <RaydiumProvider>
+                      <Suspense fallback={() => <Spin size="large" />}>
+                        <Routes />
+                      </Suspense>
+                    </RaydiumProvider>
+                  </PreferencesProvider>
+                </WalletProvider>
+              </ReferrerProvider>
+            </ConnectionProvider>
+          </ScreenSizeProvider>
         </ErrorBoundary>
       </Suspense>
     </ThemeProvider>

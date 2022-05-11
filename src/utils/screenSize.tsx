@@ -1,10 +1,16 @@
 import React, { Context, createContext, useContext, useEffect, useState } from 'react';
 
 interface ScreenSizeContextValues {
-  isScreenLess: boolean;
+  isMobile: boolean;
+  isLaptop: boolean;
+  isDesktop: boolean;
+  isLargeDesktop: boolean;
 }
 
-const RESPONSIVE_SIZE = 540; // surface duo size - max mobile screen width
+const MOBILE_SIZE = 768; // surface duo size - max mobile screen width
+const LAPTOP_SIZE = 1200;
+const DESKTOP_SIZE = 1440;
+const LARGE_DESKTOP_SIZE = 4000;
 
 // eslint-disable-next-line max-len
 const ScreenSizeContext: Context<null | ScreenSizeContextValues> = createContext<null | ScreenSizeContextValues>(
@@ -12,10 +18,16 @@ const ScreenSizeContext: Context<null | ScreenSizeContextValues> = createContext
 );
 
 export const ScreenSizeProvider = ({ children }) => {
-  const [isScreenLess, setIsScreenLess] = useState<boolean>(window.innerWidth <= RESPONSIVE_SIZE);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= MOBILE_SIZE);
+  const [isLaptop, setIsLaptop] = useState<boolean>(window.innerWidth <= LAPTOP_SIZE);
+  const [isDesktop, setIsDesktop] = useState<boolean>(window.innerWidth > LAPTOP_SIZE);
+  const [isLargeDesktop, setIsLargeDesktop] = useState<boolean>(window.innerWidth > DESKTOP_SIZE);
 
   const resizeHandler = (): void => {
-    setIsScreenLess(window.innerWidth <= RESPONSIVE_SIZE);
+    setIsMobile(window.innerWidth <= MOBILE_SIZE);
+    setIsLaptop(window.innerWidth > MOBILE_SIZE && window.innerWidth <= LAPTOP_SIZE);
+    setIsDesktop(window.innerWidth > LAPTOP_SIZE);
+    setIsLargeDesktop(window.innerWidth > DESKTOP_SIZE);
   };
 
   useEffect(() => {
@@ -27,7 +39,9 @@ export const ScreenSizeProvider = ({ children }) => {
   }, [resizeHandler]);
 
   return (
-    <ScreenSizeContext.Provider value={{ isScreenLess }}>{children}</ScreenSizeContext.Provider>
+    <ScreenSizeContext.Provider value={{ isMobile, isLaptop, isDesktop, isLargeDesktop }}>
+      {children}
+    </ScreenSizeContext.Provider>
   );
 };
 
@@ -36,6 +50,9 @@ export const useScreenSize = () => {
   if (!context) throw new Error('Missing referrer context');
 
   return {
-    isScreenLess: context.isScreenLess,
+    isMobile: context.isMobile,
+    isLaptop: context.isLaptop,
+    isDesktop: context.isDesktop,
+    isLargeDesktop: context.isLargeDesktop,
   };
 };

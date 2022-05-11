@@ -54,9 +54,12 @@ const useStyles = makeStyles(() => ({
   },
   label: {
     '&&': {
-      fontFamily: 'Saira',
-      fontSize: '24px',
-      color: '#AEAEAF',
+      'fontFamily': 'Saira',
+      'fontSize': '24px',
+      'color': '#AEAEAF',
+      '@media(max-width: 540px)': {
+        fontSize: '16px',
+      },
     },
   },
   progressDynamic: {

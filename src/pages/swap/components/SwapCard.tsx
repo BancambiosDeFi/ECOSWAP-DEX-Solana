@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#0A0C0E !important',
     width: '435px',
     height: '100%',
-    padding: '26px 16px',
+    padding: '26px 16px 10px 16px',
     boxShadow: '12px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
   },
   fromTitleContainer: {
@@ -50,15 +50,18 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
   },
   title: {
-    fontFamily: 'Saira !important',
-    fontSize: '24px !important',
-    fontStyle: 'normal',
-    fontWeight: '400 !important',
-    lineHeight: '34px !important',
-    letterSpacing: '0em !important',
-    textAlign: 'left',
-    color: '#FFFFFF',
-    marginBottom: '0px',
+    'fontFamily': 'Saira',
+    'fontSize': '24px',
+    'fontStyle': 'normal',
+    'fontWeight': '400',
+    'lineHeight': '34px',
+    'letterSpacing': '0em',
+    'textAlign': 'left',
+    'color': '#FFFFFF',
+    'marginBottom': '0px',
+    '@media(max-width: 540px)': {
+      fontSize: '16px ',
+    },
   },
   expiresInContainer: {
     display: 'flex',
@@ -83,28 +86,40 @@ const useStyles = makeStyles(theme => ({
   switchBlock: {
     position: 'relative',
     display: 'flex',
-    alignItems: 'center',
+    justifyContent: 'start',
+    flexDirection: 'column',
+    margin: '0',
+  },
+  switchButtonContainer: {
+    display: 'flex',
     justifyContent: 'center',
-    margin: '8px 0',
+    alignItems: 'center',
+    margin: '10px 0',
   },
   switchTitle: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    fontFamily: 'Saira !important',
-    fontSize: '24px !important',
-    fontStyle: 'normal',
-    fontWeight: '400 !important',
-    lineHeight: '34px !important',
-    letterSpacing: '0em !important',
-    textAlign: 'left',
-    color: '#FFFFFF',
-    marginBottom: '0px',
+    'left': 0,
+    'bottom': 0,
+    'fontFamily': 'Saira',
+    'fontSize': '24px',
+    'fontStyle': 'normal',
+    'fontWeight': '400 ',
+    'lineHeight': '34px ',
+    'letterSpacing': '0em',
+    'textAlign': 'left',
+    'color': '#FFFFFF',
+    'marginBottom': '0px',
+    '@media(max-width: 540px)': {
+      fontSize: '16px',
+    },
   },
   switchButton: {
-    width: '43px',
-    height: '43px',
-    backgroundColor: 'rgba(32, 33, 36, 1) !important',
+    'width': '43px',
+    'height': '43px',
+    'backgroundColor': 'rgba(32, 33, 36, 1) !important',
+    '@media(max-width: 540px)': {
+      width: '33px',
+      height: '33px',
+    },
   },
   tab: {
     width: '50%',
@@ -134,26 +149,29 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 600,
     color: 'white !important',
   },
-  input: {
-    textAlign: 'right',
-    color: 'white',
-    fontFamily: '"Saira", sans-serif !important',
-    fontSize: '20px !important',
+  inputTextField: {
+    'textAlign': 'right',
+    'fontFamily': '"Saira", sans-serif !important',
+    'fontSize': '20px !important',
+    '@media(max-width: 540px)': {
+      fontSize: '16px !important',
+    },
   },
   swapTokenFormContainer: {
-    borderRadius: '8px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: theme.spacing(1),
-    backgroundColor: '#202124 !important',
-    color: 'white',
-    textTransform: 'uppercase',
+    'borderRadius': '8px',
+    'display': 'flex',
+    'justifyContent': 'space-between',
+    'padding': theme.spacing(1),
+    'backgroundColor': '#202124 !important',
+    'color': 'white',
+    'textTransform': 'uppercase',
+    '@media(max-width: 540px)': {
+      padding: '0px',
+    },
   },
   swapTokenSelectorContainer: {
     marginLeft: theme.spacing(1),
     display: 'flex',
-    flexDirection: 'column',
-    width: '50%',
   },
   balanceContainer: {
     display: 'flex',
@@ -171,11 +189,23 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
-    paddingTop: '6px',
+  },
+  tokenTextName: {
+    'fontSize': '20px',
+    'fontWeight': 700,
+    'paddingTop': 4,
+    'fontFamily': '"Saira"',
+    '@media(max-width: 540px)': {
+      fontSize: '16px',
+    },
   },
   tokenIcon: {
-    height: '45px',
-    width: '45px !important',
+    'height': '45px',
+    'width': '45px',
+    '@media(max-width: 540px)': {
+      height: '35px !important',
+      width: '35px !important',
+    },
   },
   swapInfoText: {
     fontFamily: 'Saira !important',
@@ -399,9 +429,11 @@ export default function SwapCard() {
       <Card className={styles.card}>
         <div>
           <div className={styles.fromTitleContainer}>
-            <Typography className={styles.title}>From</Typography>
+            <Typography variant="inherit" className={styles.title}>
+              From
+            </Typography>
             <div className={styles.expiresInContainer}>
-              <Typography className={`${styles.title} ${styles.expiresInText}`}>
+              <Typography variant="inherit" className={`${styles.title} ${styles.expiresInText}`}>
                 Expires in
               </Typography>
               <CircularProgressBar value={seconds * 2} />
@@ -418,9 +450,14 @@ export default function SwapCard() {
           </div>
           <SwapFromForm tokenList={tokenList} />
           <div className={styles.switchBlock}>
-            <Typography className={styles.switchTitle}>To (Estimate)</Typography>
-            <SwitchButton />
+            <div className={styles.switchButtonContainer}>
+              <SwitchButton />
+            </div>
+            <Typography variant="inherit" className={styles.switchTitle}>
+              To (Estimate)
+            </Typography>
           </div>
+
           <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
           {swapSettingsContainer}
           <SwapButton {...{ checkingEcoContributionPossibility }} />
@@ -439,7 +476,9 @@ export default function SwapCard() {
             horizontal: 'left',
           }}
         >
-          <Typography className={styles.swapInfoText}>{infoText}</Typography>
+          <Typography variant="inherit" className={styles.swapInfoText}>
+            {infoText}
+          </Typography>
         </StyledPopover>
       </Card>
     </>
@@ -567,7 +606,7 @@ export function SwapTokenForm({
         InputProps={{
           classes: {
             root: styles.amountInput,
-            input: styles.input,
+            input: styles.inputTextField,
           },
         }}
       />
@@ -587,23 +626,25 @@ function TokenButton({ mint, onClick }: { mint: PublicKey; onClick: () => void }
   return (
     <div onClick={onClick} className={styles.tokenButton}>
       <TokenIcon mint={mint} />
-      <TokenName mint={mint} style={{ fontSize: 20, fontWeight: 700, paddingTop: 4 }} />
+      <TokenName mint={mint} />
       <ExpandMore />
     </div>
   );
 }
 
-export function TokenName({ mint, style }: { mint: PublicKey; style: any }) {
+export function TokenName({ mint }: { mint: PublicKey }) {
   const tokenMap = useTokenMap();
   const theme = useTheme();
   const tokenInfo = tokenMap.get(mint.toString());
+  const styles = useStyles();
 
   return (
     <Typography
+      variant="inherit"
+      className={styles.tokenTextName}
       style={{
         marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(1),
-        ...style,
+        marginRight: '0',
       }}
     >
       {tokenInfo?.symbol}

@@ -1,6 +1,18 @@
 import { PublicKey } from '@solana/web3.js';
+import { makeStyles } from '@mui/styles';
 
 import { useTokenMap } from '@serum/swap-ui';
+
+const useStyles = makeStyles(theme => ({
+  tokenIconImage: {
+    'height': '45px',
+    'width': '45px',
+    '@media(max-width: 540px)': {
+      height: '35px',
+      width: '35px',
+    },
+  },
+}));
 
 export function TokenIcon({
   mint,
@@ -14,6 +26,7 @@ export function TokenIcon({
   className?: string;
   onError?: any;
 }) {
+  const styles = useStyles();
   const tokenMap = useTokenMap();
   const tokenInfo = tokenMap.get(mint.toString());
 
@@ -33,11 +46,10 @@ export function TokenIcon({
       }}
     >
       <img
+        className={styles.tokenIconImage}
         alt="Logo"
         src={tokenInfo?.logoURI}
         style={{
-          height: '45px',
-          width: '45px !important',
           ...style,
         }}
         onError={() => {

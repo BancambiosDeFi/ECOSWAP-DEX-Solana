@@ -51,6 +51,10 @@ const ConnectSwapButton = styled(Button)(({ theme }) => ({
     background: 'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%)',
     boxShadow: '0px 0px 16px #9F5AE5',
   },
+  '@media(max-width: 540px)':{
+    'fontSize': '16px',
+    'height': '44px',
+  },
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

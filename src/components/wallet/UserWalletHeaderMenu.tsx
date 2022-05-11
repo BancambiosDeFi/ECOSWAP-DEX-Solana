@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { Connection } from '@solana/web3.js';
 import CircleIcon from '@mui/icons-material/Circle';
+
 import { formattedBallance, getBalance } from '../../utils';
+import { useScreenSize } from '../../utils/screenSize';
+import { ReactComponent as WalletIcon } from '../../assets/icons/Wallet.svg';
 import { useWallet } from './wallet';
 
 const useStyles = makeStyles({
@@ -71,8 +74,10 @@ const useStyles = makeStyles({
 
 export default function UserWalletHeaderMenu() {
   const classes = useStyles();
-  const { wallet, providerName, connected, disconnect } = useWallet();
   const [userBalance, setUserBalance] = useState('0');
+  const { wallet, providerName, connected, disconnect } = useWallet();
+  const { isLaptop, isDesktop, isLargeDesktop } = useScreenSize();
+  console.log(isLaptop);
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
@@ -88,46 +93,56 @@ export default function UserWalletHeaderMenu() {
 
   return (
     <div className={classes.wrapperWalletMenu}>
-      <Typography
-        style={{
-          width: '40px',
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          fontSize: '30.6667px',
-        }}
-      >
-        🌏
-      </Typography>
-      <Typography
-        style={{
-          width: '80px',
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          fontSize: '16px',
-          lineHeight: '46px',
-          margin: '10px',
-        }}
-      >
-        {userBalance} SOL
-      </Typography>
-      <Box className={classes.containerButton} onClick={disconnect}>
-        <Box style={{ gridArea: 'publicKey' }}>
-          <Typography variant="inherit" align="center" noWrap className={classes.publicKey}>
-            {wallet?.publicKey.toBase58()}
+      {isDesktop && (
+        <>
+          <Typography
+            style={{
+              width: '40px',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              fontSize: '30.6667px',
+            }}
+          >
+            🌏
           </Typography>
-        </Box>
-        <Box style={{ gridArea: 'expandMore' }}>
-          <Typography variant="inherit" className={classes.expandMore}>
-            <ExpandMoreRoundedIcon sx={{ fontSize: 40 }} />
+          <Typography
+            style={{
+              width: '80px',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              lineHeight: '46px',
+              margin: '10px',
+            }}
+          >
+            {userBalance}
           </Typography>
+        </>
+      )}
+      {isLargeDesktop ? (
+        <Box className={classes.containerButton} onClick={disconnect}>
+          <Box style={{ gridArea: 'publicKey' }}>
+            <Typography variant="inherit" align="center" noWrap className={classes.publicKey}>
+              {wallet?.publicKey.toBase58()}
+            </Typography>
+          </Box>
+          <Box style={{ gridArea: 'expandMore' }}>
+            <Typography variant="inherit" className={classes.expandMore}>
+              <ExpandMoreRoundedIcon sx={{ fontSize: 40 }} />
+            </Typography>
+          </Box>
+          <Box style={{ gridArea: 'providerName' }}>
+            <Typography variant="inherit" align="center" className={classes.providerName}>
+              <CircleIcon sx={{ color: '#DC1FFF', fontSize: 15, marginTop: '5px' }} />
+              {providerName}
+            </Typography>
+          </Box>
         </Box>
-        <Box style={{ gridArea: 'providerName' }}>
-          <Typography variant="inherit" align="center" className={classes.providerName}>
-            <CircleIcon sx={{ color: '#DC1FFF', fontSize: 15, marginTop: '5px' }} />
-            {providerName}
-          </Typography>
-        </Box>
-      </Box>
+      ) : (
+        <IconButton color="inherit" aria-label="connect wallet" onClick={disconnect} edge="start">
+          <WalletIcon />
+        </IconButton>
+      )}
     </div>
   );
 }

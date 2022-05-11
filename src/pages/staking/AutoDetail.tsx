@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     'lineHeight': '40px',
     'letterSpacing': '0em',
     'textAlign': 'left',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       fontWeight: 700,
       fontSize: '10px',
       lineHeight: '25px',
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     'padding': '15px 15px 5px',
     'borderRadius': '8px',
     'background': '#0a0c0f',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       padding: '0 16px',
       width: '100%',
       display: 'flex',
@@ -64,7 +64,7 @@ const useStyles = makeStyles(() => ({
     'height': '100%',
     'borderRadius': '8px',
     'background': '#0a0c0f',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       padding: '0 8px',
     },
   },
@@ -73,7 +73,7 @@ const useStyles = makeStyles(() => ({
     'padding': '0.5px',
     'borderRadius': '8px',
     'background': 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       margin: '20px 0',
     },
   },
@@ -95,6 +95,11 @@ const useStyles = makeStyles(() => ({
       boxShadow: '0px 0px 16px #9F5AE5',
     },
   },
+  weekAutoCompoundBtn: {
+    '@media (min-width: 769px) and (max-width: 1200px)': {
+      padding: '7px 10px',
+    },
+  },
   btnDisabled: {
     cursor: 'not-allowed',
     color: '#7C8498',
@@ -109,7 +114,7 @@ export default function AutoDetail({
   handleChangeClaim,
 }: showDetailsProps) {
   const styles = useStyles();
-  const { isScreenLess } = useScreenSize();
+  const { isMobile } = useScreenSize();
   const { connected, connect } = useWallet();
 
   return (
@@ -119,7 +124,7 @@ export default function AutoDetail({
       timeout="auto"
       unmountOnExit
     >
-      {isScreenLess ? (
+      {isMobile ? (
         <Grid container direction="column">
           <Grid container>
             <Grid item sx={{ width: '100%', marginBottom: '12px', padding: '0 3px' }}>
@@ -204,7 +209,7 @@ export default function AutoDetail({
                     <div className={styles.btnWrapper}>
                       <button
                         // style={{ cursor: 'not-allowed', color: '#7C8498' }}
-                        className={`${styles.btn} ${styles.btnDisabled}`}
+                        className={`${styles.btn} ${styles.btnDisabled} ${styles.weekAutoCompoundBtn}`}
                       >
                         Week Auto Compound
                       </button>

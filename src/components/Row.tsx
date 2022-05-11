@@ -29,6 +29,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    position: 'relative',
     width: '100%',
     padding: '25px 15px',
     background: '#0a0c0f',
@@ -62,7 +63,7 @@ const useStyles = makeStyles(() => ({
   img: {
     'width': '30px',
     'height': '30px',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       width: '34px',
       height: '34px',
     },
@@ -94,28 +95,38 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
   },
   arrow: {
-    padding: 0,
-    margin: '15px',
-    width: 0,
-    height: 0,
-    background: 'transparent',
-    borderTop: '10px solid #C4C4C4',
-    borderBottom: '0',
-    borderLeft: '5px solid transparent',
-    borderRight: '5px solid transparent',
-    cursor: 'pointer',
+    'padding': 0,
+    'margin': '15px',
+    'width': 0,
+    'height': 0,
+    'background': 'transparent',
+    'borderTop': '10px solid #C4C4C4',
+    'borderBottom': '0',
+    'borderLeft': '5px solid transparent',
+    'borderRight': '5px solid transparent',
+    'cursor': 'pointer',
+    '@media (min-width: 769px)': {
+      position: 'absolute',
+      top: '20px',
+      right: '20px',
+    },
   },
   rotateArrow: {
-    padding: 0,
-    margin: '15px',
-    width: 0,
-    height: 0,
-    background: 'transparent',
-    borderTop: '0',
-    borderBottom: '10px solid #C4C4C4',
-    borderLeft: '5px solid transparent',
-    borderRight: '5px solid transparent',
-    cursor: 'pointer',
+    'padding': 0,
+    'margin': '15px',
+    'width': 0,
+    'height': 0,
+    'background': 'transparent',
+    'borderTop': '0',
+    'borderBottom': '10px solid #C4C4C4',
+    'borderLeft': '5px solid transparent',
+    'borderRight': '5px solid transparent',
+    'cursor': 'pointer',
+    '@media (min-width: 769px)': {
+      position: 'absolute',
+      top: '20px',
+      right: '20px',
+    },
   },
   text: {
     'fontFamily': 'Saira',
@@ -125,7 +136,7 @@ const useStyles = makeStyles(() => ({
     'letterSpacing': '0em',
     'textAlign': 'left',
     'color': 'rgba(222, 227, 243, 1)',
-    '@media (max-width: 540px)': {
+    '@media (max-width: 768px)': {
       fontSize: '10px',
       lineHeight: '18px',
     },
@@ -137,11 +148,11 @@ const useStyles = makeStyles(() => ({
 
 export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu }: RowProp) {
   const styles = useStyles();
-  const { isScreenLess } = useScreenSize();
+  const { isMobile, isLargeDesktop } = useScreenSize();
   const [showDetails, setShowDetails] = useState<boolean>(true);
   const toggleShowDetails = () => setShowDetails(!showDetails);
 
-  const rowContent = isScreenLess ? (
+  const rowContent = isMobile ? (
     <Grid container alignItems="center" direction="row" className={styles.container}>
       <Grid container>
         <Grid item xs={4}>
@@ -179,14 +190,14 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
   ) : (
     <Grid container alignItems="center" direction="row" className={styles.container}>
       <Grid container>
-        <Grid item xs={4}>
+        <Grid item xs={isLargeDesktop ? 3 : 1}>
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
-        <Grid container direction="column" xs={2} item>
+        <Grid container direction="column" xs={isLargeDesktop ? 3 : 3} item>
           <span className={styles.text}>PENDING REWARD</span>
           <span className={`${styles.text} ${styles.value}`}>{reward}</span>
         </Grid>
-        <Grid container direction="column" xs={2} item>
+        <Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>
           <span className={styles.text}>STAKED</span>
           <span className={`${styles.text} ${styles.value}`}>{staked}</span>
         </Grid>
@@ -194,16 +205,14 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>
-        <Grid container alignItems="center" xs={2} item>
-          <Grid container direction="column" flexBasis="content">
-            <span className={styles.text}>LIQUIDITY</span>
-            <span className={`${styles.text} ${styles.value}`}>{liquidity}</span>
-          </Grid>
-          <button
-            className={showDetails ? styles.rotateArrow : styles.arrow}
-            onClick={toggleShowDetails}
-          />
+        <Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>
+          <span className={styles.text}>LIQUIDITY</span>
+          <span className={`${styles.text} ${styles.value}`}>{liquidity}</span>
         </Grid>
+        <button
+          className={showDetails ? styles.rotateArrow : styles.arrow}
+          onClick={toggleShowDetails}
+        />
       </Grid>
       {cloneElement(detailMenu, { showDetails })}
     </Grid>

@@ -91,11 +91,11 @@ const useStyles = makeStyles(() => ({
     '&:selected': {
       color: '#0156ff ',
     },
-    '@media(max-width: 1050px)': {
+    '@media(max-width: 1150px)': {
       fontSize: '15px',
       margin: 'auto 14px !important',
     },
-    '@media(max-width: 850px)': { fontSize: '14px', margin: 'auto 7px !important' },
+    '@media(max-width: 950px)': { fontSize: '14px', margin: 'auto 7px !important' },
   },
 }));
 
@@ -146,7 +146,7 @@ const TopBar: React.FC = () => {
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
-  const { isScreenLess } = useScreenSize();
+  const { isMobile, isDesktop } = useScreenSize();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('');
 
@@ -328,7 +328,7 @@ const TopBar: React.FC = () => {
 
   return (
     <>
-      {isScreenLess ? (
+      {isMobile ? (
         smallScreenTopBar
       ) : (
         <Wrapper

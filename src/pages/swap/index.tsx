@@ -12,7 +12,7 @@ import { NotifyingProvider } from './NotifyingProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: '50px',
+    marginTop: '25px',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },

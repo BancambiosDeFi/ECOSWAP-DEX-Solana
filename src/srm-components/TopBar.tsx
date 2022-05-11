@@ -91,11 +91,11 @@ const useStyles = makeStyles(() => ({
     '&:selected': {
       color: '#0156ff ',
     },
-    '@media(max-width: 1050px)': {
+    '@media(max-width: 1150px)': {
       fontSize: '15px',
       margin: 'auto 14px !important',
     },
-    '@media(max-width: 850px)': { fontSize: '14px', margin: 'auto 7px !important' },
+    '@media(max-width: 950px)': { fontSize: '14px', margin: 'auto 7px !important' },
   },
 }));
 

@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     'gridTemplateRows': 'auto',
     'gridTemplateAreas': `'space publicKey expandMore'
     'space providerName expandMore'`,
-    'margin': 0,
+    'margin': "10px 0",
     'padding': '0',
     'background': 'rgba(159, 90, 229, 0.3)',
     'border': 'solid 1px transparent',
@@ -41,6 +41,13 @@ const useStyles = makeStyles({
     '&:hover': {
       background: 'rgba(1, 86, 255, 0.3)',
     },
+    '@media(max-width: 1150px)': {
+      width: '100px',
+      margin: 'auto 5px',
+    },
+    '@media(max-width: 950px)': {
+      width:'90px',
+    }
   },
   publicKey: {
     width: '100%',
@@ -48,6 +55,12 @@ const useStyles = makeStyles({
     lineHeight: '25px',
     fontFamily: '"Saira", sans-serif',
     fontWeight: '400',
+    '@media(max-width: 1150px)': {
+      fontSize: '14px',
+    },
+    '@media(max-width: 950px)': {
+      fontSize: '12px',
+    }
   },
   expandMore: {
     lineHeight: '0',
@@ -62,6 +75,9 @@ const useStyles = makeStyles({
     fontFamily: '"Saira", sans-serif',
     fontSize: '14px',
     fontWeight: '600',
+    '@media(max-width: 1150px)': {
+      fontSize: '12px',
+    }
   },
   modalContainer: {
     display: 'flex',
@@ -69,6 +85,22 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
     background: 'red',
+  },
+  textBalance: {
+    width: '60px',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    lineHeight: '46px',
+    fontFamily: '"Saira", sans-serif',
+    '@media(max-width: 1150px)': {
+      fontSize: '14px',
+      width: '40px',
+    },
+    '@media(max-width: 950px)': {
+      fontSize: '12px',
+      width: '35px',
+    }
   },
 });
 

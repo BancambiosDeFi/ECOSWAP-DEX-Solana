@@ -39,58 +39,61 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    margin: '20px 0',
-  },
-  cardLabel: {
-    fontFamily: 'Saira',
-    fontWeight: '700',
-    fontSize: '24px',
-    margin: '0 0 15px 30px',
+    margin: '15px 0',
   },
   card: {
-    borderRadius: '20px !important',
     border: '1px solid #0156FF',
     boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
     backgroundColor: '#0A0C0E !important',
     width: '468px',
     height: 'fit-content',
-    padding: '26px 16px',
-    marginBottom: '43px',
+    padding: '26px 16px 10px 16px',
   },
   swapCard: {
     paddingTop: '52px',
   },
   title: {
-    fontFamily: 'Saira !important',
-    fontSize: '24px !important',
-    fontStyle: 'normal',
-    fontWeight: '400 !important',
-    lineHeight: '34px !important',
-    letterSpacing: '0em !important',
-    textAlign: 'left',
-    color: '#FFFFFF',
-    marginBottom: '0px',
+    'fontFamily': 'Saira',
+    'fontSize': '24px',
+    'fontStyle': 'normal',
+    'fontWeight': '400',
+    'lineHeight': '34px',
+    'letterSpacing': '0em',
+    'textAlign': 'left',
+    'color': '#FFFFFF',
+    'marginBottom': '0px',
+    '@media(max-width: 540px)': {
+      fontSize: '16px',
+    },
   },
   switchBlock: {
     position: 'relative',
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '8px 0',
+    justifyContent: 'start',
+    flexDirection: 'column',
+    margin: '0',
+  },
+  iconSwichToken: {
+    'display': 'flex',
+    'justifyContent': 'center',
+    'alignItems': 'center',
+    margin: '10px 0'
   },
   switchTitle: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    fontFamily: 'Saira !important',
-    fontSize: '24px !important',
-    fontStyle: 'normal',
-    fontWeight: '400 !important',
-    lineHeight: '34px !important',
-    letterSpacing: '0em !important',
-    textAlign: 'left',
-    color: '#FFFFFF',
-    marginBottom: '0px',
+    'left': 0,
+    'bottom': 0,
+    'fontFamily': 'Saira',
+    'fontSize': '24px',
+    'fontStyle': 'normal',
+    'fontWeight': '400 ',
+    'lineHeight': '34px ',
+    'letterSpacing': '0em',
+    'textAlign': 'left',
+    'color': '#FFFFFF',
+    'marginBottom': '0px',
+    '@media(max-width: 540px)': {
+      fontSize: '16px',
+    },
   },
   infoHeaderBlock: {
     display: 'flex',
@@ -98,43 +101,6 @@ const useStyles = makeStyles(() => ({
   },
   fromBlock: {
     position: 'relative',
-  },
-  createPoolText: {
-    fontFamily: 'Saira !important',
-    fontStyle: 'normal',
-    fontWeight: '400 !important',
-    fontSize: '16px !important',
-    lineHeight: '29px !important',
-    textAlign: 'left',
-    color: '#FFFFFF',
-  },
-  wrapperCreatePoolButton: {
-    marginTop: '10px',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  createPoolButton: {
-    'cursor': 'pointer',
-    'width': '213px',
-    'height': '43px',
-    'fontSize': '20px',
-    'fontFamily': '"Spy Agency", sans-serif',
-    'fontWeight': '400',
-    'color': '#fff',
-    'border': 'solid 1px transparent',
-    'borderRadius': '8px',
-    'backgroundImage':
-      // eslint-disable-next-line max-len
-      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
-    'backgroundOrigin': 'border-box',
-    'backgroundClip': 'content-box, border-box',
-    'boxShadow': '2px 50px rgb(3, 46, 131) inset',
-    '&:hover': {
-      background:
-        // eslint-disable-next-line max-len
-        'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
-      boxShadow: '0px 0px 16px #9F5AE5',
-    },
   },
 }));
 
@@ -256,15 +222,21 @@ export default () => {
 
   return (
     <Box className={styles.root}>
-      <Card className={styles.card}>
+      <Card sx={{ borderRadius: '20px' }} className={styles.card}>
         <div className={styles.fromBlock}>
-          <Typography className={styles.title}>From</Typography>
+          <Typography variant="inherit" className={styles.title}>
+            From
+          </Typography>
           <ExpiresInBlock fetchStats={fetchPoolInfo} />
         </div>
         <SwapFromForm tokenList={tokenList} />
         <div className={styles.switchBlock}>
-          <Typography className={styles.switchTitle}>To (Estimate)</Typography>
-          <SwitchButton />
+          <div className={styles.iconSwichToken}>
+            <SwitchButton />
+          </div>
+          <Typography variant="inherit" className={styles.switchTitle}>
+            To (Estimate)
+          </Typography>
         </div>
         <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
         {isPoolExist && (
@@ -281,25 +253,6 @@ export default () => {
         />
       </Card>
       <YourLiquidity poolKeys={poolKeys} />
-      {/* <div>
-        <h2 className={styles.cardLabel}>Create Pool</h2>
-        <Card className={styles.card}>
-          <Typography className={styles.createPoolText}>
-            {`Create a liquidity pool on Bancambios that can be traded on the swap interface. Read
-            the guide before attempting.`}
-          </Typography>
-          <div className={styles.wrapperCreatePoolButton}>
-            <button className={styles.createPoolButton}>
-              <div
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}
-              >
-                <AddTwoToneIcon sx={{ fontSize: 17 }} />
-                Create Pool
-              </div>
-            </button>
-          </div>
-        </Card>
-      </div> */}
     </Box>
   );
 };

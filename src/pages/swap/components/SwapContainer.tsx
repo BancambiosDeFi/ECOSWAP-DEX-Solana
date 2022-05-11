@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     width: '100%',
     height: '100%',
-    margin: '20px 0',
+    margin: '15px 0',
   },
   charts: {
     display: 'flex',

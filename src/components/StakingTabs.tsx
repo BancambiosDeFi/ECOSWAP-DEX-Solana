@@ -7,21 +7,28 @@ const ALLOWED_PATHES = ['/swap', '/liquidity'];
 
 const useStyles = makeStyles(() => ({
   tabs: {
-    width: '283px',
-    background: '#202124',
-    borderRadius: '12px',
-    marginBottom: '20px',
-    boxShadow: '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
+    'width': '283px',
+    'background': '#202124',
+    'borderRadius': '12px',
+    'marginBottom': '15px',
+    'boxShadow': '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
+    '@media(max-width: 540px)': {
+      width: '203px',
+    },
   },
   tab: {
     '&&': {
-      width: '50%',
-      textTransform: 'none',
-      color: '#BDC1C6',
-      fontSize: '24px',
-      fontWeight: '700',
-      fontFamily: 'Saira',
-      borderRadius: '8px',
+      'width': '50%',
+      'textTransform': 'none',
+      'color': '#BDC1C6',
+      'fontSize': '24px',
+      'fontWeight': '700',
+      'fontFamily': 'Saira',
+      'borderRadius': '8px',
+      '@media(max-width: 540px)': {
+        fontSize: '16px',
+        width: '50%',
+      },
     },
   },
   active: {

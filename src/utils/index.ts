@@ -57,6 +57,15 @@ export const getBalance = (connection: Connection, userWallet: PublicKey): Promi
   return connection.getBalance(userWallet);
 };
 
+export const getUserImpactValue = async (impactPool: ImpactPool): Promise<number> => {
+  const userImpactStatistics = await impactPool.getUserImpactStatistics();
+
+  console.log('userImpactStatistics.amount =', userImpactStatistics);
+  // console.log('userImpactStatistics.amount.toNumber() =', userImpactStatistics.amount?.toNumber());
+
+  return userImpactStatistics.amount ? userImpactStatistics.amount.toNumber() : 0;
+};
+
 export const converterLamportsToSol = (value: number): number => {
   return value / LAMPORTS_PER_SOL;
 };

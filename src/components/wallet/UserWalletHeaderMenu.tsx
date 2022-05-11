@@ -5,7 +5,7 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { Connection } from '@solana/web3.js';
 import CircleIcon from '@mui/icons-material/Circle';
 
-import { formattedBallance, getBalance } from '../../utils';
+import { formattedBallance, getBalance, getImpactPool, getUserImpactValue } from '../../utils';
 import { useScreenSize } from '../../utils/screenSize';
 import { ReactComponent as WalletIcon } from '../../assets/icons/Wallet.svg';
 import { useWallet } from './wallet';
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     'gridTemplateRows': 'auto',
     'gridTemplateAreas': `'space publicKey expandMore'
     'space providerName expandMore'`,
-    'margin': "10px 0",
+    'margin': '10px 0',
     'padding': '0',
     'background': 'rgba(159, 90, 229, 0.3)',
     'border': 'solid 1px transparent',
@@ -46,21 +46,21 @@ const useStyles = makeStyles({
       margin: 'auto 5px',
     },
     '@media(max-width: 950px)': {
-      width:'90px',
-    }
+      width: '90px',
+    },
   },
   publicKey: {
-    width: '100%',
-    fontSize: '16px',
-    lineHeight: '25px',
-    fontFamily: '"Saira", sans-serif',
-    fontWeight: '400',
+    'width': '100%',
+    'fontSize': '16px',
+    'lineHeight': '25px',
+    'fontFamily': '"Saira", sans-serif',
+    'fontWeight': '400',
     '@media(max-width: 1150px)': {
       fontSize: '14px',
     },
     '@media(max-width: 950px)': {
       fontSize: '12px',
-    }
+    },
   },
   expandMore: {
     lineHeight: '0',
@@ -69,15 +69,15 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   providerName: {
-    display: 'flex',
-    justifyContent: 'center',
-    lineHeight: '25px',
-    fontFamily: '"Saira", sans-serif',
-    fontSize: '14px',
-    fontWeight: '600',
+    'display': 'flex',
+    'justifyContent': 'center',
+    'lineHeight': '25px',
+    'fontFamily': '"Saira", sans-serif',
+    'fontSize': '14px',
+    'fontWeight': '600',
     '@media(max-width: 1150px)': {
       fontSize: '12px',
-    }
+    },
   },
   modalContainer: {
     display: 'flex',
@@ -87,12 +87,12 @@ const useStyles = makeStyles({
     background: 'red',
   },
   textBalance: {
-    width: '60px',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '16px',
-    lineHeight: '46px',
-    fontFamily: '"Saira", sans-serif',
+    'width': '60px',
+    'fontStyle': 'normal',
+    'fontWeight': 'bold',
+    'fontSize': '16px',
+    'lineHeight': '46px',
+    'fontFamily': '"Saira", sans-serif',
     '@media(max-width: 1150px)': {
       fontSize: '14px',
       width: '40px',
@@ -100,19 +100,24 @@ const useStyles = makeStyles({
     '@media(max-width: 950px)': {
       fontSize: '12px',
       width: '35px',
-    }
+    },
   },
 });
 
 export default function UserWalletHeaderMenu() {
   const classes = useStyles();
   const [userBalance, setUserBalance] = useState('0');
+  const [userImpactValue, setUserImpactValue] = useState<number>(0);
   const { wallet, providerName, connected, disconnect } = useWallet();
   const { isLaptop, isDesktop, isLargeDesktop } = useScreenSize();
-  console.log(isLaptop);
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
+      console.log('Here!');
+      getUserImpactValue(getImpactPool(wallet.publicKey, 'USDT')).then(impactValue => {
+        setUserImpactValue(impactValue);
+        console.log('Here3!');
+      });
       const connection = new Connection(process.env.REACT_APP_NETWORK as string);
 
       getBalance(connection, wallet.publicKey).then(lamportsBalance => {
@@ -147,7 +152,7 @@ export default function UserWalletHeaderMenu() {
               margin: '10px',
             }}
           >
-            {userBalance}
+            {userImpactValue}
           </Typography>
         </>
       )}

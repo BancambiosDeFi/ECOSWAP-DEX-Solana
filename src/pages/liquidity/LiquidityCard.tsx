@@ -74,10 +74,10 @@ const useStyles = makeStyles(() => ({
     margin: '0',
   },
   iconSwichToken: {
-    'display': 'flex',
-    'justifyContent': 'center',
-    'alignItems': 'center',
-    margin: '10px 0'
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '10px 0',
   },
   switchTitle: {
     'left': 0,

@@ -29,3 +29,13 @@ export class ImpactPoolStatistics {
     );
   }
 }
+
+
+export class UserImpactStatistics {
+  constructor(
+    public amount: BN | undefined,
+    public user: PublicKey | undefined,
+    public is_initialized: Boolean | undefined,
+
+  ) {}
+}

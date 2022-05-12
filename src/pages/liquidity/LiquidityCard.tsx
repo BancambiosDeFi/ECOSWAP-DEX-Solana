@@ -48,6 +48,9 @@ const useStyles = makeStyles(() => ({
     width: '468px',
     height: 'fit-content',
     padding: '26px 16px 10px 16px',
+    '@media(max-width: 540px)': {
+      width: '100%',
+    },
   },
   swapCard: {
     paddingTop: '52px',

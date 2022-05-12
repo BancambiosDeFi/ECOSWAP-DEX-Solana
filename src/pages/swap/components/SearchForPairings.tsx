@@ -69,7 +69,6 @@ const useStyles = makeStyles(theme => ({
     'padding': '15px',
     'width': '468px',
     'justifyContent': 'center !important',
-    '@media(max-width: 540px)': {},
   },
   listBox: {
     'maxHeight': '460px !important',
@@ -205,6 +204,7 @@ export default function SearchForPairingsComponent({ type, width }) {
         'margin': marginComponent,
         '@media(max-width: 540px)': {
           height: 45,
+          'width': '100%'
         },
       }}
     >

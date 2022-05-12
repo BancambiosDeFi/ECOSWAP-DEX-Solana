@@ -43,6 +43,9 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     padding: '26px 16px 10px 16px',
     boxShadow: '12px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
+    '@media(max-width: 540px)': {
+      width: '100%',
+    },
   },
   fromTitleContainer: {
     display: 'flex',

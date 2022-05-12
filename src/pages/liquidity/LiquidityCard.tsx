@@ -233,7 +233,7 @@ export default () => {
 
   return (
     <Box className={styles.root}>
-      <Card sx={{ borderRadius: '20px' }} className={styles.card}>
+      <Card sx={{ borderRadius: '8px' }} className={styles.card}>
         <div className={styles.fromBlock}>
           <Typography variant="inherit" className={styles.title}>
             From

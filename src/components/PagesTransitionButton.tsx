@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, IconButton } from '@mui/material';
 import { useHistory } from 'react-router';
+import StackedBarChartSharpIcon from '@mui/icons-material/StackedBarChartSharp';
 import { ReactComponent as ArrowLeftIcon } from '../assets/icons/arrowLeftIcon.svg';
 import { ReactComponent as ArrowRightIcon } from '../assets/icons/arrowRightIcon.svg';
 
@@ -11,18 +12,15 @@ interface ChartProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useStyles = makeStyles(theme => ({
-  wrapper: {
+  chartButton: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     maxWidth: '29px',
-    borderRadius: '20px 0 0 20px',
-    border: '1px solid #0156FF',
-    boxShadow: '-11px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
     boxSizing: 'border-box',
-    backgroundColor: '#0A0C0E !important',
     marginRight: '4px',
+    color: '#015bb5',
   },
 }));
 
@@ -35,11 +33,11 @@ export const PagesTransitionButton: React.FC<ChartProps> = ({ location }) => {
     history.push(backToPage);
   };
 
-  const arrowIcon = location === 'swap' ? <ArrowLeftIcon /> : <ArrowRightIcon />;
+  const arrowIcon = <StackedBarChartSharpIcon />;
 
   return (
-    <Box className={styles.wrapper}>
-      <IconButton onClick={handleClick}>{arrowIcon}</IconButton>
-    </Box>
+    <IconButton className={styles.chartButton} onClick={handleClick}>
+      {arrowIcon}
+    </IconButton>
   );
 };

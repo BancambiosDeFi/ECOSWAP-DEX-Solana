@@ -40,7 +40,7 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
   return (
     <>
       <StakingTabs />
-      <SearchForPairingsComponent type={'none'} width={'470px'} />
+      {!(location === 'trade') && <SearchForPairingsComponent type={'none'} width={'470px'} />}
       {connected ? (
         <>
           <Box className={styles.root}>

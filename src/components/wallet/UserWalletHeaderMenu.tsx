@@ -41,13 +41,6 @@ const useStyles = makeStyles({
     '&:hover': {
       background: 'rgba(1, 86, 255, 0.3)',
     },
-    '@media(max-width: 1150px)': {
-      width: '100px',
-      margin: 'auto 5px',
-    },
-    '@media(max-width: 950px)': {
-      width:'90px',
-    }
   },
   publicKey: {
     width: '100%',
@@ -55,12 +48,6 @@ const useStyles = makeStyles({
     lineHeight: '25px',
     fontFamily: '"Saira", sans-serif',
     fontWeight: '400',
-    '@media(max-width: 1150px)': {
-      fontSize: '14px',
-    },
-    '@media(max-width: 950px)': {
-      fontSize: '12px',
-    }
   },
   expandMore: {
     lineHeight: '0',
@@ -75,9 +62,6 @@ const useStyles = makeStyles({
     fontFamily: '"Saira", sans-serif',
     fontSize: '14px',
     fontWeight: '600',
-    '@media(max-width: 1150px)': {
-      fontSize: '12px',
-    }
   },
   modalContainer: {
     display: 'flex',
@@ -93,14 +77,6 @@ const useStyles = makeStyles({
     fontSize: '16px',
     lineHeight: '46px',
     fontFamily: '"Saira", sans-serif',
-    '@media(max-width: 1150px)': {
-      fontSize: '14px',
-      width: '40px',
-    },
-    '@media(max-width: 950px)': {
-      fontSize: '12px',
-      width: '35px',
-    }
   },
 });
 

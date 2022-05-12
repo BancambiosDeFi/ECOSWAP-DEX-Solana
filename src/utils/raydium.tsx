@@ -51,6 +51,15 @@ export const RaydiumProvider = ({ children }) => {
         const filteredByRepeatsTokenList: TokenInfo[] = new Array(filteredByPoolsTokenList[0]);
 
         for (let i = 1; i < filteredByPoolsTokenList.length; i++) {
+          if (filteredByPoolsTokenList[i].symbol === 'BXS') {
+            filteredByRepeatsTokenList.push({
+              ...filteredByPoolsTokenList[i],
+              extensions: {
+                ...filteredByPoolsTokenList[i].extensions,
+                serumV3Usdc: '6w834mFswag84MNozv13hSBK9bvAErsh7Y5SHkWh5HVs',
+              },
+            });
+          }
           if (
             filteredByRepeatsTokenList[filteredByRepeatsTokenList.length - 1].address !==
             filteredByPoolsTokenList[i].address

@@ -232,7 +232,6 @@ export default function SwapCard() {
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
-  // const { tokenList } = useTokenListContext();
   const {
     setImpact,
     fromAmount,

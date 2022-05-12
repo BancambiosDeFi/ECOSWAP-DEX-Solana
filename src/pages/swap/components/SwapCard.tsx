@@ -84,17 +84,25 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
   },
   switchBlock: {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'start',
-    flexDirection: 'column',
-    margin: '0',
+    'position': 'relative',
+    'display': 'flex',
+    'justifyContent': 'start',
+    'alignItems': 'flex-end',
+    'margin': '0',
+    '@media(max-width: 540px)': {
+      flexDirection: 'column-reverse',
+      alignItems: 'normal',
+    },
   },
   switchButtonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: '10px 0',
+    'marginLeft': '40px',
+    'display': 'flex',
+    'justifyContent': 'center',
+    'alignItems': 'center',
+    'margin': '10px 0',
+    '@media(max-width: 540px)': {
+      marginLeft: '0',
+    },
   },
   switchTitle: {
     'left': 0,
@@ -449,12 +457,12 @@ export default function SwapCard() {
           </div>
           <SwapFromForm tokenList={tokenList} />
           <div className={styles.switchBlock}>
-            <div className={styles.switchButtonContainer}>
-              <SwitchButton />
-            </div>
             <Typography variant="inherit" className={styles.switchTitle}>
               To (Estimate)
             </Typography>
+            <div className={styles.switchButtonContainer}>
+              <SwitchButton />
+            </div>
           </div>
 
           <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />

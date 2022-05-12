@@ -7,6 +7,7 @@ import { useWallet } from '../../../components/wallet/wallet';
 import { PagesTransitionButton } from '../../../components/PagesTransitionButton';
 import { StakingTabs } from '../../../components/StakingTabs';
 import { SwapType } from '../../../types';
+import { useScreenSize } from '../../../utils/screenSize';
 import SearchForPairingsComponent from './SearchForPairings';
 import SwapCard from './SwapCard';
 import { ChartContainer } from './ChartContainer';
@@ -36,6 +37,8 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
   const styles = useStyles();
   const { fromMint, toMint } = useSwapContext();
   const { connected } = useWallet();
+  const { isMobile } = useScreenSize();
+
 
   return (
     <>

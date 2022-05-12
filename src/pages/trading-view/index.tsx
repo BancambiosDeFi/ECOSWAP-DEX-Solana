@@ -4,6 +4,7 @@ import { Theme } from '@mui/material/styles';
 // eslint-disable-next-line import/no-unresolved
 import SwapContainer from '../swap/components/SwapContainer';
 import { useWallet } from '../../components/wallet/wallet';
+import SearchForPairingsComponent from '../swap/components/SearchForPairings';
 import { Chart } from './Chart';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -14,20 +15,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tableBoxContainer: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    alignItems: 'center',
+    gridGap: '10px',
+    gridTemplateAreas: `'searchInput searchInput'
+    'chart swapContainer'`,
   },
   tableBoxOne: {
-    height: '340px',
-  },
-  tableBoxOneConnected: {
-    height: '520px',
+    gridArea: 'searchInput',
+    justifySelf: 'center',
   },
   tableBoxTwo: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    width: '100%',
+    marginTop: '15px',
+    height: '340px',
+    gridArea: 'chart',
+  },
+  tableBoxThree: {
+    gridArea: 'swapContainer',
+    height: '400px',
   },
   swapTabs: {
     display: 'flex',
@@ -41,10 +44,13 @@ const TradingView: React.FC = () => {
 
   return (
     <div className={styles.tableBoxContainer}>
-      <div className={!connected ? styles.tableBoxOne : styles.tableBoxOneConnected}>
-        <Chart />
+      <div className={styles.tableBoxOne}>
+        <SearchForPairingsComponent type={'none'} width={'470px'} />
       </div>
       <div className={styles.tableBoxTwo}>
+        <Chart />
+      </div>
+      <div className={styles.tableBoxThree}>
         <SwapContainer location={'trade'} />
       </div>
     </div>

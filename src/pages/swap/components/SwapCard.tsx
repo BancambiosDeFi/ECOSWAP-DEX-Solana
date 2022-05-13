@@ -470,7 +470,7 @@ export default function SwapCard({ location }) {
             </div>
           </div>
 
-          <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
+          <SwapToForm style={{ marginBottom: '15px' }} tokenList={tokenList} />
           {swapSettingsContainer}
           <SwapButton {...{ checkingEcoContributionPossibility }} />
         </div>

@@ -30,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tableBoxThree: {
     gridArea: 'swapContainer',
-    height: '400px',
+    display: 'flex',
+    flexDirection: 'column'
   },
   swapTabs: {
     display: 'flex',

@@ -249,7 +249,7 @@ export default () => {
             <SwitchButton />
           </div>
         </div>
-        <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
+        <SwapToForm style={{ marginBottom: '15px' }} tokenList={tokenList} />
         {isPoolExist && (
           <Box className={styles.infoHeaderBlock}>
             <InfoLabel />

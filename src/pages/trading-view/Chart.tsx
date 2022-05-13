@@ -22,7 +22,7 @@ const Chart = () => {
 
     chart.current = createChart(chartContainerRef.current, {
       width: 580,
-      height: 400,
+      height: 420,
       layout: {
         backgroundColor: '#253248',
         textColor: 'rgba(255, 255, 255, 0.9)',

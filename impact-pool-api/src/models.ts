@@ -47,7 +47,7 @@ export class UserImpactAccount {
   @field(PublicKeyCreator)
   public user_key: PublicKey | undefined; //32  bytes
   @field( {type: "u64" })
-  public amount: BN | undefined; //8 bytes
+  public amount_of_transferred: BN | undefined; //8 bytes
 
 
   static readonly space: number = 41;
@@ -55,12 +55,12 @@ export class UserImpactAccount {
   constructor(properties?: {
     is_initialized: boolean;
     user_key: PublicKey;
-    amount: BN;
+    amount_of_transferred: BN;
   }) {
     if (properties) {
       this.is_initialized = properties.is_initialized;
       this.user_key = properties.user_key;
-      this.amount = properties.amount;
+      this.amount_of_transferred = properties.amount_of_transferred;
     }
   }
 }

@@ -33,9 +33,20 @@ export class ImpactPoolStatistics {
 
 export class UserImpactStatistics {
   constructor(
-    public amount: BN | undefined,
-    public user: PublicKey | undefined,
-    public is_initialized: Boolean | undefined,
+    public amount_of_transferred: BN ,
+    public user: PublicKey ,
+    public is_initialized: Boolean ,
 
   ) {}
+
+  toString(): string {
+    const amount = new BigNumber(
+      this.amount_of_transferred.toString()
+    ).div(LAMPORTS_PER_SOL);
+    return (
+      `Owner: ${this.user.toString()}\n` +
+      `Amount of trasnferred: ${amount}\n` +
+      `IS initialized: ${this.is_initialized.toString()}\n`
+    );
+  }
 }

@@ -63,7 +63,8 @@ export const getUserImpactValue = async (impactPool: ImpactPool): Promise<number
   console.log('userImpactStatistics.amount =', userImpactStatistics);
   // console.log('userImpactStatistics.amount.toNumber() =', userImpactStatistics.amount?.toNumber());
 
-  return userImpactStatistics.amount ? userImpactStatistics.amount.toNumber() : 0;
+  // return userImpactStatistics.amount ? userImpactStatistics.amount.toNumber() : 0;
+  return 0;
 };
 
 export const converterLamportsToSol = (value: number): number => {

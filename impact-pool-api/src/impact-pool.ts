@@ -163,6 +163,7 @@ export class ImpactPool implements IImpactPool {
       );
 
     const impactPool = await this.getImpactPool();
+    // const [userStatsAccount] = await PublicKey.findProgramAddress([this.signer.toBuffer()], this.programId);
     const tokenPoolPubkey = impactPool.token_pool;
     if (tokenPoolPubkey === undefined)
       throw Error("Token pool is not initialized");
@@ -175,7 +176,10 @@ export class ImpactPool implements IImpactPool {
         { pubkey: this.signer, isSigner: true, isWritable: false },
         { pubkey: tokenAccountPubkey, isSigner: false, isWritable: true },
         { pubkey: tokenPoolPubkey, isSigner: false, isWritable: true },
+        // { pubkey: userStatsAccount, isSigner: false, isWritable: true },
         { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+        // { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+
       ],
       programId: this.programId,
       data: Buffer.from(instructionData),
@@ -274,9 +278,6 @@ export class ImpactPool implements IImpactPool {
     );
   }
 
-  async getImpactUserStatistics() {
-
-  }
 
   async getImpactPoolAccountContext(validation: AccountValidation | null) {
     const seed = getImpactPoolSeed(this.programId, this.impactName);
@@ -366,18 +367,22 @@ export class ImpactPool implements IImpactPool {
   }
 
   async getUserImpactStatistics(): Promise<UserImpactStatistics> {
-    const [userStatsAccount] = await PublicKey.findProgramAddress([this.signer.toBuffer()], this.programId);
-    const userStatsAccountInfo = this.connection.getAccountInfo(userStatsAccount);
-    const data = deserialize(
-      generateSchemas([UserImpactAccount]),
-      UserImpactAccount,
-      (userStatsAccountInfo as unknown as AccountInfo<Buffer>).data)
+    // const [userStatsAccount] = await PublicKey.findProgramAddress([this.signer.toBuffer()], this.programId);
+    // const userStatsAccountInfo = await this.connection.getAccountInfo(userStatsAccount);
+    // const data = deserialize(
+    //   generateSchemas([UserImpactAccount]),
+    //   UserImpactAccount,
+    //   (userStatsAccountInfo as AccountInfo<Buffer>).data)
 
-
+    //   console.log(data.amount_of_transferred?.toString())
+    //   if (
+    //     !data.amount_of_transferred ||
+    //     !data.user_key ||
+    //     !data.is_initialized
+    //   )
+    //     throw Error("Deserialization error");
     return new UserImpactStatistics(
-      data.amount,
-      data.user_key,
-      data.is_initialized,
+      new BN(0), new PublicKey(this.signer.toBuffer()), true
     );
   }
 }

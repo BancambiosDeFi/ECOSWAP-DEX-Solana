@@ -42,12 +42,12 @@ const useStyles = makeStyles(() => ({
     margin: '15px 0',
   },
   card: {
-    border: '1px solid #0156FF',
-    boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    backgroundColor: '#0A0C0E !important',
-    width: '468px',
-    height: 'fit-content',
-    padding: '26px 16px 10px 16px',
+    'border': '1px solid #0156FF',
+    'boxShadow': '0px 0px 30px 5px rgba(0,0,0,0.075)',
+    'backgroundColor': '#0A0C0E !important',
+    'width': '468px',
+    'height': 'fit-content',
+    'padding': '26px 16px 10px 16px',
     '@media(max-width: 540px)': {
       width: '100%',
     },

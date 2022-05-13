@@ -46,14 +46,17 @@ const ConnectSwapButton = styled(Button)(({ theme }) => ({
   'fontStyle': 'normal',
   'textAlign': 'center',
   '&:hover': {
+    color: '#E8E8E8',
+  },
+  '&:active': {
     border: 'none',
     borderColor: 'rgb(127, 70, 251)',
     background: 'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%)',
     boxShadow: '0px 0px 16px #9F5AE5',
   },
-  '@media(max-width: 540px)':{
-    'fontSize': '16px',
-    'height': '44px',
+  '@media(max-width: 540px)': {
+    fontSize: '16px',
+    height: '44px',
   },
 }));
 
@@ -80,6 +83,9 @@ const SwapButton = styled(Button)(({ theme }) => ({
   'letterSpacing': '-0.01em',
   'textAlign': 'center',
   '&:hover': {
+    color: '#E8E8E8',
+  },
+  '&:active': {
     border: 'none',
     borderColor: 'rgb(203, 72, 239)',
     background: 'linear-gradient(266.19deg, #F337F8 -9.56%, #9F5AE5 102.3%)',
@@ -112,6 +118,9 @@ const DoneButton = styled(Button)(({ theme }) => ({
   'letterSpacing': '-0.01em',
   'textAlign': 'center',
   '&:hover': {
+    color: '#E8E8E8',
+  },
+  '&:active': {
     background:
       // eslint-disable-next-line max-len
       'linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) padding-box, linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) border-box',
@@ -140,6 +149,9 @@ const LaunchTheAppButton = styled(Button)(({ theme }) => ({
   'letterSpacing': '-0.01em',
   'textAlign': 'center',
   '&:hover': {
+    color: '#E8E8E8',
+  },
+  '&:active': {
     background:
       // eslint-disable-next-line max-len
       'linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) padding-box, linear-gradient(250.38deg, #EC26F5 -1.07%, #9F5AE5 92.17%) border-box',
@@ -158,6 +170,9 @@ const SubscribeButton = styled(Button)(({ theme }) => ({
   'borderRadius': '26px',
   'border': '3px solid transparent',
   '&:hover': {
+    color: '#E8E8E8',
+  },
+  '&:active': {
     background:
       'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
     boxShadow: '0px 0px 16px #9F5AE5',
@@ -182,6 +197,9 @@ const ConnectButton = styled(Button)(({ theme }) => ({
   'letterSpacing': '-0.01em',
   'textAlign': 'center',
   '&:hover': {
+    color: '#E8E8E8',
+  },
+  '&:active': {
     background:
       'linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) padding-box, linear-gradient(257.52deg, #0156FF -5.37%, #9F5AE5 84.69%) border-box',
     boxShadow: '0px 0px 16px #9F5AE5',

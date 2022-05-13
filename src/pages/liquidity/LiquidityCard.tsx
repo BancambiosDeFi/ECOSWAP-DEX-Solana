@@ -48,6 +48,9 @@ const useStyles = makeStyles(() => ({
     width: '468px',
     height: 'fit-content',
     padding: '26px 16px 10px 16px',
+    '@media(max-width: 540px)': {
+      width: '100%',
+    },
   },
   swapCard: {
     paddingTop: '52px',
@@ -230,7 +233,7 @@ export default () => {
 
   return (
     <Box className={styles.root}>
-      <Card sx={{ borderRadius: '20px' }} className={styles.card}>
+      <Card sx={{ borderRadius: '8px' }} className={styles.card}>
         <div className={styles.fromBlock}>
           <Typography variant="inherit" className={styles.title}>
             From
@@ -246,7 +249,7 @@ export default () => {
             <SwitchButton />
           </div>
         </div>
-        <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
+        <SwapToForm style={{ marginBottom: '15px' }} tokenList={tokenList} />
         {isPoolExist && (
           <Box className={styles.infoHeaderBlock}>
             <InfoLabel />

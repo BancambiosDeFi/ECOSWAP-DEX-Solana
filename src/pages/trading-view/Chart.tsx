@@ -4,6 +4,7 @@ import { unix } from 'moment';
 
 import { useSwapContext, useTokenMap } from '@serum/swap-ui';
 import { chart_api_key } from '../utils';
+import { useScreenSize } from '../../utils/screenSize';
 
 const Chart = () => {
   const [data, setData] = useState<boolean>(true);
@@ -11,6 +12,7 @@ const Chart = () => {
   const tokenMap = useTokenMap();
   const fromTokenInfo = tokenMap.get(fromMint.toString());
   const toTokenInfo = tokenMap.get(toMint.toString());
+  const { isLaptop, isDesktop, isLargeDesktop, isMobile } = useScreenSize();
 
   // eslint-disable-next-line max-len
   const chart_pair_api = `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${fromTokenInfo?.symbol}&tsym=${toTokenInfo?.symbol}&limit=1000&api_key=${chart_api_key}`;
@@ -21,8 +23,8 @@ const Chart = () => {
     chartContainerRef.current.children.length > 0 ? chart.current.remove() : null;
 
     chart.current = createChart(chartContainerRef.current, {
-      width: 580,
-      height: 400,
+      width: !isLaptop ? 520 : 0,
+      height: !isLaptop ? 400 : 350,
       layout: {
         backgroundColor: '#253248',
         textColor: 'rgba(255, 255, 255, 0.9)',

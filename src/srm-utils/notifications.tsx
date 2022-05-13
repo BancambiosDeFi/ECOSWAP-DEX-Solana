@@ -11,7 +11,7 @@ const getNotificationData = (
   message: string,
 ): { icon: JSX.Element; notificationMessage: JSX.Element } => {
   const successMessage = (
-    <H3Text style={{ color: 'rgba(236, 38, 245, 1)', textAlign: 'left' }} text={message} />
+    <H3Text style={{ color: 'rgba(236, 38, 245, 1)', textAlign: 'left'}} text={message} />
   );
   const infoMessage = (
     <H3Text style={{ color: 'rgba(1, 86, 255, 1)', textAlign: 'left' }} text={message} />

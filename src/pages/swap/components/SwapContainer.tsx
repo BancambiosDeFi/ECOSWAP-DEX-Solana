@@ -44,8 +44,7 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
       {connected ? (
         <>
           <Box className={styles.root}>
-            <PagesTransitionButton location={location} />
-            <SwapCard />
+            <SwapCard location={location} />
           </Box>
           <div className={styles.charts}>
             <ChartContainer mint={fromMint} swapType={SwapType.from} location={location} />
@@ -54,8 +53,7 @@ const SwapContainer: React.FC<ChartProps> = ({ location }) => {
         </>
       ) : (
         <Box className={styles.root}>
-          <PagesTransitionButton location={location} />
-          <SwapCard />
+          <SwapCard location={location} />
         </Box>
       )}
     </>

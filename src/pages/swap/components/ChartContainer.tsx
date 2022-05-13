@@ -20,15 +20,18 @@ interface ChartProps {
 
 const useStyles = makeStyles(theme => ({
   wrapper: () => ({
-    height: '85px',
-    maxWidth: '435px',
-    borderRadius: '20px',
-    boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    boxSizing: 'border-box',
-    backgroundColor: '#0A0C0E!important',
-    border: '1px solid #0156FF',
-    padding: '10px 16px',
-    margin: '5px',
+    'height': '85px',
+    'maxWidth': '460px',
+    'borderRadius': '20px',
+    'boxShadow': '0px 0px 30px 5px rgba(0,0,0,0.075)',
+    'boxSizing': 'border-box',
+    'backgroundColor': '#0A0C0E!important',
+    'border': '1px solid #0156FF',
+    'padding': '10px 16px',
+    'margin': '5px',
+    '@media(max-width: 770px)': {
+      maxWidth: '360px',
+    },
   }),
   tokenWrapper: {
     width: '100%',

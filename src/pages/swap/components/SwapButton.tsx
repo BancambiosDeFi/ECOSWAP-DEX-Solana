@@ -76,6 +76,7 @@ const SwapButton: React.FC<SwapButtonProps> = ({ checkingEcoContributionPossibil
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          marginBottom: '10px',
         }}
       >
         {errorText ? <BodyText style={{ color: 'red' }} text={errorText} /> : null}

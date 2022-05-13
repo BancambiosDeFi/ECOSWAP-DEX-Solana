@@ -21,6 +21,7 @@ import CircularProgressBar from '../../../components/CircularProgressBar';
 import { ReactComponent as SwitchIcon } from '../../../assets/icons/switch-icon.svg';
 import { ReactComponent as ExpiresInfoIcon } from '../../../assets/icons/expires-info-icon.svg';
 import { getExpiresInDescription } from '../../../utils/descriptions';
+import { PagesTransitionButton } from '../../../components/PagesTransitionButton';
 import SwapSettingsContainer from './SwapSettingsContainer';
 import EcoContributionErrorModal from './EcoContributionErrorModal';
 import { TokenIcon } from './TokenIcon';
@@ -36,15 +37,17 @@ const tokenExistErrorMessage =
 
 const useStyles = makeStyles(theme => ({
   card: {
-    borderRadius: '0 20px 20px 0 !important',
-    border: '1px solid #0156FF',
-    backgroundColor: '#0A0C0E !important',
-    width: '435px',
-    height: '100%',
-    padding: '26px 16px 10px 16px',
-    boxShadow: '12px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
+    'border': '1px solid #0156FF',
+    'backgroundColor': '#0A0C0E !important',
+    'width': '468px',
+    'height': '100%',
+    'padding': '26px 16px 10px 16px',
+    'boxShadow': '12px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
+    '@media(max-width: 540px)': {
+      width: '100%',
+    },
   },
-  fromTitleContainer: {
+  transitionExpiresContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -236,7 +239,7 @@ const StyledPopover = styled(Popover)(() => ({
   },
 }));
 
-export default function SwapCard() {
+export default function SwapCard({ location }) {
   const styles = useStyles();
   // TODO: use storage/context instead of passing props to children
   const { swappableTokens: tokenList } = useSwappableTokens();
@@ -433,12 +436,11 @@ export default function SwapCard() {
         startSwapTransaction={startSwapTransaction}
       />
       <SwapProgressModal open={isLoadingTx} handleClose={handleCloseSwapProgressModal} />
-      <Card className={styles.card}>
+      <Card sx={{ borderRadius: '8px' }} className={styles.card}>
         <div>
-          <div className={styles.fromTitleContainer}>
-            <Typography variant="inherit" className={styles.title}>
-              From
-            </Typography>
+          <div className={styles.transitionExpiresContainer}>
+            <PagesTransitionButton location={location} />
+
             <div className={styles.expiresInContainer}>
               <Typography variant="inherit" className={`${styles.title} ${styles.expiresInText}`}>
                 Expires in
@@ -455,6 +457,9 @@ export default function SwapCard() {
               </IconButton>
             </div>
           </div>
+          <Typography variant="inherit" className={styles.title}>
+            From
+          </Typography>
           <SwapFromForm tokenList={tokenList} />
           <div className={styles.switchBlock}>
             <Typography variant="inherit" className={styles.switchTitle}>
@@ -465,7 +470,7 @@ export default function SwapCard() {
             </div>
           </div>
 
-          <SwapToForm style={{ marginBottom: '32px' }} tokenList={tokenList} />
+          <SwapToForm style={{ marginBottom: '15px' }} tokenList={tokenList} />
           {swapSettingsContainer}
           <SwapButton {...{ checkingEcoContributionPossibility }} />
         </div>

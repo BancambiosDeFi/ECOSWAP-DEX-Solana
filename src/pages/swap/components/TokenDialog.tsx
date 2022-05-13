@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-
+import CloseIcon from '@mui/icons-material/Close';
 import { useTokenMap } from '@serum/swap-ui';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 
@@ -54,8 +54,15 @@ const useStyles = makeStyles(() => ({
       '@media(max-height: 620px)': {
         maxHeight: '420px',
       },
-      '@media(max-height: 560px)': {
-        maxHeight: '350px',
+      '@media(max-height: 540px)': {
+        maxHeight: '100%',
+        width: '100%',
+      },
+      '@media(max-width: 540px)': {
+        maxHeight: '100%',
+        width: '100%',
+        top: 0,
+        margin: 0,
       },
       'boxShadow': '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
     },
@@ -118,6 +125,8 @@ const useStyles = makeStyles(() => ({
     },
   },
   dialogInputBlogTitleWrap: {
+    'display': 'flex',
+    'justifyContent': 'space-between',
     '@media(max-height: 700px)': {
       maxHeight: '90px',
     },
@@ -136,6 +145,11 @@ const useStyles = makeStyles(() => ({
     '@media(max-height: 620px)': {
       fontSize: '14px',
     },
+  },
+  buttonClose: {
+    cursor: 'pointer',
+    border: 'none',
+    color: '#0156FF',
   },
   dialogTitleInput: {
     '&&': {
@@ -338,21 +352,22 @@ export default function TokenDialog({
     >
       <div className={styles.dialogInputBlogTitleWrap}>
         <h3 className={styles.dialogInputBlogTitle}>Select a Coin</h3>
-        <DialogTitle className={styles.dialogTitle}>
-          <TextField
-            className={styles.dialogTitleTextField}
-            placeholder={'Search name'}
-            value={tokenFilter}
-            fullWidth
-            inputProps={{
-              className: styles.dialogTitleInput,
-            }}
-            variant="outlined"
-            onChange={e => setTokenFilter(e.target.value)}
-          />
-          <SearchIcon className={styles.dialogTitleSearchIcon} />
-        </DialogTitle>
+        <CloseIcon className={styles.buttonClose} onClick={() => onClose()} />
       </div>
+      <DialogTitle className={styles.dialogTitle}>
+        <TextField
+          className={styles.dialogTitleTextField}
+          placeholder={'Search name'}
+          value={tokenFilter}
+          fullWidth
+          inputProps={{
+            className: styles.dialogTitleInput,
+          }}
+          variant="outlined"
+          onChange={e => setTokenFilter(e.target.value)}
+        />
+        <SearchIcon className={styles.dialogTitleSearchIcon} />
+      </DialogTitle>
       <DialogActions className={styles.dialogActions}>
         <CommonBases
           commonBaseTokens={commonBaseTokens}

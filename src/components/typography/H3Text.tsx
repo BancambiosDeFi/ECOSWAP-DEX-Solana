@@ -11,7 +11,7 @@ interface TitleProps {
 const TypographyStyled = styled(Typography)(() => ({
   fontFamily: 'Saira',
   fontSize: '24px',
-  fontWeight: 700,
+  fontWeight: 500,
   lineHeight: '38px',
   letterSpacing: '0em',
   textAlign: 'center',

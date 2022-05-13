@@ -4,10 +4,12 @@ import { unix } from 'moment';
 import { PublicKey } from '@solana/web3.js';
 import { useTokenMap } from '@serum/swap-ui';
 import { chart_api_key } from '../../utils';
+import { useScreenSize } from '../../../utils/screenSize';
 
 const SingleChart = ({ mint }: { mint: PublicKey }) => {
   const tokenMap = useTokenMap();
   const tokenInfo = tokenMap.get(mint.toString());
+  const { isLaptop, isDesktop, isLargeDesktop, isMobile } = useScreenSize();
 
   const chartContainerRef = useRef() as any;
 
@@ -20,9 +22,9 @@ const SingleChart = ({ mint }: { mint: PublicKey }) => {
         width: chartContainerRef.current.clientWidth,
       });
     };
-
     const chart = createChart(chartContainerRef.current, {
-      width: 320,
+       
+      width: !isMobile ? 345 : 220,
       height: 60,
       layout: {
         backgroundColor: 'transparent',
@@ -75,7 +77,7 @@ const SingleChart = ({ mint }: { mint: PublicKey }) => {
 
       chart.remove();
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <section>

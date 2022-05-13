@@ -85,7 +85,6 @@ export default function UserWalletHeaderMenu() {
   const [userBalance, setUserBalance] = useState('0');
   const { wallet, providerName, connected, disconnect } = useWallet();
   const { isLaptop, isDesktop, isLargeDesktop } = useScreenSize();
-  console.log(isLaptop);
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {

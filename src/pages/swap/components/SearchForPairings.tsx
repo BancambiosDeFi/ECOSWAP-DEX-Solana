@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     '&::placeholder': {
       'fontFamily': '"Saira", sans-serif !important',
       'fontSize': '24px !important',
-      'fontWeight': '700 !important',
+      'fontWeight': '400 !important',
       'opacity': '1 !important',
       'paddingLeft': '15px',
       'color': '#BDC1C6 !important',
@@ -243,7 +243,7 @@ export default function SearchForPairingsComponent({ type, width }) {
               ...params.inputProps,
               autoComplete: 'new-password', // disable autocomplete and autofill
             }}
-            placeholder={'Try : 1 USDC to Sol'}
+            placeholder={'Try : 1 USDC to BXS'}
           />
         )}
       />

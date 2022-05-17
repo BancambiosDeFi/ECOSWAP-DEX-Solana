@@ -56,7 +56,7 @@ export function notify({
   placement?: string;
 }) {
   const { notificationMessage, icon } = getNotificationData(type, message);
-
+  
   notification[type]({
     placement: 'topRight',
     message: notificationMessage,
@@ -69,7 +69,7 @@ export function notify({
     icon,
     closeIcon: <CloseOutlined style={{ fontSize: '24px', color: '#FFFFFF' }} />,
     style: {
-      padding: '25px',
+      padding: '15px 25px',
       border: '1px solid #0156FF',
       borderRadius: '8px',
       backgroundColor: '#0A0C0E',

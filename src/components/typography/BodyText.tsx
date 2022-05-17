@@ -9,13 +9,17 @@ interface TitleProps {
 }
 
 const TypographyStyled = styled(Typography)(() => ({
-  fontFamily: '"Saira", sans-serif',
-  fontSize: '16px',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  lineHeight: '29px',
-  letterSpacing: '0em',
-  textAlign: 'center',
+  'fontFamily': '"Saira", sans-serif',
+  'fontSize': '16px',
+  'fontStyle': 'normal',
+  'fontWeight': 400,
+  'lineHeight': '29px',
+  'letterSpacing': '0em',
+  'textAlign': 'center',
+  '@media(max-width: 540px)': {
+    fontSize: '12px',
+    lineHeight: '15px',
+  },
 }));
 
 const BodyText: React.FC<TitleProps> = ({ text, style }) => {

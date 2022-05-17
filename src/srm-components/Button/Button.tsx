@@ -33,7 +33,7 @@ const ConnectSwapButton = styled(Button)(({ theme }) => ({
   'color': '#FFFFFF',
   'background': 'rgba(1, 86, 255, 0.3)',
   'borderRadius': '8px',
-  'border': 'solid 3px transparent',
+  'border': 'solid 1px transparent',
   'backgroundImage':
     'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
   'backgroundOrigin': 'border-box',
@@ -69,7 +69,7 @@ const SwapButton = styled(Button)(({ theme }) => ({
   'color': '#FFFFFF',
   'background': 'rgba(1, 86, 255, 0.3)',
   'borderRadius': '8px',
-  'border': 'solid 3px transparent',
+  'border': 'solid 1px transparent',
   'backgroundImage':
     'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
   'backgroundOrigin': 'border-box',
@@ -94,6 +94,10 @@ const SwapButton = styled(Button)(({ theme }) => ({
   '&:disabled': {
     color: '#FFFFFF',
     opacity: '0.5',
+  },
+  '@media(max-width: 540px)': {
+    fontSize: '16px',
+    height: '44px',
   },
 }));
 
@@ -168,7 +172,7 @@ const SubscribeButton = styled(Button)(({ theme }) => ({
   'color': '#FFFFFF',
   'background': '#0056FD',
   'borderRadius': '26px',
-  'border': '3px solid transparent',
+  'border': '1px solid transparent',
   '&:hover': {
     color: '#E8E8E8',
   },
@@ -188,7 +192,7 @@ const ConnectButton = styled(Button)(({ theme }) => ({
   'color': '#FFFFFF',
   'background': '#0056FD',
   'borderRadius': '36px',
-  'border': '3px solid transparent',
+  'border': '1px solid transparent',
   'textTransform': 'none',
   'fontFamily': '"Spy Agency", sans-serif',
   'fontSize': '11px',

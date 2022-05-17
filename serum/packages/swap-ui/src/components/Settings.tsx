@@ -13,6 +13,8 @@ import {
 import { makeStyles } from '@mui/styles';
 import { SettingsOutlined as Settings } from '@mui/icons-material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+// import { bindTrigger, bindPopover } from 'material-ui-popup-state';
+// import PopupState from 'material-ui-popup-state/es';
 import { useSwapContext, useSwapFair } from '../context/Swap';
 import { useDexContext } from '../context/Dex';
 import OpenOrdersDialog from './OpenOrdersDialog';
@@ -47,52 +49,53 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function SettingsButton() {
-  const styles = useStyles();
-
-  return (
-    <PopupState variant="popover">
-      {
-        //@ts-ignore
-        popupState => (
-          <div>
-            <IconButton
-              {...bindTrigger(popupState)}
-              className={styles.settingsButton}
-            >
-              <Settings />
-            </IconButton>
-            <Popover
-              {...bindPopover(popupState)}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              PaperProps={{
-                style: {
-                  borderRadius: '10px',
-                  boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
-                },
-              }}
-            >
-              <SettingsDetails />
-            </Popover>
-          </div>
-        )
-      }
-    </PopupState>
-  );
-}
+// export function SettingsButton() {
+//   const styles = useStyles();
+//
+//   return (
+//     <PopupState variant="popover">
+//       {popupState => (
+//         <div>
+//           <IconButton
+//             {...bindTrigger(popupState)}
+//             className={styles.settingsButton}
+//           >
+//             <Settings />
+//           </IconButton>
+//           <Popover
+//             {...bindPopover(popupState)}
+//             anchorOrigin={{
+//               vertical: 'bottom',
+//               horizontal: 'left',
+//             }}
+//             transformOrigin={{
+//               vertical: 'top',
+//               horizontal: 'right',
+//             }}
+//             PaperProps={{
+//               style: {
+//                 borderRadius: '10px',
+//                 boxShadow: '0px 0px 30px 5px rgba(0,0,0,0.075)',
+//               },
+//             }}
+//           >
+//             <SettingsDetails />
+//           </Popover>
+//         </div>
+//       )}
+//     </PopupState>
+//   );
+// }
 
 function SettingsDetails() {
   const styles = useStyles();
 
-  const { slippage, setSlippage, fairOverride, setFairOverride } =
-    useSwapContext();
+  const {
+    slippage,
+    setSlippage,
+    fairOverride,
+    setFairOverride,
+  } = useSwapContext();
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const fair = useSwapFair();
   const { swapClient } = useDexContext();

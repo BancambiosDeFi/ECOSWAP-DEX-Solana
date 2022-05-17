@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Button, Modal } from 'antd';
 import { makeStyles } from '@mui/styles';
+import { useWallet } from '../../components/wallet/wallet';
+import { getAssociatedStakingTokenAddress } from './utils';
 
 type ClaimPopup = {
   balance: number;
@@ -97,8 +99,13 @@ const MemoClaimPopup = memo(function ClaimPopup({
 }: ClaimPopup): JSX.Element {
   const styles = useStyles();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const { wallet } = useWallet();
 
-  const showModal = () => {
+  const showModal = async () => {
+    if (wallet?.publicKey) {
+      const stakingAccount = await getAssociatedStakingTokenAddress(wallet?.publicKey);
+    }
+
     setIsModalVisible(!isModalVisible);
     handleChangeClaim(0);
   };
@@ -136,7 +143,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
                 Staking BXS
               </Typography>
               <Typography component="span" className={styles.content}>
-                Balance: 1.12312323
+                Balance: 1.1231232
               </Typography>
             </Grid>
             <Grid container justifyContent="space-between" alignItems="center">

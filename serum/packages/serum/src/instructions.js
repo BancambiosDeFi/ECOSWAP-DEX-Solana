@@ -100,7 +100,11 @@ INSTRUCTION_LAYOUT.inner.addVariant(
 INSTRUCTION_LAYOUT.inner.addVariant(14, struct([]), 'closeOpenOrders');
 INSTRUCTION_LAYOUT.inner.addVariant(15, struct([]), 'initOpenOrders');
 INSTRUCTION_LAYOUT.inner.addVariant(16, struct([u16('limit')]), 'prune');
-INSTRUCTION_LAYOUT.inner.addVariant(17, struct([u16('limit')]), 'consumeEventsPermissioned');
+INSTRUCTION_LAYOUT.inner.addVariant(
+  17,
+  struct([u16('limit')]),
+  'consumeEventsPermissioned',
+);
 INSTRUCTION_LAYOUT.inner.addVariant(
   18,
   struct([
@@ -111,7 +115,7 @@ INSTRUCTION_LAYOUT.inner.addVariant(
     u64('clientId4'),
     u64('clientId5'),
     u64('clientId6'),
-    u64('clientId7')
+    u64('clientId7'),
   ]),
   'cancelOrdersByClientIds',
 );
@@ -238,7 +242,7 @@ export class DexInstructions {
     orderType,
     clientId,
     programId,
-    feeDiscountPubkey = null,
+    feeDiscountPubkey,
   }) {
     const keys = [
       { pubkey: market, isSigner: false, isWritable: true },
@@ -520,7 +524,7 @@ export class DexInstructions {
     programId,
   }) {
     if (clientIds.length > 8) {
-      throw new Error("Number of client ids cannot exceed 8!");
+      throw new Error('Number of client ids cannot exceed 8!');
     }
 
     while (clientIds.length < 8) {
@@ -538,7 +542,9 @@ export class DexInstructions {
       ],
       programId,
       data: encodeInstruction({
-        cancelOrdersByClientIds: Object.fromEntries(clientIds.map((clientId, i) => [`clientId${i}`, clientId])),
+        cancelOrdersByClientIds: Object.fromEntries(
+          clientIds.map((clientId, i) => [`clientId${i}`, clientId]),
+        ),
       }),
     });
   }
@@ -553,7 +559,7 @@ export class DexInstructions {
     quoteWallet,
     vaultSigner,
     programId,
-    referrerQuoteWallet = null,
+    referrerQuoteWallet,
   }) {
     const keys = [
       { pubkey: market, isSigner: false, isWritable: true },

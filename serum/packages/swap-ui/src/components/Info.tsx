@@ -43,46 +43,46 @@ export function InfoLabel() {
             )} ${fromTokenInfo.symbol}`
           : `-`}
       </Typography>
-      <InfoButton />
+      {/*<InfoButton />*/}
     </div>
   );
 }
 
-function InfoButton() {
-  const styles = useStyles();
-  return (
-    <PopupState variant="popover">
-      {
-        //@ts-ignore
-        popupState => (
-          <div style={{ display: 'flex' }}>
-            <IconButton
-              {...bindTrigger(popupState)}
-              className={styles.infoButton}
-            >
-              <Info fontSize="small" />
-            </IconButton>
-            <Popover
-              {...bindPopover(popupState)}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              PaperProps={{ style: { borderRadius: '10px' } }}
-              disableRestoreFocus
-            >
-              <InfoDetails />
-            </Popover>
-          </div>
-        )
-      }
-    </PopupState>
-  );
-}
+// function InfoButton() {
+//   const styles = useStyles();
+//   return (
+//     <PopupState variant="popover">
+//       {
+//         //@ts-ignore
+//         popupState => (
+//           <div style={{ display: 'flex' }}>
+//             <IconButton
+//               {...bindTrigger(popupState)}
+//               className={styles.infoButton}
+//             >
+//               <Info fontSize="small" />
+//             </IconButton>
+//             <Popover
+//               {...bindPopover(popupState)}
+//               anchorOrigin={{
+//                 vertical: 'bottom',
+//                 horizontal: 'left',
+//               }}
+//               transformOrigin={{
+//                 vertical: 'top',
+//                 horizontal: 'right',
+//               }}
+//               PaperProps={{ style: { borderRadius: '10px' } }}
+//               disableRestoreFocus
+//             >
+//               <InfoDetails />
+//             </Popover>
+//           </div>
+//         )
+//       }
+//     </PopupState>
+//   );
+// }
 
 function InfoDetails() {
   const { fromMint, toMint } = useSwapContext();

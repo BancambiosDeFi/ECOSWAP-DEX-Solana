@@ -23,7 +23,7 @@ import { useTokenMap } from '../context/TokenList';
 import { useMint, useOwnedTokenAccount } from '../context/Token';
 import { useCanSwap, useReferral } from '../context/Swap';
 import TokenDialog from './TokenDialog';
-import { SettingsButton } from './Settings';
+// import { SettingsButton } from './Settings';
 import { InfoLabel } from './Info';
 import { SOL_MINT, WRAPPED_SOL_MINT } from '../utils/pubkeys';
 
@@ -135,7 +135,7 @@ export function SwapHeader() {
       >
         SWAP
       </Typography>
-      <SettingsButton />
+      {/*<SettingsButton />*/}
     </div>
   );
 }

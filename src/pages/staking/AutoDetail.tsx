@@ -209,6 +209,7 @@ export default function AutoDetail({
                     <div className={styles.btnWrapper}>
                       <button
                         // style={{ cursor: 'not-allowed', color: '#7C8498' }}
+                        // eslint-disable-next-line max-len
                         className={`${styles.btn} ${styles.btnDisabled} ${styles.weekAutoCompoundBtn}`}
                       >
                         Week Auto Compound

@@ -9,12 +9,16 @@ interface TitleProps {
 }
 
 const TypographyStyled = styled(Typography)(() => ({
-  fontFamily: 'Saira',
-  fontSize: '24px',
-  fontWeight: 500,
-  lineHeight: '38px',
-  letterSpacing: '0em',
-  textAlign: 'center',
+  'fontFamily': 'Saira',
+  'fontSize': '24px',
+  'fontWeight': 500,
+  'lineHeight': '38px',
+  'letterSpacing': '0em',
+  'textAlign': 'center',
+  '@media(max-width: 540px)': {
+    fontSize: '16px',
+    lineHeight: '18px',
+  },
 }));
 
 const H3Text: React.FC<TitleProps> = ({ text, style }) => {

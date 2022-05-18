@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
   infoLabelIcon: {
     width: '21px',
     height: '21px',
-    background: '#202124',
+    background: '#1B2341',
     transform: 'rotate(90deg)',
     borderRadius: '50%',
     padding: '3px',

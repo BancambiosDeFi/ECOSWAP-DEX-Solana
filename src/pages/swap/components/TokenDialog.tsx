@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
       borderRadius: '8px',
     },
     '&::-webkit-scrollbar-track': {
-      backgroundColor: '#707070',
+      backgroundColor: '#1B2341',
       borderRadius: '8px',
     },
     '&::-webkit-scrollbar-thumb': {
@@ -37,13 +37,12 @@ const useStyles = makeStyles(() => ({
   },
   dialogWrapper: {
     '&&': {
-      'backgroundColor': '#040506',
+      'backgroundColor': 'rgb(13, 18, 38)',
       'position': 'absolute',
       'top': '100px',
       'width': '390px',
       'maxHeight': '660px',
       'padding': '20px',
-      'border': '1px solid #0156FF',
       'borderRadius': '8px',
       '@media(max-height: 800px)': {
         maxHeight: '550px',
@@ -64,8 +63,11 @@ const useStyles = makeStyles(() => ({
         top: 0,
         margin: 0,
       },
-      'boxShadow': '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
     },
+  },
+  backDrop: {
+    backdropFilter: 'blur(10px)',
+    backgroundColor: 'rgba(13, 18, 38, 0.7) !important',
   },
   dialogContent: {
     '&&': { padding: 0, border: 0, overflowX: 'hidden' },
@@ -157,7 +159,7 @@ const useStyles = makeStyles(() => ({
       'color': '#bdc1c6',
       'boxSizing': 'border-box',
       'padding': '16px 14px 16px 55px',
-      'background': '#1e2022',
+      'background': '#1B2341',
       'borderRadius': '8px',
 
       '&::placeholder': {
@@ -249,6 +251,8 @@ const useStyles = makeStyles(() => ({
     '&&': {
       display: 'flex',
       justifyContent: 'space-between',
+      borderBottom: '1px solid #0156FF',
+      paddingBottom: '20px',
     },
   },
   commonBaseTitle: {
@@ -273,7 +277,7 @@ const useStyles = makeStyles(() => ({
       'display': 'flex',
       'alignItems': 'center',
       'borderRadius': '8px',
-      'background': '#707070',
+      'background': '#1B2341',
       'padding': '8px 20px',
       'cursor': 'pointer',
       '@media(max-height: 700px)': {
@@ -349,9 +353,12 @@ export default function TokenDialog({
       PaperProps={{
         className: styles.dialogWrapper,
       }}
+      BackdropProps={{
+        className: styles.backDrop,
+      }}
     >
       <div className={styles.dialogInputBlogTitleWrap}>
-        <h3 className={styles.dialogInputBlogTitle}>Select a Coin</h3>
+        <h3 className={styles.dialogInputBlogTitle}>Select a token</h3>
         <CloseIcon className={styles.buttonClose} onClick={() => onClose()} />
       </div>
       <DialogTitle className={styles.dialogTitle}>
@@ -400,7 +407,7 @@ function CommonBases({ commonBaseTokens, onClick }) {
 
   return (
     <div className={styles.commonBaseWrap}>
-      <span className={styles.commonBaseTitle}>Popular Coin</span>
+      <span className={styles.commonBaseTitle}>Popular tokens</span>
       <div className={styles.commonBaseList}>
         {commonBaseTokens.map(tokenInfo => {
           const mint = new PublicKey(tokenInfo.address);

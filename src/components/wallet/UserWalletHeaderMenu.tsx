@@ -27,15 +27,9 @@ const useStyles = makeStyles({
     'space providerName expandMore'`,
     'margin': '10px 0',
     'padding': '0',
-    'background': 'rgba(159, 90, 229, 0.3)',
-    'border': 'solid 1px transparent',
-    'backgroundImage':
-      // eslint-disable-next-line max-len
-      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #9F5AE5, #EC26F5)',
-    'backgroundOrigin': 'border-box',
-    'backgroundClip': 'content-box, border-box',
-    'boxShadow': '2px 500px #431e68 inset',
-    'borderRadius': '20px',
+    'background': '#0D1226',
+    'border': '0.5px solid #0156FF',
+    'borderRadius': '8px',
     'alignItems': 'center',
     '&:hover': {
       background: 'rgba(1, 86, 255, 0.3)',
@@ -56,7 +50,7 @@ const useStyles = makeStyles({
   },
   providerName: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'start',
     lineHeight: '25px',
     fontFamily: '"Saira", sans-serif',
     fontSize: '14px',
@@ -135,7 +129,7 @@ export default function UserWalletHeaderMenu() {
           </Box>
           <Box style={{ gridArea: 'providerName' }}>
             <Typography variant="inherit" align="center" className={classes.providerName}>
-              <CircleIcon sx={{ color: '#DC1FFF', fontSize: 15, marginTop: '5px' }} />
+              <CircleIcon sx={{ color: '#0156FF', fontSize: 15, margin: '5px 5px 0 0' }} />
               {providerName}
             </Typography>
           </Box>

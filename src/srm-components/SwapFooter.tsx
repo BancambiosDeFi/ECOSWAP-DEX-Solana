@@ -35,7 +35,7 @@ export const SwapFooter = () => {
       role="isExistFooterComponent"
       style={{
         height: '59px',
-        background: '#1A1B1C',
+        background: '#1B2341',
         display: 'flex',
         alignItems: 'center',
         width: '100%',

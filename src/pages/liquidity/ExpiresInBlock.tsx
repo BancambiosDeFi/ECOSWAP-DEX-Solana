@@ -20,9 +20,7 @@ const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    position: 'absolute',
-    top: 0,
-    right: 0,
+    justifyContent: 'end',
   },
   infoIcon: {
     position: 'absolute',

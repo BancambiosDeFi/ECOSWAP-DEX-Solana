@@ -18,7 +18,7 @@ export default function WalletConnect() {
       <WalletIcon />
     </IconButton>
   ) : (
-    <div style={{ width: '' }}>
+    <div style={{ marginTop: '10px' }}>
       <ButtonComponent
         type={'connect'}
         title={'Connect Wallet'}

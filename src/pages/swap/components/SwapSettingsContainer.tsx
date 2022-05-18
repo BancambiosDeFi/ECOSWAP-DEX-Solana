@@ -106,7 +106,7 @@ const useStyles = makeStyles(theme => ({
   headerIconWrapper: {
     width: '44px !important',
     height: '44px !important',
-    backgroundColor: 'rgba(65, 63, 63, 1) !important',
+    backgroundColor: '#1B2341 !important',
     borderRadius: '14px !important',
     marginLeft: '6px !important',
   },

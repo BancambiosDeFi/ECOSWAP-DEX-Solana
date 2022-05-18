@@ -27,10 +27,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   tableBoxTwo: {
     marginTop: '15px',
     padding: '10px 0 0 0',
-    height: '419.5px',
+    height: '413.5px',
     gridArea: 'chart',
     border: '1px solid #0156FF',
-    backgroundColor: '#253248',
+    backgroundColor: '#1B2341',
     borderRadius: '8px',
   },
   tableBoxThree: {
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     'width': '100%',
     'height': '400px',
     'alignItems': 'center',
-    'backgroundColor': '#253248',
+    'backgroundColor': '#1B2341',
     'position': 'absolute',
     'marginBottom': '100px',
     'zIndex': 1,

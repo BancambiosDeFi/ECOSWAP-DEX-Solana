@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
   card: {
     'border': '1px solid #0156FF',
     'boxShadow': '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    'backgroundColor': '#0A0C0E !important',
+    'backgroundColor': '#0D1226 !important',
     'width': '468px',
     'height': 'fit-content',
     'padding': '26px 16px 10px 16px',
@@ -234,11 +234,11 @@ export default () => {
   return (
     <Box className={styles.root}>
       <Card sx={{ borderRadius: '8px' }} className={styles.card}>
+          <ExpiresInBlock fetchStats={fetchPoolInfo} />
         <div className={styles.fromBlock}>
           <Typography variant="inherit" className={styles.title}>
             From
           </Typography>
-          <ExpiresInBlock fetchStats={fetchPoolInfo} />
         </div>
         <SwapFromForm tokenList={tokenList} />
         <div className={styles.switchBlock}>

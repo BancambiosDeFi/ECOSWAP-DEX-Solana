@@ -8,10 +8,9 @@ const ALLOWED_PATHES = ['/swap', '/liquidity'];
 const useStyles = makeStyles(() => ({
   tabs: {
     'width': '283px',
-    'background': '#202124',
+    'background': '#1B2341',
     'borderRadius': '12px',
     'marginBottom': '15px',
-    'boxShadow': '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5)',
     '@media(max-width: 540px)': {
       width: '203px',
     },
@@ -35,7 +34,7 @@ const useStyles = makeStyles(() => ({
     '&&&': {
       width: '50%',
       color: '#fff',
-      background: 'linear-gradient(267.38deg, #EC26F5 5.63%, #9F5AE5 107.42%)',
+      background: '#092667',
     },
   },
 }));

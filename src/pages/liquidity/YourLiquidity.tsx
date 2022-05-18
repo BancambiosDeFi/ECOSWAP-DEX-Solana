@@ -24,8 +24,7 @@ const useStyles = makeStyles(() => ({
   card: {
     'borderRadius': '8px !important',
     'border': '1px solid #0156FF',
-    'boxShadow': '0px 0px 30px 5px rgba(0,0,0,0.075)',
-    'backgroundColor': '#0A0C0E !important',
+    'backgroundColor': '#1B2341 !important',
     'width': '468px',
     'height': 'fit-content',
     'padding': '9px 25px',

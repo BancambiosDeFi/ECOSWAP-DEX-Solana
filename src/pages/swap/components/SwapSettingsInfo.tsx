@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#202124',
+    backgroundColor: '#1B2341',
     borderRadius: '20px',
     padding: '8px 16px',
     marginBottom: '10px',

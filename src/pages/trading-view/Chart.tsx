@@ -26,7 +26,7 @@ const Chart = () => {
       width: !isLaptop ? 520 : 0,
       height: !isLaptop ? 400 : 350,
       layout: {
-        backgroundColor: '#253248',
+        backgroundColor: '#1B2341',
         textColor: 'rgba(255, 255, 255, 0.9)',
       },
       grid: {
@@ -53,7 +53,7 @@ const Chart = () => {
       wickUpColor: '#838ca1',
     });
     const histogram = chart.current.addHistogramSeries({
-      color: '#182233',
+      color: '#485c7b',
       lineWidth: 2,
       priceFormat: {
         type: 'volume',

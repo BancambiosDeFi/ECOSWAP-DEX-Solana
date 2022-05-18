@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     'borderRadius': '20px',
     'boxShadow': '0px 0px 30px 5px rgba(0,0,0,0.075)',
     'boxSizing': 'border-box',
-    'backgroundColor': '#0A0C0E!important',
+    'backgroundColor': '#0D1226 !important',
     'border': '1px solid #0156FF',
     'padding': '10px 16px',
     'margin': '5px',

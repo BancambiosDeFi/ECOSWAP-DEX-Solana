@@ -1,6 +1,7 @@
 import { useHistory } from 'react-router';
 import { makeStyles } from '@mui/styles';
 import { ReactComponent as ChartOpen } from '../assets/icons/iconOpenChart.svg';
+import { ReactComponent as ChartClose } from '../assets/icons/blueIconCloseChart.svg';
 
 interface ChartProps {
   location: string;
@@ -22,5 +23,13 @@ export const PagesTransitionButton: React.FC<ChartProps> = ({ location }) => {
     history.push(backToPage);
   };
 
-  return <ChartOpen onClick={handleClick} className={classes.iconButtonChart} />;
+  return (
+    <>
+      {location === 'swap' ? (
+        <ChartOpen onClick={handleClick} className={classes.iconButtonChart} />
+      ) : (
+        <ChartClose onClick={handleClick} className={classes.iconButtonChart} />
+      )}
+    </>
+  );
 };

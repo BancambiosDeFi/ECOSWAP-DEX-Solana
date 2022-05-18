@@ -67,7 +67,7 @@ input[type=number]:focus::-webkit-inner-spin-button {
   border-top: 1px solid #434a59 !important;
 }
 .ant-layout {
-    background: #0F0E17;
+    background: #0D1226;
   }
   .ant-table {
     background: #212734;

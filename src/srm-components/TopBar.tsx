@@ -236,7 +236,7 @@ const TopBar: React.FC = () => {
       <Wrapper
         style={{
           height: '54px',
-          background: '#1E2022',
+          background: '#1B2341',
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
@@ -334,7 +334,7 @@ const TopBar: React.FC = () => {
         <Wrapper
           style={{
             height: '95px',
-            background: '#04030A',
+            background: '#1B2341',
             display: 'flex',
             alignItems: 'flex-end',
             width: '100%',

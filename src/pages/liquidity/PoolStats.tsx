@@ -12,17 +12,11 @@ const useStyles = makeStyles(() => ({
     'display': 'flex',
     'flexDirection': 'row',
     'justifyContent': 'space-between',
-    'backgroundColor': 'rgba(65, 63, 63, 1)',
+    'backgroundColor': '#1B2341',
     'padding': '8px 16px',
     'marginBottom': '20px',
-    'border': 'solid 1px transparent',
+    'border': 'solid 1px #0156FF',
     'borderRadius': '8px',
-    'backgroundImage':
-      // eslint-disable-next-line max-len
-      'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #EC26F5, #0156FF)',
-    'backgroundOrigin': 'border-box',
-    'backgroundClip': 'content-box, border-box',
-    'boxShadow': '2px 500px #202124 inset',
     '&:before': {
       content: '',
       position: 'absolute',
@@ -33,7 +27,6 @@ const useStyles = makeStyles(() => ({
       zIndex: '-1',
       margin: '-0.5px',
       borderRadius: '20px',
-      background: 'linear-gradient(266.03deg, #0156FF 6.58%, #EC26F5 98.25%)',
     },
     // border: '0.5px solid linear-gradient(266.03deg, #0156FF 6.58%, #EC26F5 98.25%)',
   },

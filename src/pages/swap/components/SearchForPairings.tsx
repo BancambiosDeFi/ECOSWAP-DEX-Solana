@@ -18,9 +18,8 @@ const useStyles = makeStyles(theme => ({
   paperStyle: ({ isInputFocus }: any) => ({
     background:
       // eslint-disable-next-line max-len
-      'linear-gradient(#202124, #202124) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #EC26F5 102.3%) border-box !important',
-    border: isInputFocus ? '3px solid transparent' : 'none',
-    boxShadow: '0px 0px 12.0059px 12.0059px rgba(0, 0, 0, 0.5) !important',
+      'linear-gradient(#1B2341, #1B2341) padding-box, linear-gradient(266.19deg, #0156FF -9.56%, #0156FF 102.3%) border-box !important',
+    border: isInputFocus ? '1px solid transparent' : 'none',
   }),
   inputBase: {
     '& .MuiOutlinedInput-notchedOutline': {
@@ -37,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     'color': 'white !important',
     'fontFamily': '"Saira", sans-serif !important',
     'fontSize': '24px !important',
-    'fontWeight': '700 !important',
+    'fontWeight': '400 !important',
     'opacity': 1,
     '@media(max-width: 540px)': {
       fontSize: '16px !important',
@@ -64,7 +63,7 @@ const useStyles = makeStyles(theme => ({
     'color': 'white',
     'border': '1px solid #0156FF',
     'borderRadius': '8px',
-    'background': '#0A0C0E !important',
+    'background': '#0D1226 !important',
     'marginTop': '5px',
     'padding': '15px',
     'width': '468px',
@@ -79,7 +78,7 @@ const useStyles = makeStyles(theme => ({
       borderRadius: '8px',
     },
     '&::-webkit-scrollbar-track': {
-      backgroundColor: '#707070',
+      backgroundColor: '#1B2341',
       borderRadius: '8px',
     },
     '&::-webkit-scrollbar-thumb': {
@@ -200,7 +199,7 @@ export default function SearchForPairingsComponent({ type, width }) {
         'width': width,
         'height': 60,
         'borderRadius': '8px',
-        'background': '#202124',
+        'background': '#1B2341',
         'margin': marginComponent,
         '@media(max-width: 540px)': {
           height: 45,

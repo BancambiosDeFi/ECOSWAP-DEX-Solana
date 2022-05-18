@@ -12,7 +12,7 @@ const Chart = () => {
   const tokenMap = useTokenMap();
   const fromTokenInfo = tokenMap.get(fromMint.toString());
   const toTokenInfo = tokenMap.get(toMint.toString());
-  const { isLaptop, isDesktop, isLargeDesktop, isMobile } = useScreenSize();
+  const { isLaptop } = useScreenSize();
 
   // eslint-disable-next-line max-len
   const chart_pair_api = `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${fromTokenInfo?.symbol}&tsym=${toTokenInfo?.symbol}&limit=1000&api_key=${chart_api_key}`;

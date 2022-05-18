@@ -13,6 +13,7 @@ interface showDetailsProps {
   detailValue: number;
   handleChangeClaim: (data: any) => void;
   claimValue: number;
+  userBxBalance: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -161,6 +162,7 @@ export default function ManualDetail({
   detailValue,
   handleChangeClaim,
   claimValue,
+  userBxBalance,
 }: showDetailsProps) {
   const styles = useStyles();
   const { isMobile } = useScreenSize();
@@ -228,7 +230,7 @@ export default function ManualDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}
@@ -241,7 +243,7 @@ export default function ManualDetail({
                         <Grid item xs={10}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={true}
@@ -310,7 +312,7 @@ export default function ManualDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}
@@ -323,7 +325,7 @@ export default function ManualDetail({
                         <Grid item xs={10}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={true}

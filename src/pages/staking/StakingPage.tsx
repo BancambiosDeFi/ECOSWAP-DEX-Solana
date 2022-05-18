@@ -1,17 +1,27 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
+import BN from 'bn.js';
+import { PublicKey } from '@solana/web3.js';
 import logo from '../../assets/icons/banc-logo.png';
 import infoIcon from '../../srm-assets/info.svg';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
 import { useScreenSize } from '../../utils/screenSize';
+import { DEFAULT_PUBLIC_KEY } from '../../components/wallet/types';
+import { useWallet } from '../../components/wallet/wallet';
+import { notify } from '../../srm-utils/notifications';
 import ManualDetail from './ManualDetail';
 import AutoDetail from './AutoDetail';
+import {
+  convertBnAmountToDisplayBalance,
+  getAssociatedBxTokenAddress,
+  getAssociatedTokenAccount,
+} from './utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -86,6 +96,8 @@ export default function StakingPage() {
   const { isMobile } = useScreenSize();
   const [checkedOption, setCheckedOption] = useState({});
   const [claimValue, setClaimValue] = useState<number>(0);
+  const [userBxBalance, setUserBxBalance] = useState<number>(0);
+  const { wallet } = useWallet();
 
   const handleChangeClaim = useCallback(
     e => {
@@ -104,6 +116,49 @@ export default function StakingPage() {
     },
     [setCheckedOption],
   );
+
+  useEffect(() => {
+    console.log('wallet?.publicKey', wallet?.publicKey);
+    console.log('StakingPage.tsx useEffect before IF...');
+    if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
+      console.log('StakingPage.tsx useEffect inside IF...');
+      const getUserBxBalance = async () => {
+        const bxAddress = await getAssociatedBxTokenAddress(wallet?.publicKey);
+        try {
+          const tokenAccount = await getAssociatedTokenAccount(
+            wallet?.publicKey,
+            new PublicKey(process.env.REACT_APP_BX_TOKEN_MINT_PUBKEY as string),
+            bxAddress,
+          );
+          setUserBxBalance(
+            convertBnAmountToDisplayBalance(
+              new BN(tokenAccount.amount),
+              Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+            ),
+          );
+        } catch (e) {
+          notify({
+            type: 'error',
+            message: 'Fetch BXS balance error',
+            description: e.message,
+          });
+        }
+      };
+
+      getUserBxBalance();
+    }
+  }, [wallet?.publicKey]);
+
+  // useEffect(() => {
+  //   console.log('wallet?.publicKey', wallet?.publicKey);
+  //   console.log('StakingPage.tsx useEffect before IF...');
+  //   if (wallet?.publicKey) {
+  //     console.log('StakingPage.tsx useEffect inside IF...');
+  //     const getUserBxBalance = async () => {
+  //
+  //     getUserBxBalance();
+  //   }
+  // }, [wallet?.publicKey]);
 
   const expiresInComponent = isMobile ? (
     <div className={styles.expiresTitleBlock}>
@@ -160,6 +215,7 @@ export default function StakingPage() {
               detailValue={15}
               detailMenu={
                 <ManualDetail
+                  userBxBalance={userBxBalance}
                   detailTitle="PENDING REWARD"
                   detailValue={0}
                   handleChangeClaim={handleChangeClaim}
@@ -186,6 +242,7 @@ export default function StakingPage() {
               detailValue={15}
               detailMenu={
                 <AutoDetail
+                  userBxBalance={userBxBalance}
                   claimValue={claimValue}
                   handleChangeClaim={handleChangeClaim}
                   detailTitle="Auto-Compound"

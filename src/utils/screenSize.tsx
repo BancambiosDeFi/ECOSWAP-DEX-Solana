@@ -10,6 +10,7 @@ interface ScreenSizeContextValues {
 const MOBILE_SIZE = 768; // surface duo size - max mobile screen width
 const LAPTOP_SIZE = 1200;
 const DESKTOP_SIZE = 1440;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LARGE_DESKTOP_SIZE = 4000;
 
 // eslint-disable-next-line max-len

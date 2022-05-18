@@ -13,6 +13,7 @@ interface showDetailsProps {
   checkedOption: any;
   setPeriod: (data: any) => void;
   claimValue: number;
+  userBxBalance: number;
   handleChangeClaim: (data: any) => void;
   options: Array<{ label: string; startDate: number; endDate: number }>;
 }
@@ -111,6 +112,7 @@ export default function AutoDetail({
   detailTitle,
   detailValue,
   claimValue,
+  userBxBalance,
   handleChangeClaim,
 }: showDetailsProps) {
   const styles = useStyles();
@@ -169,7 +171,7 @@ export default function AutoDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}
@@ -209,6 +211,7 @@ export default function AutoDetail({
                     <div className={styles.btnWrapper}>
                       <button
                         // style={{ cursor: 'not-allowed', color: '#7C8498' }}
+                        // eslint-disable-next-line max-len
                         className={`${styles.btn} ${styles.btnDisabled} ${styles.weekAutoCompoundBtn}`}
                       >
                         Week Auto Compound
@@ -238,7 +241,7 @@ export default function AutoDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}

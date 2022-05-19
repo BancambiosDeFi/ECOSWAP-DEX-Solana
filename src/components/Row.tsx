@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   wrapper: {
     padding: '1px',
     borderRadius: '18px',
-    background: 'linear-gradient(232deg, #0156FF 10%, #EC26F5 100%)',
+    background: '#0156FF',
   },
   container: {
     display: 'flex',
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     width: '100%',
     padding: '25px 15px',
-    background: '#0a0c0f',
+    background: '#0D1226',
     borderRadius: '18px',
   },
   mainContainer: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     width: '100%',
     // padding: '25px 15px',
-    background: '#0a0c0f',
+    background: '#0D1226',
     borderRadius: '18px',
   },
 
@@ -91,8 +91,13 @@ const useStyles = makeStyles(() => ({
   },
   arrowButtonContainer: {
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    background: '#092667',
+    borderRadius: '4px',
+    width: '26px',
+    height: '26px',
+    cursor: 'pointer',
   },
   arrow: {
     'padding': 0,
@@ -167,10 +172,9 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>
         <Grid container alignItems="center" xs={1} item>
-          <button
-            className={showDetails ? styles.rotateArrow : styles.arrow}
-            onClick={toggleShowDetails}
-          />
+          <div className={styles.arrowButtonContainer} onClick={toggleShowDetails}>
+            <button className={showDetails ? styles.rotateArrow : styles.arrow} />
+          </div>
         </Grid>
       </Grid>
       {showDetails ? (

@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { DialogContent, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -38,38 +35,6 @@ export interface DialogTitleProps {
   children?: React.ReactNode;
   onClose: () => void;
 }
-
-const BootstrapDialogTitle = (props: DialogTitleProps) => {
-  const { children, onClose } = props;
-
-  return (
-    <DialogTitle
-      sx={{
-        m: 0,
-        padding: '16px 16px 16px 16px',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#0D1226',
-      }}
-    >
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 10,
-            top: 10,
-            color: '#f6f6f6',
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-};
 
 interface CustomizedDialogsProps {
   open: boolean;

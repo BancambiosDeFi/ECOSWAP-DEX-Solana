@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, CircularProgress } from '@mui/material';
-import SubtitleText from '../../../components/typography/SubtitleText';
 import ModalWrapper from '../../../components/ModalWrapper';
 
 interface SwapProgressModalProps {

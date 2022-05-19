@@ -9,7 +9,7 @@ import { useScreenSize } from '../../../utils/screenSize';
 const SingleChart = ({ mint }: { mint: PublicKey }) => {
   const tokenMap = useTokenMap();
   const tokenInfo = tokenMap.get(mint.toString());
-  const { isLaptop, isDesktop, isLargeDesktop, isMobile } = useScreenSize();
+  const { isMobile } = useScreenSize();
 
   const chartContainerRef = useRef() as any;
 
@@ -23,7 +23,6 @@ const SingleChart = ({ mint }: { mint: PublicKey }) => {
       });
     };
     const chart = createChart(chartContainerRef.current, {
-       
       width: !isMobile ? 345 : 220,
       height: 60,
       layout: {

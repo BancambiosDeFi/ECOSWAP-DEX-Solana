@@ -1,8 +1,7 @@
 import { IconButton, Typography, Popover } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CircularProgressBar from '../../components/CircularProgressBar';
-import { getExpiresInDescription } from '../../utils/descriptions';
 import { ReactComponent as ExpiresInfoIcon } from '../../assets/icons/expires-info-icon.svg';
 
 const useStyles = makeStyles(() => ({

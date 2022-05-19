@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import { Connection } from '@solana/web3.js';
 import CircleIcon from '@mui/icons-material/Circle';
 
-import { formattedBallance, getBalance } from '../../utils';
+import { getImpactPool, getUserImpactValue } from '../../utils';
 import { useScreenSize } from '../../utils/screenSize';
 import { ReactComponent as WalletIcon } from '../../assets/icons/Wallet.svg';
 import { useWallet } from './wallet';
@@ -76,18 +75,14 @@ const useStyles = makeStyles({
 
 export default function UserWalletHeaderMenu() {
   const classes = useStyles();
-  const [userBalance, setUserBalance] = useState('0');
+  const [userImpactValue, setUserImpactValue] = useState<number>(0);
   const { wallet, providerName, connected, disconnect } = useWallet();
-  const { isLaptop, isDesktop, isLargeDesktop } = useScreenSize();
+  const { isDesktop, isLargeDesktop } = useScreenSize();
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
-      const connection = new Connection(process.env.REACT_APP_NETWORK as string);
-
-      getBalance(connection, wallet.publicKey).then(lamportsBalance => {
-        lamportsBalance > 0
-          ? setUserBalance(formattedBallance(lamportsBalance))
-          : setUserBalance('0');
+      getUserImpactValue(getImpactPool(wallet.publicKey, 'USDT')).then(impactValue => {
+        setUserImpactValue(impactValue);
       });
     }
   }, [wallet, connected]);
@@ -116,7 +111,7 @@ export default function UserWalletHeaderMenu() {
               margin: '10px',
             }}
           >
-            {userBalance}
+            {userImpactValue}
           </Typography>
         </>
       )}

@@ -16,6 +16,8 @@ interface showDetailsProps {
   userBxBalance: number;
   handleChangeClaim: (data: any) => void;
   options: Array<{ label: string; startDate: number; endDate: number }>;
+  updatePendingReward: () => Promise<void>;
+  pendingReward: number;
 }
 
 const useStyles = makeStyles(() => ({
@@ -114,6 +116,8 @@ export default function AutoDetail({
   claimValue,
   userBxBalance,
   handleChangeClaim,
+  updatePendingReward,
+  pendingReward,
 }: showDetailsProps) {
   const styles = useStyles();
   const { isMobile } = useScreenSize();
@@ -178,6 +182,8 @@ export default function AutoDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>
@@ -248,6 +254,8 @@ export default function AutoDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>

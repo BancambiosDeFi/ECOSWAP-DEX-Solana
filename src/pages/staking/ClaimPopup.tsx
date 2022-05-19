@@ -5,7 +5,6 @@ import { Button, Modal } from 'antd';
 import { makeStyles } from '@mui/styles';
 import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import Wallet from '@project-serum/sol-wallet-adapter';
-import BN from 'bn.js';
 import { useWallet } from '../../components/wallet/wallet';
 import { notify } from '../../srm-utils/notifications';
 import {
@@ -16,7 +15,6 @@ import {
   getStaking,
   getAssociatedTokenAccount,
   getNetwork,
-  getStakingTokenMintInfo,
 } from './utils';
 
 type ClaimPopup = {
@@ -27,6 +25,8 @@ type ClaimPopup = {
   onSubmit: void;
   ifStake: boolean;
   title: string;
+  updatePendingReward: () => Promise<void>;
+  pendingReward: number;
 };
 
 const useStyles = makeStyles(() => ({
@@ -109,6 +109,9 @@ const MemoClaimPopup = memo(function ClaimPopup({
   claimValue,
   handleChangeClaim,
   title,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updatePendingReward,
+  pendingReward,
 }: ClaimPopup): JSX.Element {
   const styles = useStyles();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -138,10 +141,10 @@ const MemoClaimPopup = memo(function ClaimPopup({
                 handleChangeClaim(0);
                 notify({
                   type: 'success',
-                  message: ifStake ? 'Staking Successfully' : 'Un-Staking Successfully',
+                  message: ifStake ? 'Staked Successfully' : 'Un-Staked Successfully',
                   description: ifStake
-                    ? 'Un-Staking transaction was successful.'
-                    : 'Staking transaction was successful.',
+                    ? 'Staking transaction was successful.'
+                    : 'Un-Staking transaction was successful.',
                 });
               })
               .catch(e => {
@@ -170,7 +173,6 @@ const MemoClaimPopup = memo(function ClaimPopup({
   };
 
   const stakeBxs = async () => {
-    console.log('stakeBxs...');
     if (wallet?.publicKey) {
       const transaction = new Transaction();
       const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
@@ -185,8 +187,9 @@ const MemoClaimPopup = memo(function ClaimPopup({
           createAssociatedStakingTokenAccountInstruction(wallet?.publicKey, stakingAddress),
         );
       }
+
       transaction.add(
-        getStaking(wallet as Wallet).stake(
+        await getStaking(wallet as Wallet).stake(
           convertStakingValueToBnAmount(
             claimValue,
             Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
@@ -200,7 +203,6 @@ const MemoClaimPopup = memo(function ClaimPopup({
       );
 
       await sendTransaction(transaction);
-      console.log('Successful stake transaction');
     } else {
       notify({
         type: 'error',
@@ -208,46 +210,56 @@ const MemoClaimPopup = memo(function ClaimPopup({
         description: "Wallet doesn't connected.",
       });
     }
-
-    // setIsModalVisible(!isModalVisible);
-    // handleChangeClaim(0);
   };
 
   const unStakeBxs = async () => {
     if (wallet?.publicKey) {
       const transaction = new Transaction();
-      const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
       const amount = convertStakingValueToBnAmount(
         claimValue,
         Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
       );
+      // await updatePendingReward();
+      const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
       const staking = getStaking(wallet as Wallet);
-      const programState = await staking.programState();
-      const userStakeInfo = await staking.userStakeInfo(wallet?.publicKey);
-      const tokenAccount = await getAssociatedTokenAccount(
-        wallet?.publicKey,
-        new PublicKey(process.env.REACT_APP_STAKING_TOKEN_MINT_PUBKEY as string),
-        stakingAddress,
-      );
-      const tokenMintInfo = await getStakingTokenMintInfo(wallet?.publicKey);
-      const { amountUnstaked, amountTransfered } = programState.getPossibleUnstake(
-        userStakeInfo,
-        new BN(tokenAccount.amount),
-        tokenMintInfo.supply,
-      );
-      if (amount.lte(amountUnstaked)) {
-        transaction.add(
-          staking.unstake(amount, {
-            publicKey: wallet?.publicKey,
-            bxTokenAccount: await getAssociatedBxTokenAddress(wallet?.publicKey),
-            stakingTokenAccount: stakingAddress,
-          }),
-        );
+      // const programState = await staking.programState();
+      // const userStakeInfo = await staking.userStakeInfo(wallet?.publicKey);
+      // const tokenAccount = await getAssociatedTokenAccount(
+      //   wallet?.publicKey,
+      //   new PublicKey(process.env.REACT_APP_STAKING_TOKEN_MINT_PUBKEY as string),
+      //   stakingAddress,
+      // );
+      // const tokenMintInfo = await getStakingTokenMintInfo(wallet?.publicKey);
+      // const { amountUnstaked } = programState.getPossibleUnstake(
+      //   userStakeInfo,
+      //   new BN(tokenAccount.amount),
+      //   tokenMintInfo.supply,
+      // );
+      // if (amount.lte(amountUnstaked)) {
+      if (
+        amount.lte(
+          convertStakingValueToBnAmount(
+            pendingReward,
+            Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+          ),
+        )
+      ) {
+        const unStakeInstruction = await staking.unstake(amount, {
+          publicKey: wallet?.publicKey,
+          bxTokenAccount: await getAssociatedBxTokenAddress(wallet?.publicKey),
+          stakingTokenAccount: stakingAddress,
+        });
+
+        transaction.add(unStakeInstruction);
 
         await sendTransaction(transaction);
-        console.log('Successful un-stake transaction');
       } else {
-        // Error logic!!!!!!!!!!
+        setIsClaimValueError(true);
+        notify({
+          type: 'error',
+          message: 'Staking error',
+          description: 'Insufficient balance to un-stake.',
+        });
       }
     } else {
       notify({
@@ -259,21 +271,19 @@ const MemoClaimPopup = memo(function ClaimPopup({
   };
 
   useEffect(() => {
-    if (claimValue > userBxBalance) {
+    if (ifStake && claimValue > userBxBalance) {
+      setIsClaimValueError(true);
+    } else if (!ifStake && claimValue > pendingReward) {
       setIsClaimValueError(true);
     } else {
       setIsClaimValueError(false);
     }
-  }, [claimValue, userBxBalance]);
+  }, [claimValue, userBxBalance, pendingReward]);
 
   return (
     <>
       <Grid container justifyContent="space-between">
-        <button
-          className={`${styles.btn} ${styles.btnAllowed}`}
-          // onClick={title === '-' ? showUnStakeModal : showStakeModal}
-          onClick={showModal}
-        >
+        <button className={`${styles.btn} ${styles.btnAllowed}`} onClick={showModal}>
           {title}
         </button>
       </Grid>
@@ -296,14 +306,14 @@ const MemoClaimPopup = memo(function ClaimPopup({
         maskClosable={true}
       >
         <section>
-          <h5 className={styles.title}>{ifStake ? 'Stake BSX' : 'Un-Stake BSX'}</h5>
+          <h5 className={styles.title}>{ifStake ? 'Stake BXS' : 'Un-Stake BXS'}</h5>
           <Grid className={styles.inner}>
             <Grid container justifyContent="space-between" alignItems="center">
               <Typography component="span" className={styles.content}>
                 Staking BXS
               </Typography>
               <Typography component="span" className={styles.content}>
-                Balance: 1.12312323
+                {ifStake ? `Balance: ${userBxBalance}` : `Pending reward: ${pendingReward}`}
               </Typography>
             </Grid>
             <Grid container justifyContent="space-between" alignItems="center">
@@ -328,7 +338,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
               type="primary"
               onClick={ifStake ? stakeBxs : unStakeBxs}
             >
-              {ifStake ? 'Stake BSX' : 'Un-Stake BSX'}
+              {ifStake ? 'Stake BXS' : 'Un-Stake BXS'}
             </Button>
           </Grid>
           <Grid className={styles.btnWrapper}>

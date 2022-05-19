@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
 import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
+import Wallet from '@project-serum/sol-wallet-adapter';
 import logo from '../../assets/icons/banc-logo.png';
 import infoIcon from '../../srm-assets/info.svg';
 import BasicLayout from '../../srm-components/BasicLayout';
@@ -20,7 +21,10 @@ import AutoDetail from './AutoDetail';
 import {
   convertBnAmountToDisplayBalance,
   getAssociatedBxTokenAddress,
+  getAssociatedStakingTokenAddress,
   getAssociatedTokenAccount,
+  getStaking,
+  getStakingTokenMintInfo,
 } from './utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -97,6 +101,7 @@ export default function StakingPage() {
   const [checkedOption, setCheckedOption] = useState({});
   const [claimValue, setClaimValue] = useState<number>(0);
   const [userBxBalance, setUserBxBalance] = useState<number>(0);
+  const [pendingReward, setPendingReward] = useState<number>(0);
   const { wallet } = useWallet();
 
   const handleChangeClaim = useCallback(
@@ -117,44 +122,91 @@ export default function StakingPage() {
     [setCheckedOption],
   );
 
-  useEffect(() => {
-    console.log('wallet?.publicKey', wallet?.publicKey);
-    console.log('StakingPage.tsx useEffect before IF...');
+  const updatePendingReward = useCallback(async () => {
     if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
-      console.log('StakingPage.tsx useEffect inside IF...');
-      const getUserBxBalance = async () => {
-        const bxAddress = await getAssociatedBxTokenAddress(wallet?.publicKey);
-        try {
-          const tokenAccount = await getAssociatedTokenAccount(
-            wallet?.publicKey,
-            new PublicKey(process.env.REACT_APP_BX_TOKEN_MINT_PUBKEY as string),
-            bxAddress,
-          );
-          setUserBxBalance(
-            convertBnAmountToDisplayBalance(
-              new BN(tokenAccount.amount),
-              Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
-            ),
-          );
-        } catch (e) {
-          notify({
-            type: 'error',
-            message: 'Fetch BXS balance error',
-            description: e.message,
-          });
-        }
-      };
-
-      getUserBxBalance();
+      const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
+      const staking = getStaking(wallet as Wallet);
+      const programState = await staking.programState();
+      const userStakeInfo = await staking.userStakeInfo(wallet?.publicKey);
+      const tokenAccount = await getAssociatedTokenAccount(
+        wallet?.publicKey,
+        new PublicKey(process.env.REACT_APP_STAKING_TOKEN_MINT_PUBKEY as string),
+        stakingAddress,
+      );
+      const tokenMintInfo = await getStakingTokenMintInfo(wallet?.publicKey);
+      const { amountUnstaked } = programState.getPossibleUnstake(
+        userStakeInfo,
+        new BN(tokenAccount.amount),
+        tokenMintInfo.supply,
+      );
+      setPendingReward(
+        convertBnAmountToDisplayBalance(
+          amountUnstaked,
+          Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+        ),
+      );
     }
   }, [wallet?.publicKey]);
 
+  const updateUserBxsBalance = useCallback(async () => {
+    if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
+      const bxAddress = await getAssociatedBxTokenAddress(wallet?.publicKey);
+      try {
+        const tokenAccount = await getAssociatedTokenAccount(
+          wallet?.publicKey,
+          new PublicKey(process.env.REACT_APP_BX_TOKEN_MINT_PUBKEY as string),
+          bxAddress,
+        );
+        setUserBxBalance(
+          convertBnAmountToDisplayBalance(
+            new BN(tokenAccount.amount),
+            Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+          ),
+        );
+      } catch (e) {
+        notify({
+          type: 'error',
+          message: 'Fetch BXS balance error',
+          description: e.message,
+        });
+      }
+    }
+  }, [wallet?.publicKey]);
+
+  useEffect(() => {
+    updatePendingReward();
+  }, [updatePendingReward]);
+
+  useEffect(() => {
+    updateUserBxsBalance();
+  }, [updateUserBxsBalance]);
+
   // useEffect(() => {
-  //   console.log('wallet?.publicKey', wallet?.publicKey);
-  //   console.log('StakingPage.tsx useEffect before IF...');
-  //   if (wallet?.publicKey) {
-  //     console.log('StakingPage.tsx useEffect inside IF...');
+  //   updatePendingReward();
+  //   if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
   //     const getUserBxBalance = async () => {
+  //       // Getting user BXS balance
+  //       const bxAddress = await getAssociatedBxTokenAddress(wallet?.publicKey);
+  //       try {
+  //         const tokenAccount = await getAssociatedTokenAccount(
+  //           wallet?.publicKey,
+  //           new PublicKey(process.env.REACT_APP_BX_TOKEN_MINT_PUBKEY as string),
+  //           bxAddress,
+  //         );
+  //         setUserBxBalance(
+  //           convertBnAmountToDisplayBalance(
+  //             new BN(tokenAccount.amount),
+  //             Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+  //           ),
+  //         );
+  //       } catch (e) {
+  //         notify({
+  //           type: 'error',
+  //           message: 'Fetch BXS balance error',
+  //           description: e.message,
+  //         });
+  //       }
+  //     };
   //
   //     getUserBxBalance();
   //   }
@@ -207,7 +259,7 @@ export default function StakingPage() {
               setPeriod={setPeriod}
               claimValue={claimValue}
               imgSrc={logo}
-              reward={11}
+              reward={pendingReward}
               staked={22}
               arp={33}
               liquidity={44}
@@ -217,9 +269,11 @@ export default function StakingPage() {
                 <ManualDetail
                   userBxBalance={userBxBalance}
                   detailTitle="PENDING REWARD"
-                  detailValue={0}
+                  detailValue={pendingReward}
                   handleChangeClaim={handleChangeClaim}
                   claimValue={claimValue}
+                  updatePendingReward={updatePendingReward}
+                  pendingReward={pendingReward}
                 />
               }
             />
@@ -234,7 +288,7 @@ export default function StakingPage() {
               setPeriod={setPeriod}
               claimValue={claimValue}
               imgSrc={logo}
-              reward={11}
+              reward={pendingReward}
               staked={22}
               arp={33}
               liquidity={44}
@@ -246,10 +300,12 @@ export default function StakingPage() {
                   claimValue={claimValue}
                   handleChangeClaim={handleChangeClaim}
                   detailTitle="Auto-Compound"
-                  detailValue={0}
+                  detailValue={pendingReward}
                   checkedOption={checkedOption}
                   setPeriod={setPeriod}
                   options={options}
+                  updatePendingReward={updatePendingReward}
+                  pendingReward={pendingReward}
                 />
               }
             />

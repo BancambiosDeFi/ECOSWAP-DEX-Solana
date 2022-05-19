@@ -14,6 +14,8 @@ interface showDetailsProps {
   handleChangeClaim: (data: any) => void;
   claimValue: number;
   userBxBalance: number;
+  updatePendingReward: () => Promise<void>;
+  pendingReward: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -163,6 +165,8 @@ export default function ManualDetail({
   handleChangeClaim,
   claimValue,
   userBxBalance,
+  updatePendingReward,
+  pendingReward,
 }: showDetailsProps) {
   const styles = useStyles();
   const { isMobile } = useScreenSize();
@@ -237,6 +241,8 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>
@@ -250,6 +256,8 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="Stake BSX"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>
@@ -319,6 +327,8 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>
@@ -332,6 +342,8 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="Stake BSX"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>

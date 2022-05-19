@@ -87,14 +87,7 @@ export const convertStakingValueToBnAmount = (value: number, decimals: number): 
 };
 
 export const convertBnAmountToDisplayBalance = (amount: BN, decimals: number): number => {
-  console.log('convertBnAmountToDisplayBalance...');
-  const userBxsBalance = new BigNumber(amount.toString())
-    .dividedBy(Math.pow(10, decimals))
-    .toNumber();
-  console.log('userBxsBalance =', userBxsBalance);
-
-  return userBxsBalance;
-  // return new BigNumber(amount.toString()).dividedBy(Math.pow(10, decimals)).toNumber();
+  return new BigNumber(amount.toString()).dividedBy(Math.pow(10, decimals)).toNumber();
 };
 
 export const getStakingTokenMintInfo = async (owner: PublicKey): Promise<MintInfo> => {

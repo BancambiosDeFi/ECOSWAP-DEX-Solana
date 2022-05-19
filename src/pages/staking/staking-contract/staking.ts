@@ -172,29 +172,29 @@ export class Staking {
     this.stakingTokenMint = tokens.stakingTokenMint;
   }
 
-  public programStateAddress(): PublicKey {
-    return this.programAddress([Buffer.from('state', 'utf8')])[0];
+  public async programStateAddress(): Promise<PublicKey> {
+    return (await this.programAddress([Buffer.from('state', 'utf8')]))[0];
   }
 
-  public tokenPoolAddress(): PublicKey {
-    return this.programAddress([Buffer.from('token-pool', 'utf8')])[0];
+  public async tokenPoolAddress(): Promise<PublicKey> {
+    return (await this.programAddress([Buffer.from('token-pool', 'utf8')]))[0];
   }
 
-  public stakingTokenMintAuthorityAddress(): PublicKey {
-    return this.programAddress([Buffer.from('mint-authority', 'utf8')])[0];
+  public async stakingTokenMintAuthorityAddress(): Promise<PublicKey> {
+    return (await this.programAddress([Buffer.from('mint-authority', 'utf8')]))[0];
   }
 
-  public userStakeInfoAddress(user: PublicKey): PublicKey {
-    return this.programAddress([Buffer.from('stake-info', 'utf8'), user.toBytes()])[0];
+  public async userStakeInfoAddress(user: PublicKey): Promise<PublicKey> {
+    return (await this.programAddress([Buffer.from('stake-info', 'utf8'), user.toBytes()]))[0];
   }
 
-  public tokenPoolAuthorityAddress(): PublicKey {
-    return this.programAddress([Buffer.from('token-pool-authority', 'utf8')])[0];
+  public async tokenPoolAuthorityAddress(): Promise<PublicKey> {
+    return (await this.programAddress([Buffer.from('token-pool-authority', 'utf8')]))[0];
   }
 
   public async programState(): Promise<ProgramState> {
     const rawProgramState = await this.program.account.programState.fetch(
-      this.programStateAddress(),
+      await this.programStateAddress(),
     );
     const price = new Decimal(
       rawProgramState.price.flags,
@@ -225,7 +225,7 @@ export class Staking {
 
   public async userStakeInfo(user: PublicKey): Promise<StakeInfo> {
     const rawStakeInfo = await this.program.account.stakeInfo.fetch(
-      this.userStakeInfoAddress(user),
+      await this.userStakeInfoAddress(user),
     );
 
     return new StakeInfo(
@@ -233,20 +233,20 @@ export class Staking {
     );
   }
 
-  public init(
+  public async init(
     earlyUnstakeFee: number,
     rewardPerSecond: BN,
     lockupTime: BN,
     admin: PublicKey,
-  ): TransactionInstruction {
+  ): Promise<TransactionInstruction> {
     return this.program.instruction.initialize(earlyUnstakeFee, rewardPerSecond, lockupTime, {
       accounts: {
-        programState: this.programStateAddress(),
-        tokenPool: this.tokenPoolAddress(),
-        tokenPoolAuthority: this.tokenPoolAuthorityAddress(),
+        programState: await this.programStateAddress(),
+        tokenPool: await this.tokenPoolAddress(),
+        tokenPoolAuthority: await this.tokenPoolAuthorityAddress(),
         bxTokenMint: this.mainTokenMint,
         stakingTokenMint: this.stakingTokenMint,
-        stakingTokenMintAuthority: this.stakingTokenMintAuthorityAddress(),
+        stakingTokenMintAuthority: await this.stakingTokenMintAuthorityAddress(),
         admin: admin,
         systemProgram: SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -255,20 +255,20 @@ export class Staking {
     });
   }
 
-  public stake(
+  public async stake(
     amount: BN,
     staker: { publicKey: PublicKey; bxTokenAccount: PublicKey; stakingTokenAccount: PublicKey },
-  ): TransactionInstruction {
+  ): Promise<TransactionInstruction> {
     return this.program.instruction.stake(amount, {
       accounts: {
-        programState: this.programStateAddress(),
-        tokenPool: this.tokenPoolAddress(),
+        programState: await this.programStateAddress(),
+        tokenPool: await this.tokenPoolAddress(),
         stakingTokenMint: this.stakingTokenMint,
-        stakingTokenMintAuthority: this.stakingTokenMintAuthorityAddress(),
+        stakingTokenMintAuthority: await this.stakingTokenMintAuthorityAddress(),
         userStakingTokenAccount: staker.stakingTokenAccount,
         userBxTokenAccount: staker.bxTokenAccount,
-        userStakeInfo: this.userStakeInfoAddress(staker.publicKey),
-        user: staker.publicKey,
+        userStakeInfo: await this.userStakeInfoAddress(staker.publicKey),
+        user: staker.publicKey.toString(),
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
@@ -277,14 +277,14 @@ export class Staking {
     });
   }
 
-  public increasePool(
+  public async increasePool(
     amount: BN,
     user: { bxTokenAccount: PublicKey; publicKey: PublicKey },
-  ): TransactionInstruction {
+  ): Promise<TransactionInstruction> {
     return this.program.instruction.increasePool(amount, {
       accounts: {
-        programState: this.programStateAddress(),
-        tokenPool: this.tokenPoolAddress(),
+        programState: await this.programStateAddress(),
+        tokenPool: await this.tokenPoolAddress(),
         stakingTokenMint: this.stakingTokenMint,
         bxTokenAccount: user.bxTokenAccount,
         user: user.publicKey,
@@ -293,15 +293,15 @@ export class Staking {
     });
   }
 
-  public decreasePool(
+  public async decreasePool(
     amount: BN,
     admin: { bxTokenAccount: PublicKey; publicKey: PublicKey },
-  ): TransactionInstruction {
+  ): Promise<TransactionInstruction> {
     return this.program.instruction.decreasePool(amount, {
       accounts: {
-        programState: this.programStateAddress(),
-        tokenPool: this.tokenPoolAddress(),
-        tokenPoolAuthority: this.tokenPoolAuthorityAddress(),
+        programState: await this.programStateAddress(),
+        tokenPool: await this.tokenPoolAddress(),
+        tokenPoolAuthority: await this.tokenPoolAuthorityAddress(),
         stakingTokenMint: this.stakingTokenMint,
         bxTokenAccount: admin.bxTokenAccount,
         admin: admin.publicKey,
@@ -310,31 +310,34 @@ export class Staking {
     });
   }
 
-  public unstake(
+  public async unstake(
     amount: BN,
     staker: { publicKey: PublicKey; bxTokenAccount: PublicKey; stakingTokenAccount: PublicKey },
-  ): TransactionInstruction {
+  ): Promise<TransactionInstruction> {
     return this.program.instruction.unstake(amount, {
       accounts: {
-        programState: this.programStateAddress(),
-        tokenPool: this.tokenPoolAddress(),
-        tokenPoolAuthority: this.tokenPoolAuthorityAddress(),
+        programState: await this.programStateAddress(),
+        tokenPool: await this.tokenPoolAddress(),
+        tokenPoolAuthority: await this.tokenPoolAuthorityAddress(),
         stakingTokenMint: this.stakingTokenMint,
         userStakingTokenAccount: staker.stakingTokenAccount,
         userBxTokenAccount: staker.bxTokenAccount,
-        userStakeInfo: this.userStakeInfoAddress(staker.publicKey),
-        user: staker.publicKey,
+        userStakeInfo: await this.userStakeInfoAddress(staker.publicKey),
+        user: staker.publicKey.toString(),
         tokenProgram: TOKEN_PROGRAM_ID,
       },
     });
   }
 
-  public claimFees(admin: PublicKey, bxTokenAccount: PublicKey): TransactionInstruction {
+  public async claimFees(
+    admin: PublicKey,
+    bxTokenAccount: PublicKey,
+  ): Promise<TransactionInstruction> {
     return this.program.instruction.claimFees({
       accounts: {
-        programState: this.programStateAddress(),
-        tokenPool: this.tokenPoolAddress(),
-        tokenPoolAuthority: this.tokenPoolAuthorityAddress(),
+        programState: await this.programStateAddress(),
+        tokenPool: await this.tokenPoolAddress(),
+        tokenPoolAuthority: await this.tokenPoolAuthorityAddress(),
         bxTokenAccount: bxTokenAccount,
         admin: admin,
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -342,15 +345,15 @@ export class Staking {
     });
   }
 
-  public updateParams(
+  public async updateParams(
     earlyUnstakeFee: number | null,
     rewardPerSecond: BN | null,
     lockupTime: BN | null,
     admin: PublicKey,
-  ): TransactionInstruction {
+  ): Promise<TransactionInstruction> {
     return this.program.instruction.updateParams(earlyUnstakeFee, rewardPerSecond, lockupTime, {
       accounts: {
-        programState: this.programStateAddress(),
+        programState: await this.programStateAddress(),
         admin: admin,
       },
     });

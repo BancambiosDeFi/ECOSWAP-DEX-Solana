@@ -86,7 +86,9 @@ const useStyles = makeStyles(() => ({
     'fontSize': '16px',
     'lineHeight': '250%',
     '&:hover': {
-      color: '#0156ff !important',
+      color: '#ffffff !important',
+      textShadow: '1px 1px 20px #0156ff',
+      borderBottom: '2px solid transparent !important',
     },
     '&:selected': {
       color: '#0156ff ',
@@ -348,7 +350,7 @@ const TopBar: React.FC = () => {
               flex: 1,
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               alignItems: 'center',
             }}
           >

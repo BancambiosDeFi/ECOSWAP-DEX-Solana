@@ -1,11 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-import IconButton from '@mui/material/IconButton';
-import Popover from '@mui/material/Popover';
-import InfoIcon from '@mui/icons-material/Info';
+import { IconButton, Typography, Popover } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
+import { useState } from 'react';
+import CircularProgressBar from '../../components/CircularProgressBar';
+import { ReactComponent as ExpiresInfoIcon } from '../../assets/icons/expires-info-icon.svg';
 
+const useStyles = makeStyles(() => ({
+  expiresInContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  expiresInText: {
+    fontSize: '24px',
+    color: '#AEAEAF',
+    marginRight: '4px !important',
+  },
+  title: {
+    'fontFamily': 'Saira',
+    'fontSize': '24px',
+    'fontStyle': 'normal',
+    'fontWeight': '400',
+    'lineHeight': '34px',
+    'letterSpacing': '0em',
+    'textAlign': 'left',
+    'marginBottom': '0px',
+    '@media(max-width: 540px)': {
+      fontSize: '16px ',
+    },
+  },
+  expiresInfoButton: {
+    width: 'fit-content !important',
+    height: 'fit-content !important',
+    padding: '0 !important',
+    marginLeft: '4px !important',
+  },
+  swapInfoText: {
+    fontFamily: 'Saira !important',
+    fontStyle: 'normal',
+    fontWeight: '400 !important',
+    fontSize: '16px !important',
+    lineHeight: '29px !important',
+    textAlign: 'left',
+    color: '#FFFFFF',
+  },
+}));
 const StyledPopover = styled(Popover)(() => ({
   '& .MuiPopover-paper': {
     width: 'fit-content',
@@ -16,159 +55,55 @@ const StyledPopover = styled(Popover)(() => ({
   },
 }));
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'end',
-  },
-  infoIcon: {
-    position: 'absolute',
-    width: '17px',
-    height: '17px',
-    color: 'gray',
-    zIndex: '2',
-  },
-  infoIconBackground: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '10px',
-    height: '10px',
-    backgroundColor: '#fff',
-  },
-  infoButton: {
-    position: 'relative',
-    width: '20px',
-    height: '20px',
-  },
-  wrap: {
-    position: 'relative',
-    width: '17px',
-    height: '17px',
-    margin: '0 5px',
-    cursor: 'pointer',
-  },
-  label: {
-    '&&': {
-      'fontFamily': 'Saira',
-      'fontSize': '24px',
-      'color': '#AEAEAF',
-      '@media(max-width: 540px)': {
-        fontSize: '16px',
-      },
-    },
-  },
-  progressDynamic: {
-    '&&': {
-      position: 'absolute',
-      top: 0,
-      zIndex: 2,
-      color: 'linear-gradient(265.93deg, #0156FF 42%, #EC26F5 133.52%)',
-    },
-  },
-  progressStatic: {
-    '&&': {
-      position: 'absolute',
-      color: '#AEAEAF',
-      top: 0,
-    },
-  },
-  infoText: {
-    '&&': {
-      fontFamily: 'Saira',
-      fontStyle: 'normal',
-      fontWeight: '400',
-      fontSize: '16px',
-      lineHeight: '29px',
-      textAlign: 'left',
-      color: '#FFFFFF',
-    },
-  },
-}));
-
-export const ExpiresInBlock = ({ fetchStats }) => {
-  const [progress, setProgress] = useState(0);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+export const ExpiresInBlock = ({ seconds, infoText }) => {
   const styles = useStyles();
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
-
-  const handleInfoClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const popoverId = open ? 'simple-popover' : undefined;
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress(prevProgress => (prevProgress >= 100 ? 0 : prevProgress + 5.5));
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (progress >= 100) {
-      fetchStats();
-    }
-  }, [progress]);
+  const handleInfoButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   return (
-    <div className={styles.root}>
-      <Typography className={styles.label}>Expires in</Typography>
-      <div
-        className={styles.wrap}
-        onClick={() => {
-          setProgress(0);
-          fetchStats();
-        }}
-      >
-        <CircularProgress
-          variant="determinate"
-          size={17}
-          value={progress}
-          className={styles.progressDynamic}
-        />
-        <CircularProgress
-          variant="determinate"
-          size={17}
-          value={100}
-          className={styles.progressStatic}
-        />
-      </div>
-      <IconButton
-        className={styles.infoButton}
-        size="small"
-        onClick={handleInfoClick}
-        id="eco-contribution"
-      >
-        <InfoIcon className={styles.infoIcon} />
-        <div className={styles.infoIconBackground} />
-      </IconButton>
-      <StyledPopover
-        id="popover"
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Typography className={styles.infoText}>
-          Please Note that the Displayed data will be auto-refreshed after 18 seconds. Click this
-          circle to update manually.
+    <>
+      <div className={styles.expiresInContainer}>
+        <Typography variant="inherit" className={`${styles.title} ${styles.expiresInText}`}>
+          Expires in
         </Typography>
-      </StyledPopover>
-    </div>
+        <CircularProgressBar value={seconds * 2} />
+        <IconButton
+          className={styles.expiresInfoButton}
+          size="small"
+          aria-describedby={popoverId}
+          onClick={handleInfoButtonClick}
+          id="expires-in"
+        >
+          <ExpiresInfoIcon />
+        </IconButton>
+        <StyledPopover
+          id={popoverId}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'center',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'center',
+            horizontal: 'left',
+          }}
+        >
+          <Typography variant="inherit" className={styles.swapInfoText}>
+            {infoText}
+          </Typography>
+        </StyledPopover>
+      </div>
+    </>
   );
 };

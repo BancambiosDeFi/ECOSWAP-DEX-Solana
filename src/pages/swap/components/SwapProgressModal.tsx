@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, CircularProgress } from '@mui/material';
-import SubtitleText from '../../../components/typography/SubtitleText';
 import ModalWrapper from '../../../components/ModalWrapper';
 
 interface SwapProgressModalProps {
@@ -10,7 +9,7 @@ interface SwapProgressModalProps {
 
 const SwapProgressModal: React.FC<SwapProgressModalProps> = ({ open, handleClose }) => {
   return (
-    <ModalWrapper open={open} handleClose={handleClose} title="Token swapping">
+    <ModalWrapper open={open} handleClose={handleClose} title="Token Swapping in progress">
       <Box
         sx={{
           display: 'flex',
@@ -19,8 +18,7 @@ const SwapProgressModal: React.FC<SwapProgressModalProps> = ({ open, handleClose
           flexDirection: 'column',
         }}
       >
-        <CircularProgress style={{ color: 'rgb(183,82,230)' }} thickness={6} size={50} />
-        <SubtitleText style={{ color: '#FFFFFF', p: 2 }} text="Transaction in progress" />
+        <CircularProgress style={{ color: '#0156FF' }} thickness={6} size={50} />
       </Box>
     </ModalWrapper>
   );

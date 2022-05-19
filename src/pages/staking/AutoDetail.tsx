@@ -13,8 +13,11 @@ interface showDetailsProps {
   checkedOption: any;
   setPeriod: (data: any) => void;
   claimValue: number;
+  userBxBalance: number;
   handleChangeClaim: (data: any) => void;
   options: Array<{ label: string; startDate: number; endDate: number }>;
+  updatePendingReward: () => Promise<void>;
+  pendingReward: number;
 }
 
 const useStyles = makeStyles(() => ({
@@ -109,7 +112,10 @@ export default function AutoDetail({
   detailTitle,
   detailValue,
   claimValue,
+  userBxBalance,
   handleChangeClaim,
+  updatePendingReward,
+  pendingReward,
 }: showDetailsProps) {
   const styles = useStyles();
   const { isMobile } = useScreenSize();
@@ -167,13 +173,15 @@ export default function AutoDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>
@@ -207,6 +215,7 @@ export default function AutoDetail({
                     <div className={styles.btnWrapper}>
                       <button
                         // style={{ cursor: 'not-allowed', color: '#7C8498' }}
+                        // eslint-disable-next-line max-len
                         className={`${styles.btn} ${styles.btnDisabled} ${styles.weekAutoCompoundBtn}`}
                       >
                         Week Auto Compound
@@ -236,13 +245,15 @@ export default function AutoDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>

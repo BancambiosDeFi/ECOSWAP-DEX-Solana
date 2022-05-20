@@ -82,7 +82,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   switchButtonContainer: {
-    'marginLeft': '40px',
+    'marginLeft': '60px',
     'display': 'flex',
     'justifyContent': 'center',
     'alignItems': 'center',
@@ -245,14 +245,23 @@ export default () => {
   useEffect(() => {
     setInfoText(getExpiresInDescription(seconds));
     if (seconds === 50) {
+      setSeconds(0);
+      fetchPoolInfo();
+      // here we need to add a dependency other than seconds, and a function that updates the required data
     }
   }, [seconds]);
+
+  const updateTimerAndPool = () => {
+    fetchPoolInfo();
+    setSeconds(0);
+    // here we need to add a a function that updates the required data
+  };
 
   return (
     <Box className={styles.root}>
       <Card sx={{ borderRadius: '8px' }} className={styles.card}>
         <div style={{ display: 'flex', justifyContent: 'end' }}>
-          <ExpiresInBlock seconds={seconds} infoText={infoText} />
+          <ExpiresInBlock seconds={seconds} infoText={infoText} updateTimer={updateTimerAndPool} />
         </div>
         <div className={styles.fromBlock}>
           <Typography variant="inherit" className={styles.title}>

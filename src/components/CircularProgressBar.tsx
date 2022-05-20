@@ -7,7 +7,7 @@ import CircularProgress, {
 
 const CircularProgressBar: React.FC<CircularProgressProps> = props => {
   return (
-    <Box sx={{ position: 'relative', display: 'flex' }}>
+    <Box sx={{ position: 'relative', display: 'flex', cursor: 'pointer' }}>
       <CircularProgress
         variant="determinate"
         sx={{

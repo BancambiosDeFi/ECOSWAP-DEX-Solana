@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     position: 'relative',
     width: '100%',
-    padding: '25px 15px',
+    padding: '25px 15px 15px 15px',
     background: '#0D1226',
     borderRadius: '18px',
   },
@@ -100,38 +100,22 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
   },
   arrow: {
-    'padding': 0,
-    'margin': '15px',
-    'width': 0,
-    'height': 0,
-    'background': 'transparent',
-    'borderTop': '10px solid #C4C4C4',
-    'borderBottom': '0',
-    'borderLeft': '5px solid transparent',
-    'borderRight': '5px solid transparent',
-    'cursor': 'pointer',
-    '@media (min-width: 769px)': {
-      position: 'absolute',
-      top: '20px',
-      right: '20px',
-    },
+    padding: 0,
+    background: 'transparent',
+    borderTop: '10px solid #C4C4C4',
+    borderBottom: '0',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent',
+    cursor: 'pointer',
   },
   rotateArrow: {
-    'padding': 0,
-    'margin': '15px',
-    'width': 0,
-    'height': 0,
-    'background': 'transparent',
-    'borderTop': '0',
-    'borderBottom': '10px solid #C4C4C4',
-    'borderLeft': '5px solid transparent',
-    'borderRight': '5px solid transparent',
-    'cursor': 'pointer',
-    '@media (min-width: 769px)': {
-      position: 'absolute',
-      top: '20px',
-      right: '20px',
-    },
+    padding: 0,
+    background: 'transparent',
+    borderTop: '0',
+    borderBottom: '10px solid #C4C4C4',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent',
+    cursor: 'pointer',
   },
   text: {
     'fontFamily': 'Saira',
@@ -197,7 +181,7 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
         <Grid item xs={isLargeDesktop ? 3 : 1}>
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
-        <Grid container direction="column" xs={isLargeDesktop ? 3 : 3} item>
+        <Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>
           <span className={styles.text}>PENDING REWARD</span>
           <span className={`${styles.text} ${styles.value}`}>{reward}</span>
         </Grid>
@@ -209,14 +193,15 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>
-        <Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>
+        <Grid container direction="column" xs={isLargeDesktop ? 2 : 2} item>
           <span className={styles.text}>LIQUIDITY</span>
           <span className={`${styles.text} ${styles.value}`}>{liquidity}</span>
         </Grid>
-        <button
-          className={showDetails ? styles.rotateArrow : styles.arrow}
-          onClick={toggleShowDetails}
-        />
+        <Grid container alignItems="center" xs={1} item>
+          <div className={styles.arrowButtonContainer} onClick={toggleShowDetails}>
+            <button className={showDetails ? styles.rotateArrow : styles.arrow} />
+          </div>
+        </Grid>
       </Grid>
       {cloneElement(detailMenu, { showDetails })}
     </Grid>

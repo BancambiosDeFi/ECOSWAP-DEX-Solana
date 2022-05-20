@@ -46,30 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '30px',
     height: '30px',
   },
-  arrow: {
-    padding: 0,
-    margin: '15px',
-    width: 0,
-    height: 0,
-    background: 'transparent',
-    borderTop: '5px solid transparent',
-    borderBottom: '5px solid transparent',
-    borderLeft: '10px solid #C4C4C4',
-    borderRight: '0px',
-    cursor: 'pointer',
-  },
-  rotateArrow: {
-    padding: 0,
-    margin: '15px',
-    width: 0,
-    height: 0,
-    background: 'transparent',
-    borderTop: '10px solid #C4C4C4',
-    borderBottom: '0',
-    borderLeft: '5px solid transparent',
-    borderRight: '5px solid transparent',
-    cursor: 'pointer',
-  },
   text: {
     fontWeight: 400,
     fontSize: '16px',
@@ -168,7 +144,7 @@ export default function ManualDetail({
 
   return (
     <Collapse
-      style={{ width: '100%', marginTop: '28px' }}
+      style={{ width: '100%',  marginTop: '28px' }}
       in={showDetails}
       timeout="auto"
       unmountOnExit

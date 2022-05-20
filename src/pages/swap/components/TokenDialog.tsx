@@ -44,7 +44,6 @@ const useStyles = makeStyles(() => ({
       'width': '390px',
       'maxHeight': '660px',
       'padding': '20px',
-      'border': '1px solid #0156FF',
       'borderRadius': '8px',
       '@media(max-height: 800px)': {
         maxHeight: '550px',

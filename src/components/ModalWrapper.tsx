@@ -67,7 +67,6 @@ const ModalWrapper: React.FC<CustomizedDialogsProps> = ({ open, title, handleClo
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          // alignItems: "center",
         }}
       >
         {children}

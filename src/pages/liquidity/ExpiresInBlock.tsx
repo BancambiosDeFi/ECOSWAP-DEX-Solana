@@ -45,6 +45,7 @@ const useStyles = makeStyles(() => ({
     color: '#FFFFFF',
   },
 }));
+
 const StyledPopover = styled(Popover)(() => ({
   '& .MuiPopover-paper': {
     width: 'fit-content',

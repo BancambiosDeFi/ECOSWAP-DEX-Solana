@@ -161,10 +161,6 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
       </Grid>
       {showDetails ? (
         <Grid container sx={{ paddingTop: '30px' }}>
-          {/*<Grid container direction="column" xs={4} item sx={{ paddingLeft: '6px' }}>*/}
-          {/*  <span className={styles.text}>STAKED</span>*/}
-          {/*  <span className={`${styles.text} ${styles.value}`}>{staked}</span>*/}
-          {/*</Grid>*/}
           <Grid container direction="column" xs={4} item>
             <span className={styles.text}>TOTAL STAKED</span>
             <span className={`${styles.text} ${styles.value}`}>{totalStaked}</span>
@@ -183,10 +179,6 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
           <span className={styles.text}>ACCUMULATED REWARD</span>
           <span className={`${styles.text} ${styles.value}`}>{reward}</span>
         </Grid>
-        {/*<Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>*/}
-        {/*  <span className={styles.text}>STAKED</span>*/}
-        {/*  <span className={`${styles.text} ${styles.value}`}>{staked}</span>*/}
-        {/*</Grid>*/}
         <Grid container direction="column" xs={3} item>
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>

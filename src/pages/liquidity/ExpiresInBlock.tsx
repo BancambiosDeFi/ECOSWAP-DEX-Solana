@@ -55,7 +55,7 @@ const StyledPopover = styled(Popover)(() => ({
   },
 }));
 
-export const ExpiresInBlock = ({ seconds, infoText }) => {
+export const ExpiresInBlock = ({ seconds, infoText, updateTimer }) => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
@@ -69,13 +69,14 @@ export const ExpiresInBlock = ({ seconds, infoText }) => {
     setAnchorEl(event.currentTarget);
   };
 
+
   return (
     <>
       <div className={styles.expiresInContainer}>
         <Typography variant="inherit" className={`${styles.title} ${styles.expiresInText}`}>
           Expires in
         </Typography>
-        <CircularProgressBar value={seconds * 2} />
+        <CircularProgressBar onClick={updateTimer} value={seconds * 2} />
         <IconButton
           className={styles.expiresInfoButton}
           size="small"

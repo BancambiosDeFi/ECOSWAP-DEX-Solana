@@ -13,17 +13,16 @@ const useStyles = makeStyles(() => ({
     color: '#ffffff',
     fontSize: '24px',
     fontFamily: '"Saira"',
-    border: '1px solid #0156FF',
+    border: 'none',
     borderBottom: 'none',
   },
 }));
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
     background: '#0D1226',
-    border: '1px solid #0156FF',
-    borderTop: 'none',
   },
   '& .MuiDialogActions-root': {
     padding: theme.spacing(1),
@@ -50,9 +49,10 @@ const ModalWrapper: React.FC<CustomizedDialogsProps> = ({ open, title, handleClo
     <BootstrapDialog
       PaperProps={{
         sx: {
-          height: { xs: '55%', md: '192.1px' },
+          height: { xs: 'none', md: '192.1px' },
           width: { xs: 'none', md: '379.51px' },
           borderRadius: '8px',
+          border:'2px solid #0156FF'
         },
       }}
       fullWidth

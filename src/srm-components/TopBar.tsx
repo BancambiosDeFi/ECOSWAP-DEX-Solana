@@ -115,7 +115,7 @@ const EXTERNAL_LINKS = {
 const StyledDrawer = styled(Drawer)(() => ({
   '& .MuiDrawer-paper': {
     width: '191px',
-    backgroundColor: 'rgba(30, 32, 34, 1)',
+    backgroundColor: '#1B2341',
   },
 }));
 
@@ -305,9 +305,7 @@ const TopBar: React.FC = () => {
           </Box>
           <Divider
             sx={{
-              border: '0.5px solid',
-              borderImage:
-                'linear-gradient(to right, rgba(236, 38, 245, 0.5), rgba(1, 86, 255, 0.5)) 0.5',
+              borderBottom: '0.1px solid #0156FF',
             }}
           />
           <List>

@@ -3,19 +3,18 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-import Tooltip from '@mui/material/Tooltip';
 import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
 import Wallet from '@project-serum/sol-wallet-adapter';
 import logo from '../../assets/icons/banc-logo.png';
-import infoIcon from '../../srm-assets/info.svg';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
 import { useScreenSize } from '../../utils/screenSize';
 import { DEFAULT_PUBLIC_KEY } from '../../components/wallet/types';
 import { useWallet } from '../../components/wallet/wallet';
 import { notify } from '../../srm-utils/notifications';
+import { ExpiresInBlock } from '../liquidity/ExpiresInBlock';
+import { getExpiresInDescription } from '../../utils/descriptions';
 import ManualDetail from './ManualDetail';
 import AutoDetail from './AutoDetail';
 import {
@@ -45,7 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   title: {
-    'padding': theme.spacing(6, 0, 2, 2),
     'fontFamily': 'Saira',
     'fontWeight': 700,
     'fontSize': '24px',
@@ -103,7 +101,8 @@ export default function StakingPage() {
   const [userBxBalance, setUserBxBalance] = useState<number>(0);
   const [pendingReward, setPendingReward] = useState<number>(0);
   const { wallet } = useWallet();
-
+  const [seconds, setSeconds] = useState<number>(0);
+  const [infoText, setInfoText] = useState<string>(getExpiresInDescription(seconds));
   const handleChangeClaim = useCallback(
     e => {
       setClaimValue(e.target?.value);
@@ -181,6 +180,27 @@ export default function StakingPage() {
     updateUserBxsBalance();
   }, [updateUserBxsBalance]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prevValue => (prevValue === 50 ? 0 : prevValue + 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    setInfoText(getExpiresInDescription(seconds));
+    if (seconds === 50) {
+      setSeconds(0);
+      // here we need to add a dependency other than seconds, and a function that updates the required data
+    }
+  }, [seconds]);
+
+  const updateTimerAndSomeData = () => {
+    setSeconds(0);
+    // here we need to add a a function that updates the required data
+  };
+
   // useEffect(() => {
   //   updatePendingReward();
   //   if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
@@ -212,45 +232,19 @@ export default function StakingPage() {
   //   }
   // }, [wallet?.publicKey]);
 
-  const expiresInComponent = isMobile ? (
-    <div className={styles.expiresTitleBlock}>
-      <CircularProgress
-        thickness={7}
-        variant="determinate"
-        color="primary"
-        size={22}
-        value={63}
-        style={{ margin: '0 5px' }}
-      />
-    </div>
-  ) : (
-    <Typography variant="inherit" className={styles.expiresTitle}>
-      Expires in
-      <CircularProgress
-        thickness={7}
-        variant="determinate"
-        color="primary"
-        size={15}
-        value={63}
-        style={{ margin: '0 5px' }}
-      />
-      <Tooltip title="Delete aaa" placement="top-start">
-        <>
-          <img src={infoIcon} alt="" />
-        </>
-      </Tooltip>
-    </Typography>
-  );
-
   return (
     <BasicLayout>
       <Grid container direction="column" alignItems="center" className={styles.root}>
         <Grid container direction="column">
-          <Grid container justifyContent="space-between">
+          <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="inherit" className={styles.title}>
               Manual staking BXS
             </Typography>
-            {expiresInComponent}
+            <ExpiresInBlock
+              seconds={seconds}
+              infoText={infoText}
+              updateTimer={updateTimerAndSomeData}
+            />
           </Grid>
           <Grid container alignItems="center" direction="row" className={styles.wrapper}>
             <Row

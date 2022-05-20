@@ -6,9 +6,8 @@ import { useScreenSize } from '../utils/screenSize';
 interface RowProp {
   imgSrc: any;
   reward: number;
-  staked: number;
-  arp: number;
-  liquidity: number;
+  arp: string;
+  totalStaked: number;
   setPeriod: (data: any) => void;
   claimValue: number;
   checkedOption: any;
@@ -151,7 +150,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu }: RowProp) {
+export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: RowProp) {
   const styles = useStyles();
   const { isMobile, isLargeDesktop } = useScreenSize();
   const [showDetails, setShowDetails] = useState<boolean>(true);
@@ -164,7 +163,7 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
         <Grid container direction="column" xs={4} item>
-          <span className={styles.text}>PENDING REWARD</span>
+          <span className={styles.text}>ACCUMULATED REWARD</span>
           <span className={`${styles.text} ${styles.value}`}>{reward}</span>
         </Grid>
         <Grid container direction="column" xs={3} item>
@@ -179,13 +178,13 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
       </Grid>
       {showDetails ? (
         <Grid container sx={{ paddingTop: '30px' }}>
-          <Grid container direction="column" xs={4} item sx={{ paddingLeft: '6px' }}>
-            <span className={styles.text}>STAKED</span>
-            <span className={`${styles.text} ${styles.value}`}>{staked}</span>
-          </Grid>
+          {/*<Grid container direction="column" xs={4} item sx={{ paddingLeft: '6px' }}>*/}
+          {/*  <span className={styles.text}>STAKED</span>*/}
+          {/*  <span className={`${styles.text} ${styles.value}`}>{staked}</span>*/}
+          {/*</Grid>*/}
           <Grid container direction="column" xs={4} item>
-            <span className={styles.text}>LIQUIDITY</span>
-            <span className={`${styles.text} ${styles.value}`}>{liquidity}</span>
+            <span className={styles.text}>TOTAL STAKED</span>
+            <span className={`${styles.text} ${styles.value}`}>{totalStaked}</span>
           </Grid>
         </Grid>
       ) : null}
@@ -198,20 +197,20 @@ export default function Row({ imgSrc, reward, staked, arp, liquidity, detailMenu
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
         <Grid container direction="column" xs={isLargeDesktop ? 3 : 3} item>
-          <span className={styles.text}>PENDING REWARD</span>
+          <span className={styles.text}>ACCUMULATED REWARD</span>
           <span className={`${styles.text} ${styles.value}`}>{reward}</span>
         </Grid>
-        <Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>
-          <span className={styles.text}>STAKED</span>
-          <span className={`${styles.text} ${styles.value}`}>{staked}</span>
-        </Grid>
+        {/*<Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>*/}
+        {/*  <span className={styles.text}>STAKED</span>*/}
+        {/*  <span className={`${styles.text} ${styles.value}`}>{staked}</span>*/}
+        {/*</Grid>*/}
         <Grid container direction="column" xs={2} item>
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>
         <Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>
-          <span className={styles.text}>LIQUIDITY</span>
-          <span className={`${styles.text} ${styles.value}`}>{liquidity}</span>
+          <span className={styles.text}>TOTAL STAKED</span>
+          <span className={`${styles.text} ${styles.value}`}>{totalStaked}</span>
         </Grid>
         <button
           className={showDetails ? styles.rotateArrow : styles.arrow}

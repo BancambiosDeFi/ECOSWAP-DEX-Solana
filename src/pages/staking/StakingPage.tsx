@@ -17,8 +17,8 @@ import { DEFAULT_PUBLIC_KEY } from '../../components/wallet/types';
 import { useWallet } from '../../components/wallet/wallet';
 import { notify } from '../../srm-utils/notifications';
 import ManualDetail from './ManualDetail';
-import AutoDetail from './AutoDetail';
 import {
+  calculateApr,
   convertBnAmountToDisplayBalance,
   getAssociatedBxTokenAddress,
   getAssociatedStakingTokenAddress,
@@ -101,7 +101,9 @@ export default function StakingPage() {
   const [checkedOption, setCheckedOption] = useState({});
   const [claimValue, setClaimValue] = useState<number>(0);
   const [userBxBalance, setUserBxBalance] = useState<number>(0);
-  const [pendingReward, setPendingReward] = useState<number>(0);
+  const [accumulatedReward, setAccumulatedReward] = useState<number>(0);
+  const [apr, setApr] = useState<string>('0');
+  const [totalStaked, setTotalStaked] = useState<number>(0);
   const { wallet } = useWallet();
 
   const handleChangeClaim = useCallback(
@@ -127,6 +129,12 @@ export default function StakingPage() {
       const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
       const staking = getStaking(wallet as Wallet);
       const programState = await staking.programState();
+      setTotalStaked(
+        convertBnAmountToDisplayBalance(
+          programState.totalStakedTokens,
+          Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+        ),
+      );
       const userStakeInfo = await staking.userStakeInfo(wallet?.publicKey);
       const tokenAccount = await getAssociatedTokenAccount(
         wallet?.publicKey,
@@ -139,7 +147,7 @@ export default function StakingPage() {
         new BN(tokenAccount.amount),
         tokenMintInfo.supply,
       );
-      setPendingReward(
+      setAccumulatedReward(
         convertBnAmountToDisplayBalance(
           amountUnstaked,
           Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
@@ -147,6 +155,12 @@ export default function StakingPage() {
       );
     }
   }, [wallet?.publicKey]);
+
+  useEffect(() => {
+    if (totalStaked && accumulatedReward) {
+      setApr(calculateApr(totalStaked, accumulatedReward));
+    }
+  }, [totalStaked, accumulatedReward]);
 
   const updateUserBxsBalance = useCallback(async () => {
     if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
@@ -180,37 +194,6 @@ export default function StakingPage() {
   useEffect(() => {
     updateUserBxsBalance();
   }, [updateUserBxsBalance]);
-
-  // useEffect(() => {
-  //   updatePendingReward();
-  //   if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
-  //     const getUserBxBalance = async () => {
-  //       // Getting user BXS balance
-  //       const bxAddress = await getAssociatedBxTokenAddress(wallet?.publicKey);
-  //       try {
-  //         const tokenAccount = await getAssociatedTokenAccount(
-  //           wallet?.publicKey,
-  //           new PublicKey(process.env.REACT_APP_BX_TOKEN_MINT_PUBKEY as string),
-  //           bxAddress,
-  //         );
-  //         setUserBxBalance(
-  //           convertBnAmountToDisplayBalance(
-  //             new BN(tokenAccount.amount),
-  //             Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
-  //           ),
-  //         );
-  //       } catch (e) {
-  //         notify({
-  //           type: 'error',
-  //           message: 'Fetch BXS balance error',
-  //           description: e.message,
-  //         });
-  //       }
-  //     };
-  //
-  //     getUserBxBalance();
-  //   }
-  // }, [wallet?.publicKey]);
 
   const expiresInComponent = isMobile ? (
     <div className={styles.expiresTitleBlock}>
@@ -259,57 +242,55 @@ export default function StakingPage() {
               setPeriod={setPeriod}
               claimValue={claimValue}
               imgSrc={logo}
-              reward={pendingReward}
-              staked={22}
-              arp={33}
-              liquidity={44}
+              reward={accumulatedReward}
+              arp={apr}
+              totalStaked={totalStaked}
               detailTitle="Harvest"
               detailValue={15}
               detailMenu={
                 <ManualDetail
                   userBxBalance={userBxBalance}
-                  detailTitle="PENDING REWARD"
-                  detailValue={pendingReward}
+                  detailTitle="ACCUMULATED REWARD"
+                  detailValue={accumulatedReward}
                   handleChangeClaim={handleChangeClaim}
                   claimValue={claimValue}
                   updatePendingReward={updatePendingReward}
-                  pendingReward={pendingReward}
+                  accumulatedReward={accumulatedReward}
                 />
               }
             />
           </Grid>
-          <Typography variant="inherit" className={styles.title}>
-            Auto staking BXS
-          </Typography>
-          <Grid container alignItems="center" direction="row" className={styles.wrapper}>
-            <Row
-              options={options}
-              checkedOption={checkedOption}
-              setPeriod={setPeriod}
-              claimValue={claimValue}
-              imgSrc={logo}
-              reward={pendingReward}
-              staked={22}
-              arp={33}
-              liquidity={44}
-              detailTitle="Auto"
-              detailValue={15}
-              detailMenu={
-                <AutoDetail
-                  userBxBalance={userBxBalance}
-                  claimValue={claimValue}
-                  handleChangeClaim={handleChangeClaim}
-                  detailTitle="Auto-Compound"
-                  detailValue={pendingReward}
-                  checkedOption={checkedOption}
-                  setPeriod={setPeriod}
-                  options={options}
-                  updatePendingReward={updatePendingReward}
-                  pendingReward={pendingReward}
-                />
-              }
-            />
-          </Grid>
+          {/*<Typography variant="inherit" className={styles.title}>*/}
+          {/*  Auto staking BXS*/}
+          {/*</Typography>*/}
+          {/*<Grid container alignItems="center" direction="row" className={styles.wrapper}>*/}
+          {/*  <Row*/}
+          {/*    options={options}*/}
+          {/*    checkedOption={checkedOption}*/}
+          {/*    setPeriod={setPeriod}*/}
+          {/*    claimValue={claimValue}*/}
+          {/*    imgSrc={logo}*/}
+          {/*    reward={accumulatedReward}*/}
+          {/*    arp={apr}*/}
+          {/*    totalStaked={totalStaked}*/}
+          {/*    detailTitle="Auto"*/}
+          {/*    detailValue={15}*/}
+          {/*    detailMenu={*/}
+          {/*      <AutoDetail*/}
+          {/*        userBxBalance={userBxBalance}*/}
+          {/*        claimValue={claimValue}*/}
+          {/*        handleChangeClaim={handleChangeClaim}*/}
+          {/*        detailTitle="Auto-Compound"*/}
+          {/*        detailValue={accumulatedReward}*/}
+          {/*        checkedOption={checkedOption}*/}
+          {/*        setPeriod={setPeriod}*/}
+          {/*        options={options}*/}
+          {/*        updatePendingReward={updatePendingReward}*/}
+          {/*        accumulatedReward={accumulatedReward}*/}
+          {/*      />*/}
+          {/*    }*/}
+          {/*  />*/}
+          {/*</Grid>*/}
         </Grid>
       </Grid>
     </BasicLayout>

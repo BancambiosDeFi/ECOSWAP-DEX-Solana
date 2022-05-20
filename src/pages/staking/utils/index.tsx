@@ -22,7 +22,7 @@ export const getStaking = (wallet: Wallet): Staking => {
     preflightCommitment: 'recent',
     commitment: 'recent',
   };
-  const provider = new Provider(new Connection('https://api.devnet.solana.com'), wallet, opts);
+  const provider = new Provider(new Connection(getNetwork()), wallet, opts);
 
   return new Staking(
     new PublicKey(process.env.REACT_APP_STAKING_PROGRAM_ID as string),
@@ -88,6 +88,17 @@ export const convertStakingValueToBnAmount = (value: number, decimals: number): 
 
 export const convertBnAmountToDisplayBalance = (amount: BN, decimals: number): number => {
   return new BigNumber(amount.toString()).dividedBy(Math.pow(10, decimals)).toNumber();
+};
+
+export const calculateApr = (totalStaked: number, accumulatedReward: number): string => {
+  return (
+    new BigNumber(process.env.REACT_APP_STAKING_YEARLY_REWARD as string)
+      .dividedBy(new BigNumber(totalStaked))
+      .multipliedBy(new BigNumber(accumulatedReward))
+      .integerValue(BigNumber.ROUND_FLOOR)
+      // .toPrecision(3)
+      .toString()
+  );
 };
 
 export const getStakingTokenMintInfo = async (owner: PublicKey): Promise<MintInfo> => {

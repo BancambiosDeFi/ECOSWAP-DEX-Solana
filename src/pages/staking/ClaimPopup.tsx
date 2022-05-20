@@ -26,7 +26,7 @@ type ClaimPopup = {
   ifStake: boolean;
   title: string;
   updatePendingReward: () => Promise<void>;
-  pendingReward: number;
+  accumulatedReward: number;
 };
 
 const useStyles = makeStyles(() => ({
@@ -111,7 +111,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
   title,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updatePendingReward,
-  pendingReward,
+  accumulatedReward,
 }: ClaimPopup): JSX.Element {
   const styles = useStyles();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -222,24 +222,10 @@ const MemoClaimPopup = memo(function ClaimPopup({
       // await updatePendingReward();
       const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
       const staking = getStaking(wallet as Wallet);
-      // const programState = await staking.programState();
-      // const userStakeInfo = await staking.userStakeInfo(wallet?.publicKey);
-      // const tokenAccount = await getAssociatedTokenAccount(
-      //   wallet?.publicKey,
-      //   new PublicKey(process.env.REACT_APP_STAKING_TOKEN_MINT_PUBKEY as string),
-      //   stakingAddress,
-      // );
-      // const tokenMintInfo = await getStakingTokenMintInfo(wallet?.publicKey);
-      // const { amountUnstaked } = programState.getPossibleUnstake(
-      //   userStakeInfo,
-      //   new BN(tokenAccount.amount),
-      //   tokenMintInfo.supply,
-      // );
-      // if (amount.lte(amountUnstaked)) {
       if (
         amount.lte(
           convertStakingValueToBnAmount(
-            pendingReward,
+            accumulatedReward,
             Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
           ),
         )
@@ -273,12 +259,12 @@ const MemoClaimPopup = memo(function ClaimPopup({
   useEffect(() => {
     if (ifStake && claimValue > userBxBalance) {
       setIsClaimValueError(true);
-    } else if (!ifStake && claimValue > pendingReward) {
+    } else if (!ifStake && claimValue > accumulatedReward) {
       setIsClaimValueError(true);
     } else {
       setIsClaimValueError(false);
     }
-  }, [claimValue, userBxBalance, pendingReward]);
+  }, [claimValue, userBxBalance, accumulatedReward]);
 
   return (
     <>
@@ -313,7 +299,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
                 Staking BXS
               </Typography>
               <Typography component="span" className={styles.content}>
-                {ifStake ? `Balance: ${userBxBalance}` : `Pending reward: ${pendingReward}`}
+                {ifStake ? `Balance: ${userBxBalance}` : `Pending reward: ${accumulatedReward}`}
               </Typography>
             </Grid>
             <Grid container justifyContent="space-between" alignItems="center">

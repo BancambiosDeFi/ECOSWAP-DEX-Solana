@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 
 import { useTokenMap } from '@serum/swap-ui';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   tokenIconImage: {
     'height': '45px',
     'width': '45px',

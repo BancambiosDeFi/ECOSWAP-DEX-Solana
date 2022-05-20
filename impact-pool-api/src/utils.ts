@@ -10,9 +10,9 @@ pool_token_name: string
 
 export function getImpactPoolSeed(
   programId: PublicKey,
-  vestingName: string
+  impactName: string
 ): string {
-  return getSeed(programId.toBase58(), "VestingType", vestingName);
+  return getSeed(programId.toBase58(), "ImpactPool", impactName);
 }
 
 function getSeed(...params: string[]): string {

@@ -13,14 +13,17 @@ interface showDetailsProps {
   checkedOption: any;
   setPeriod: (data: any) => void;
   claimValue: number;
+  userBxBalance: number;
   handleChangeClaim: (data: any) => void;
   options: Array<{ label: string; startDate: number; endDate: number }>;
+  updatePendingReward: () => Promise<void>;
+  pendingReward: number;
 }
 
 const useStyles = makeStyles(() => ({
   subtitle: {
     'fontFamily': 'Saira',
-    'fontWeight': 800,
+    'fontWeight': 600,
     'fontSize': '16px',
     'lineHeight': '40px',
     'letterSpacing': '0em',
@@ -32,8 +35,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   divider: {
-    background:
-      'linear-gradient(232deg, rgba(236, 38, 245, 0.3) 50%, rgba(159, 90, 229, 0.3) 100%)',
+    background: '#0156FF',
     border: 'none',
     margin: '15px 0 15px',
     height: '1px',
@@ -42,15 +44,13 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '100%',
     padding: '1px',
-    borderRadius: '8px',
-    background:
-      'linear-gradient(232deg, rgba(236, 38, 245, 0.3) 50%, rgba(159, 90, 229, 0.3) 100%)',
   },
   innerWrapper: {
     'height': '100%',
     'padding': '15px 15px 5px',
+    'border': '0.15px solid #0156FF',
     'borderRadius': '8px',
-    'background': '#0a0c0f',
+    'background': '#0D1226',
     '@media (max-width: 768px)': {
       padding: '0 16px',
       width: '100%',
@@ -63,7 +63,7 @@ const useStyles = makeStyles(() => ({
   connectWalletWrapper: {
     'height': '100%',
     'borderRadius': '8px',
-    'background': '#0a0c0f',
+    'background': '#0D1226',
     '@media (max-width: 768px)': {
       padding: '0 8px',
     },
@@ -72,7 +72,6 @@ const useStyles = makeStyles(() => ({
     'marginBottom': '10px',
     'padding': '0.5px',
     'borderRadius': '8px',
-    'background': 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
     '@media (max-width: 768px)': {
       margin: '20px 0',
     },
@@ -80,9 +79,9 @@ const useStyles = makeStyles(() => ({
   btn: {
     padding: '7px 35px',
     width: '100%',
-    border: 'none',
+    border: '1px solid #0156FF',
     fontSize: '16px',
-    background: '#202124',
+    background: '#092667',
     borderRadius: '8px',
     fontFamily: 'Saira',
   },
@@ -103,6 +102,8 @@ const useStyles = makeStyles(() => ({
   btnDisabled: {
     cursor: 'not-allowed',
     color: '#7C8498',
+    background: '#1B2341',
+    border: '1px solid transparent',
   },
 }));
 
@@ -111,7 +112,10 @@ export default function AutoDetail({
   detailTitle,
   detailValue,
   claimValue,
+  userBxBalance,
   handleChangeClaim,
+  updatePendingReward,
+  pendingReward,
 }: showDetailsProps) {
   const styles = useStyles();
   const { isMobile } = useScreenSize();
@@ -169,13 +173,15 @@ export default function AutoDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>
@@ -209,6 +215,7 @@ export default function AutoDetail({
                     <div className={styles.btnWrapper}>
                       <button
                         // style={{ cursor: 'not-allowed', color: '#7C8498' }}
+                        // eslint-disable-next-line max-len
                         className={`${styles.btn} ${styles.btnDisabled} ${styles.weekAutoCompoundBtn}`}
                       >
                         Week Auto Compound
@@ -238,13 +245,15 @@ export default function AutoDetail({
                         <Grid item xs={2}>
                           <Grid container className={styles.btnWrapper}>
                             <MemoClaimPopup
-                              balance={1}
+                              userBxBalance={userBxBalance}
                               onChange={undefined}
                               onSubmit={undefined}
                               ifStake={false}
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
+                              updatePendingReward={updatePendingReward}
+                              pendingReward={pendingReward}
                             />
                           </Grid>
                         </Grid>

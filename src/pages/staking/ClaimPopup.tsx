@@ -1,35 +1,45 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Button, Modal } from 'antd';
 import { makeStyles } from '@mui/styles';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
+import Wallet from '@project-serum/sol-wallet-adapter';
+import { useWallet } from '../../components/wallet/wallet';
+import { notify } from '../../srm-utils/notifications';
+import {
+  convertStakingValueToBnAmount,
+  createAssociatedStakingTokenAccountInstruction,
+  getAssociatedBxTokenAddress,
+  getAssociatedStakingTokenAddress,
+  getStaking,
+  getAssociatedTokenAccount,
+  getNetwork,
+} from './utils';
 
 type ClaimPopup = {
-  balance: number;
+  userBxBalance: number;
   onChange: void;
   claimValue: number;
   handleChangeClaim: (data: any) => void;
   onSubmit: void;
   ifStake: boolean;
   title: string;
+  updatePendingReward: () => Promise<void>;
+  pendingReward: number;
 };
 
 const useStyles = makeStyles(() => ({
   inner: {
     padding: '12px 22px',
     marginBottom: '25px',
-    background: '#202124',
+    background: '#0D1226',
     borderRadius: '8px',
+    border: '0.15px solid #0156FF'
   },
   title: {
-    fontWeight: 800,
+    fontWeight: 600,
     fontSize: '24px',
-  },
-  btnWrapper: {
-    marginBottom: '10px',
-    padding: '0.5px',
-    borderRadius: '8px',
-    background: 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
   },
   content: {
     fontSize: '16px',
@@ -41,7 +51,7 @@ const useStyles = makeStyles(() => ({
   },
   contentValue: {
     fontSize: '24px',
-    fontWeight: 800,
+    fontWeight: 600,
     color: '#AEAEAF',
     background: 'transparent',
     border: 'none',
@@ -56,20 +66,21 @@ const useStyles = makeStyles(() => ({
       cursor: 'pointer',
     },
     'width': '100%',
-    'border': 'none',
+    'border': '1px solid #0156FF',
     'padding': '8px 0',
     'fontSize': '16px',
-    'background': '#202124',
+    'background': '#092667',
     'borderRadius': '8px',
   },
   controlBtn: {
     '&:hover': {
       cursor: 'pointer',
     },
+    'margin': '5px 0',
+    'border': '1px solid #0156FF',
     'width': '100%',
-    'background': '#1E2022',
+    'background': '#092667',
     'borderRadius': '8px',
-    'border': 'none',
     'cursor': 'pointer',
   },
   validation: {
@@ -89,19 +100,181 @@ const useStyles = makeStyles(() => ({
 }));
 
 const MemoClaimPopup = memo(function ClaimPopup({
-  balance,
+  userBxBalance,
   ifStake,
   claimValue,
   handleChangeClaim,
   title,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updatePendingReward,
+  pendingReward,
 }: ClaimPopup): JSX.Element {
   const styles = useStyles();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isClaimValueError, setIsClaimValueError] = useState<boolean>(false);
+  const { wallet } = useWallet();
 
   const showModal = () => {
     setIsModalVisible(!isModalVisible);
-    handleChangeClaim(0);
   };
+
+  const sendTransaction = async (transaction: Transaction) => {
+    const connection = new Connection(getNetwork());
+
+    connection
+      .getRecentBlockhash('confirmed')
+      .then(({ blockhash }) => {
+        transaction.recentBlockhash = blockhash;
+        transaction.feePayer = wallet?.publicKey;
+
+        window.solana
+          .signAndSendTransaction(transaction)
+          .then((sign: { signature: string }) => {
+            connection
+              .confirmTransaction(sign.signature, 'confirmed')
+              .then(() => {
+                setIsModalVisible(false);
+                handleChangeClaim(0);
+                notify({
+                  type: 'success',
+                  message: ifStake ? 'Staked Successfully' : 'Un-Staked Successfully',
+                  description: ifStake
+                    ? 'Staking transaction was successful.'
+                    : 'Un-Staking transaction was successful.',
+                });
+              })
+              .catch(e => {
+                notify({
+                  type: 'error',
+                  message: ifStake ? 'Staking transaction error' : 'Un-Staking transaction error',
+                  description: e.message,
+                });
+              });
+          })
+          .catch((e: any) => {
+            notify({
+              type: 'error',
+              message: ifStake ? 'Staking transaction error' : 'Un-Staking transaction error',
+              description: e.message,
+            });
+          });
+      })
+      .catch(e => {
+        notify({
+          type: 'error',
+          message: ifStake ? 'Staking transaction error' : 'Un-Staking transaction error',
+          description: e.message,
+        });
+      });
+  };
+
+  const stakeBxs = async () => {
+    if (wallet?.publicKey) {
+      const transaction = new Transaction();
+      const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
+      try {
+        await getAssociatedTokenAccount(
+          wallet?.publicKey,
+          new PublicKey(process.env.REACT_APP_STAKING_TOKEN_MINT_PUBKEY as string),
+          stakingAddress,
+        );
+      } catch (e) {
+        transaction.add(
+          createAssociatedStakingTokenAccountInstruction(wallet?.publicKey, stakingAddress),
+        );
+      }
+
+      transaction.add(
+        await getStaking(wallet as Wallet).stake(
+          convertStakingValueToBnAmount(
+            claimValue,
+            Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+          ),
+          {
+            publicKey: wallet?.publicKey,
+            bxTokenAccount: await getAssociatedBxTokenAddress(wallet?.publicKey),
+            stakingTokenAccount: stakingAddress,
+          },
+        ),
+      );
+
+      await sendTransaction(transaction);
+    } else {
+      notify({
+        type: 'error',
+        message: 'Staking error',
+        description: "Wallet doesn't connected.",
+      });
+    }
+  };
+
+  const unStakeBxs = async () => {
+    if (wallet?.publicKey) {
+      const transaction = new Transaction();
+      const amount = convertStakingValueToBnAmount(
+        claimValue,
+        Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+      );
+      // await updatePendingReward();
+      const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
+      const staking = getStaking(wallet as Wallet);
+      // const programState = await staking.programState();
+      // const userStakeInfo = await staking.userStakeInfo(wallet?.publicKey);
+      // const tokenAccount = await getAssociatedTokenAccount(
+      //   wallet?.publicKey,
+      //   new PublicKey(process.env.REACT_APP_STAKING_TOKEN_MINT_PUBKEY as string),
+      //   stakingAddress,
+      // );
+      // const tokenMintInfo = await getStakingTokenMintInfo(wallet?.publicKey);
+      // const { amountUnstaked } = programState.getPossibleUnstake(
+      //   userStakeInfo,
+      //   new BN(tokenAccount.amount),
+      //   tokenMintInfo.supply,
+      // );
+      // if (amount.lte(amountUnstaked)) {
+      if (
+        amount.lte(
+          convertStakingValueToBnAmount(
+            pendingReward,
+            Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+          ),
+        )
+      ) {
+        const unStakeInstruction = await staking.unstake(amount, {
+          publicKey: wallet?.publicKey,
+          bxTokenAccount: await getAssociatedBxTokenAddress(wallet?.publicKey),
+          stakingTokenAccount: stakingAddress,
+        });
+
+        transaction.add(unStakeInstruction);
+
+        await sendTransaction(transaction);
+      } else {
+        setIsClaimValueError(true);
+        notify({
+          type: 'error',
+          message: 'Staking error',
+          description: 'Insufficient balance to un-stake.',
+        });
+      }
+    } else {
+      notify({
+        type: 'error',
+        message: 'Staking error',
+        description: "Wallet doesn't connected.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (ifStake && claimValue > userBxBalance) {
+      setIsClaimValueError(true);
+    } else if (!ifStake && claimValue > pendingReward) {
+      setIsClaimValueError(true);
+    } else {
+      setIsClaimValueError(false);
+    }
+  }, [claimValue, userBxBalance, pendingReward]);
 
   return (
     <>
@@ -116,10 +289,10 @@ const MemoClaimPopup = memo(function ClaimPopup({
         onCancel={showModal}
         closable={false}
         maskStyle={{
-          background: 'background: rgba(0, 0, 0, 0.9)',
+          background: 'background: #0D1226',
         }}
         bodyStyle={{
-          background: '#0A0C0E',
+          background: '#0D1226',
           padding: '12px 25px 25px',
           borderRadius: '8px',
           border: '1px solid #0156FF',
@@ -129,14 +302,14 @@ const MemoClaimPopup = memo(function ClaimPopup({
         maskClosable={true}
       >
         <section>
-          <h5 className={styles.title}>{ifStake ? 'Stake BSX' : 'Un-Stake BSX'}</h5>
+          <h5 className={styles.title}>{ifStake ? 'Stake BXS' : 'Un-Stake BXS'}</h5>
           <Grid className={styles.inner}>
             <Grid container justifyContent="space-between" alignItems="center">
               <Typography component="span" className={styles.content}>
                 Staking BXS
               </Typography>
               <Typography component="span" className={styles.content}>
-                Balance: 1.12312323
+                {ifStake ? `Balance: ${userBxBalance}` : `Pending reward: ${pendingReward}`}
               </Typography>
             </Grid>
             <Grid container justifyContent="space-between" alignItems="center">
@@ -148,31 +321,28 @@ const MemoClaimPopup = memo(function ClaimPopup({
                 value={claimValue}
                 onChange={handleChangeClaim}
                 className={styles.contentValue}
-                style={{ color: claimValue > balance ? 'red' : '#AEAEAF' }}
+                style={{ color: isClaimValueError ? 'red' : '#AEAEAF' }}
                 type="number"
               />
             </Grid>
-            {claimValue > balance && <p className={styles.validation}>too much bro</p>}
+            {/*{claimValue > userBxBalance && <p className={styles.validation}>too much bro</p>}*/}
           </Grid>
-          <Grid className={styles.btnWrapper}>
-            <Button
-              className={`${styles.controlBtn} ${styles.btnAllowed}`}
-              type="primary"
-              onClick={showModal}
-            >
-              {ifStake ? 'Stake BSX' : 'Un-Stake BSX'}
-            </Button>
-          </Grid>
-          <Grid className={styles.btnWrapper}>
-            <Button
-              className={styles.controlBtn}
-              style={{ background: '#0A0C0E' }}
-              type="primary"
-              onClick={showModal}
-            >
-              Cancel
-            </Button>
-          </Grid>
+          <Button
+            disabled={isClaimValueError}
+            className={`${styles.controlBtn} ${styles.btnAllowed}`}
+            type="primary"
+            onClick={ifStake ? stakeBxs : unStakeBxs}
+          >
+            {ifStake ? 'Stake BXS' : 'Un-Stake BXS'}
+          </Button>
+          <Button
+            className={styles.controlBtn}
+            style={{ background: '#1B2341', border:'none' }}
+            type="primary"
+            onClick={showModal}
+          >
+            Cancel
+          </Button>
         </section>
       </Modal>
     </>

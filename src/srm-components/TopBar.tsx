@@ -86,7 +86,9 @@ const useStyles = makeStyles(() => ({
     'fontSize': '16px',
     'lineHeight': '250%',
     '&:hover': {
-      color: '#0156ff !important',
+      color: '#ffffff !important',
+      textShadow: '1px 1px 20px #0156ff',
+      borderBottom: '2px solid transparent !important',
     },
     '&:selected': {
       color: '#0156ff ',
@@ -113,7 +115,7 @@ const EXTERNAL_LINKS = {
 const StyledDrawer = styled(Drawer)(() => ({
   '& .MuiDrawer-paper': {
     width: '191px',
-    backgroundColor: 'rgba(30, 32, 34, 1)',
+    backgroundColor: '#1B2341',
   },
 }));
 
@@ -146,7 +148,7 @@ const TopBar: React.FC = () => {
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
-  const { isMobile, isDesktop } = useScreenSize();
+  const { isMobile } = useScreenSize();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('');
 
@@ -303,9 +305,7 @@ const TopBar: React.FC = () => {
           </Box>
           <Divider
             sx={{
-              border: '0.5px solid',
-              borderImage:
-                'linear-gradient(to right, rgba(236, 38, 245, 0.5), rgba(1, 86, 255, 0.5)) 0.5',
+              borderBottom: '0.1px solid #0156FF',
             }}
           />
           <List>
@@ -348,7 +348,7 @@ const TopBar: React.FC = () => {
               flex: 1,
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               alignItems: 'center',
             }}
           >

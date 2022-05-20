@@ -58,16 +58,16 @@ const useStyles = makeStyles(theme => ({
     border: 'none',
   },
   paper: {
-    'position': 'absolute',
-    'left': '-254px',
-    'color': 'white',
-    'border': '1px solid #0156FF',
-    'borderRadius': '8px',
-    'background': '#0D1226 !important',
-    'marginTop': '5px',
-    'padding': '15px',
-    'width': '468px',
-    'justifyContent': 'center !important',
+    position: 'absolute',
+    left: '-254px',
+    color: 'white',
+    border: '1px solid #0156FF',
+    borderRadius: '8px',
+    background: '#0D1226 !important',
+    marginTop: '5px',
+    padding: '15px',
+    width: '468px',
+    justifyContent: 'center !important',
   },
   listBox: {
     'maxHeight': '460px !important',
@@ -203,7 +203,7 @@ export default function SearchForPairingsComponent({ type, width }) {
         'margin': marginComponent,
         '@media(max-width: 540px)': {
           height: 45,
-          'width': '100%'
+          width: '100%',
         },
       }}
     >

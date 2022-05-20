@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import { IconButton, Typography, Popover } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
-import { useState } from 'react';
 import CircularProgressBar from '../../components/CircularProgressBar';
 import { ReactComponent as ExpiresInfoIcon } from '../../assets/icons/expires-info-icon.svg';
 
@@ -45,6 +45,7 @@ const useStyles = makeStyles(() => ({
     color: '#FFFFFF',
   },
 }));
+
 const StyledPopover = styled(Popover)(() => ({
   '& .MuiPopover-paper': {
     width: 'fit-content',
@@ -68,7 +69,6 @@ export const ExpiresInBlock = ({ seconds, infoText, updateTimer }) => {
   const handleInfoButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
 
   return (
     <>

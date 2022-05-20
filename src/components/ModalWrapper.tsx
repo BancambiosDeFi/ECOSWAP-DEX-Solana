@@ -19,7 +19,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
     background: '#0D1226',
@@ -52,7 +51,7 @@ const ModalWrapper: React.FC<CustomizedDialogsProps> = ({ open, title, handleClo
           height: { xs: 'none', md: '192.1px' },
           width: { xs: 'none', md: '379.51px' },
           borderRadius: '8px',
-          border:'2px solid #0156FF'
+          border: '2px solid #0156FF',
         },
       }}
       fullWidth
@@ -68,7 +67,6 @@ const ModalWrapper: React.FC<CustomizedDialogsProps> = ({ open, title, handleClo
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          // alignItems: "center",
         }}
       >
         {children}

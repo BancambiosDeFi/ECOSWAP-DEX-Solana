@@ -9,15 +9,14 @@ import Wallet from '@project-serum/sol-wallet-adapter';
 import logo from '../../assets/icons/banc-logo.png';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
-import { useScreenSize } from '../../utils/screenSize';
 import { DEFAULT_PUBLIC_KEY } from '../../components/wallet/types';
 import { useWallet } from '../../components/wallet/wallet';
 import { notify } from '../../srm-utils/notifications';
-import { ExpiresInBlock } from '../liquidity/ExpiresInBlock';
 import { getExpiresInDescription } from '../../utils/descriptions';
+import { ExpiresInBlock } from '../liquidity/ExpiresInBlock';
 import ManualDetail from './ManualDetail';
-import AutoDetail from './AutoDetail';
 import {
+  calculateApr,
   convertBnAmountToDisplayBalance,
   getAssociatedBxTokenAddress,
   getAssociatedStakingTokenAddress,
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     'justifyContent': 'center',
-    'padding': '0 235px',
+    'padding': '0 235px 50px 235px',
     'minHeight': '100vh',
     'marginBottom': '24px',
     '@media (max-width: 768px)': {
@@ -95,11 +94,12 @@ const options = [
 
 export default function StakingPage() {
   const styles = useStyles();
-  const { isMobile } = useScreenSize();
   const [checkedOption, setCheckedOption] = useState({});
   const [claimValue, setClaimValue] = useState<number>(0);
   const [userBxBalance, setUserBxBalance] = useState<number>(0);
-  const [pendingReward, setPendingReward] = useState<number>(0);
+  const [accumulatedReward, setAccumulatedReward] = useState<number>(0);
+  const [apr, setApr] = useState<string>('0');
+  const [totalStaked, setTotalStaked] = useState<number>(0);
   const { wallet } = useWallet();
   const [seconds, setSeconds] = useState<number>(0);
   const [infoText, setInfoText] = useState<string>(getExpiresInDescription(seconds));
@@ -121,11 +121,17 @@ export default function StakingPage() {
     [setCheckedOption],
   );
 
-  const updatePendingReward = useCallback(async () => {
+  const updateStakingInfo = useCallback(async () => {
     if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
       const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
       const staking = getStaking(wallet as Wallet);
       const programState = await staking.programState();
+      setTotalStaked(
+        convertBnAmountToDisplayBalance(
+          programState.totalStakedTokens,
+          Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
+        ),
+      );
       const userStakeInfo = await staking.userStakeInfo(wallet?.publicKey);
       const tokenAccount = await getAssociatedTokenAccount(
         wallet?.publicKey,
@@ -138,7 +144,7 @@ export default function StakingPage() {
         new BN(tokenAccount.amount),
         tokenMintInfo.supply,
       );
-      setPendingReward(
+      setAccumulatedReward(
         convertBnAmountToDisplayBalance(
           amountUnstaked,
           Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
@@ -146,6 +152,12 @@ export default function StakingPage() {
       );
     }
   }, [wallet?.publicKey]);
+
+  useEffect(() => {
+    if (totalStaked && accumulatedReward) {
+      setApr(calculateApr(totalStaked, accumulatedReward));
+    }
+  }, [totalStaked, accumulatedReward]);
 
   const updateUserBxsBalance = useCallback(async () => {
     if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
@@ -173,8 +185,8 @@ export default function StakingPage() {
   }, [wallet?.publicKey]);
 
   useEffect(() => {
-    updatePendingReward();
-  }, [updatePendingReward]);
+    updateStakingInfo();
+  }, [updateStakingInfo]);
 
   useEffect(() => {
     updateUserBxsBalance();
@@ -198,39 +210,9 @@ export default function StakingPage() {
 
   const updateTimerAndSomeData = () => {
     setSeconds(0);
+    updateStakingInfo();
     // here we need to add a a function that updates the required data
   };
-
-  // useEffect(() => {
-  //   updatePendingReward();
-  //   if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
-  //     const getUserBxBalance = async () => {
-  //       // Getting user BXS balance
-  //       const bxAddress = await getAssociatedBxTokenAddress(wallet?.publicKey);
-  //       try {
-  //         const tokenAccount = await getAssociatedTokenAccount(
-  //           wallet?.publicKey,
-  //           new PublicKey(process.env.REACT_APP_BX_TOKEN_MINT_PUBKEY as string),
-  //           bxAddress,
-  //         );
-  //         setUserBxBalance(
-  //           convertBnAmountToDisplayBalance(
-  //             new BN(tokenAccount.amount),
-  //             Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
-  //           ),
-  //         );
-  //       } catch (e) {
-  //         notify({
-  //           type: 'error',
-  //           message: 'Fetch BXS balance error',
-  //           description: e.message,
-  //         });
-  //       }
-  //     };
-  //
-  //     getUserBxBalance();
-  //   }
-  // }, [wallet?.publicKey]);
 
   return (
     <BasicLayout>
@@ -253,53 +235,19 @@ export default function StakingPage() {
               setPeriod={setPeriod}
               claimValue={claimValue}
               imgSrc={logo}
-              reward={pendingReward}
-              staked={22}
-              arp={33}
-              liquidity={44}
+              reward={accumulatedReward}
+              arp={apr}
+              totalStaked={totalStaked}
               detailTitle="Harvest"
               detailValue={15}
               detailMenu={
                 <ManualDetail
                   userBxBalance={userBxBalance}
-                  detailTitle="PENDING REWARD"
-                  detailValue={pendingReward}
+                  detailTitle="ACCUMULATED REWARD"
+                  detailValue={accumulatedReward}
                   handleChangeClaim={handleChangeClaim}
                   claimValue={claimValue}
-                  updatePendingReward={updatePendingReward}
-                  pendingReward={pendingReward}
-                />
-              }
-            />
-          </Grid>
-          <Typography variant="inherit" className={styles.title}>
-            Auto staking BXS
-          </Typography>
-          <Grid container alignItems="center" direction="row" className={styles.wrapper}>
-            <Row
-              options={options}
-              checkedOption={checkedOption}
-              setPeriod={setPeriod}
-              claimValue={claimValue}
-              imgSrc={logo}
-              reward={pendingReward}
-              staked={22}
-              arp={33}
-              liquidity={44}
-              detailTitle="Auto"
-              detailValue={15}
-              detailMenu={
-                <AutoDetail
-                  userBxBalance={userBxBalance}
-                  claimValue={claimValue}
-                  handleChangeClaim={handleChangeClaim}
-                  detailTitle="Auto-Compound"
-                  detailValue={pendingReward}
-                  checkedOption={checkedOption}
-                  setPeriod={setPeriod}
-                  options={options}
-                  updatePendingReward={updatePendingReward}
-                  pendingReward={pendingReward}
+                  accumulatedReward={accumulatedReward}
                 />
               }
             />

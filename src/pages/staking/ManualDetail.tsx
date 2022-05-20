@@ -14,8 +14,7 @@ interface showDetailsProps {
   handleChangeClaim: (data: any) => void;
   claimValue: number;
   userBxBalance: number;
-  updatePendingReward: () => Promise<void>;
-  pendingReward: number;
+  accumulatedReward: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -135,20 +134,14 @@ export default function ManualDetail({
   handleChangeClaim,
   claimValue,
   userBxBalance,
-  updatePendingReward,
-  pendingReward,
+  accumulatedReward,
 }: showDetailsProps) {
   const styles = useStyles();
   const { isMobile } = useScreenSize();
   const { connected, connect } = useWallet();
 
   return (
-    <Collapse
-      style={{ width: '100%',  marginTop: '28px' }}
-      in={showDetails}
-      timeout="auto"
-      unmountOnExit
-    >
+    <Collapse style={{ width: '100%' }} in={showDetails} timeout="auto" unmountOnExit>
       {isMobile ? (
         <Grid container direction="column">
           <Grid container>
@@ -207,8 +200,7 @@ export default function ManualDetail({
                             claimValue={claimValue}
                             handleChangeClaim={handleChangeClaim}
                             title="-"
-                            updatePendingReward={updatePendingReward}
-                            pendingReward={pendingReward}
+                            accumulatedReward={accumulatedReward}
                           />
                         </Grid>
                       </Grid>
@@ -222,8 +214,7 @@ export default function ManualDetail({
                             claimValue={claimValue}
                             handleChangeClaim={handleChangeClaim}
                             title="Stake BSX"
-                            updatePendingReward={updatePendingReward}
-                            pendingReward={pendingReward}
+                            accumulatedReward={accumulatedReward}
                           />
                         </Grid>
                       </Grid>
@@ -292,8 +283,7 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
-                              updatePendingReward={updatePendingReward}
-                              pendingReward={pendingReward}
+                              accumulatedReward={accumulatedReward}
                             />
                           </Grid>
                         </Grid>
@@ -307,8 +297,7 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="Stake BSX"
-                              updatePendingReward={updatePendingReward}
-                              pendingReward={pendingReward}
+                              accumulatedReward={accumulatedReward}
                             />
                           </Grid>
                         </Grid>
@@ -323,216 +312,4 @@ export default function ManualDetail({
       )}
     </Collapse>
   );
-
-  //   return (
-  //     <Collapse
-  //       style={{ width: '100%', marginTop: '28px' }}
-  //       in={showDetails}
-  //       timeout="auto"
-  //       unmountOnExit
-  //     >
-  //       {isMobile ? (
-  //         <Grid container direction="column">
-  //           <Grid container>
-  //             <Grid item sx={{ width: '100%', marginBottom: '12px', padding: '0 3px' }}>
-  //               <Grid className={styles.inner}>
-  //                 <Grid container className={styles.innerWrapper}>
-  //                   <div
-  //                     style={{
-  //                       display: 'flex',
-  //                       flexDirection: 'column',
-  //                     }}
-  //                   >
-  //                     <Typography variant="inherit" className={styles.subtitle}>
-  //                       {detailTitle}
-  //                     </Typography>
-  //                     <Typography variant="inherit" className={styles.subtitle}>
-  //                       {detailValue}
-  //                     </Typography>
-  //                   </div>
-  //                   <div className={styles.btnWrapper}>
-  //                     {connected ? (
-  //                       <button className={`${styles.btn} ${styles.btnAllowed}`}>Claim</button>
-  //                     ) : (
-  //                       <button className={`${styles.btn} ${styles.btnDisabled}`}>Auto</button>
-  //                     )}
-  //                   </div>
-  //                 </Grid>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid item sx={{ width: '100%', padding: '0 3px' }}>
-  //               <Grid container className={styles.connectWalletWrapper}>
-  //                 <Grid
-  //                   container
-  //                   alignItems="center"
-  //                   justifyContent="space-between"
-  //                   alignSelf="flex-end"
-  //                   spacing={2}
-  //                 >
-  //                   {!connected ? (
-  //                     <Grid item sx={{ width: '100%' }}>
-  //                       <Grid container className={styles.btnWrapper}>
-  //                         <button onClick={connect} className={`${styles.btn} ${styles.btnAllowed}`}>
-  //                           Connect wallet
-  //                         </button>
-  //                       </Grid>
-  //                     </Grid>
-  //                   ) : (
-  //                     <>
-  //                       <Grid item xs={2}>
-  //                         <Grid container className={styles.btnWrapper}>
-  //                           <MemoClaimPopup
-  //                             balance={1}
-  //                             onChange={undefined}
-  //                             onSubmit={undefined}
-  //                             ifStake={false}
-  //                             claimValue={claimValue}
-  //                             handleChangeClaim={handleChangeClaim}
-  //                             title="-"
-  //                           />
-  //                         </Grid>
-  //                       </Grid>
-  // <<<<<<< HEAD
-  //                     ) : (
-  //                       <>
-  //                         <Grid item xs={2}>
-  //                           <Grid container className={styles.btnWrapper}>
-  //                             <MemoClaimPopup
-  //                               userBxBalance={userBxBalance}
-  //                               onChange={undefined}
-  //                               onSubmit={undefined}
-  //                               ifStake={false}
-  //                               claimValue={claimValue}
-  //                               handleChangeClaim={handleChangeClaim}
-  //                               title="-"
-  //                               updatePendingReward={updatePendingReward}
-  //                               pendingReward={pendingReward}
-  //                             />
-  //                           </Grid>
-  //                         </Grid>
-  //                         <Grid item xs={10}>
-  //                           <Grid container className={styles.btnWrapper}>
-  //                             <MemoClaimPopup
-  //                               userBxBalance={userBxBalance}
-  //                               onChange={undefined}
-  //                               onSubmit={undefined}
-  //                               ifStake={true}
-  //                               claimValue={claimValue}
-  //                               handleChangeClaim={handleChangeClaim}
-  //                               title="Stake BSX"
-  //                               updatePendingReward={updatePendingReward}
-  //                               pendingReward={pendingReward}
-  //                             />
-  //                           </Grid>
-  // =======
-  //                       <Grid item xs={10}>
-  //                         <Grid container className={styles.btnWrapper}>
-  //                           <MemoClaimPopup
-  //                             balance={1}
-  //                             onChange={undefined}
-  //                             onSubmit={undefined}
-  //                             ifStake={true}
-  //                             claimValue={claimValue}
-  //                             handleChangeClaim={handleChangeClaim}
-  //                             title="Stake BSX"
-  //                           />
-  // >>>>>>> ef36516c01e467fecc15293887c09cdadda72a2d
-  //                         </Grid>
-  //                       </Grid>
-  //                     </>
-  //                   )}
-  //                 </Grid>
-  //               </Grid>
-  //             </Grid>
-  //           </Grid>
-  //         </Grid>
-  //       ) : (
-  //         <Grid container direction="column">
-  //           <hr className={styles.divider} />
-  //           <Grid container spacing={2}>
-  //             <Grid item sm={6}>
-  //               <Grid className={styles.inner}>
-  //                 <Grid container className={styles.innerWrapper}>
-  //                   <Typography variant="inherit" className={styles.subtitle}>
-  //                     {detailTitle}
-  //                   </Typography>
-  //                   <Grid container alignItems="center" justifyContent="space-between">
-  //                     <Typography variant="inherit" className={styles.subtitle}>
-  //                       {detailValue}
-  //                     </Typography>
-  //                     <div className={styles.btnWrapper}>
-  //                       {connected ? (
-  //                         <button className={`${styles.btn} ${styles.btnAllowed}`}>Claim</button>
-  //                       ) : (
-  //                         <button className={`${styles.btn} ${styles.btnDisabled}`}>Auto</button>
-  //                       )}
-  //                     </div>
-  //                   </Grid>
-  //                 </Grid>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid item sm={6}>
-  //               <Grid className={styles.inner}>
-  //                 <Grid container className={styles.innerWrapper}>
-  //                   <Grid
-  //                     container
-  //                     alignItems="center"
-  //                     justifyContent="space-between"
-  //                     alignSelf="flex-end"
-  //                     spacing={2}
-  //                   >
-  //                     {!connected ? (
-  //                       <Grid item xs={12}>
-  //                         <Grid container className={styles.btnWrapper}>
-  //                           <button
-  //                             onClick={connect}
-  //                             className={`${styles.btn} ${styles.btnAllowed}`}
-  //                           >
-  //                             Connect wallet
-  //                           </button>
-  //                         </Grid>
-  //                       </Grid>
-  //                     ) : (
-  //                       <>
-  //                         <Grid item xs={2}>
-  //                           <Grid container className={styles.btnWrapper}>
-  //                             <MemoClaimPopup
-  //                               userBxBalance={userBxBalance}
-  //                               onChange={undefined}
-  //                               onSubmit={undefined}
-  //                               ifStake={false}
-  //                               claimValue={claimValue}
-  //                               handleChangeClaim={handleChangeClaim}
-  //                               title="-"
-  //                               updatePendingReward={updatePendingReward}
-  //                               pendingReward={pendingReward}
-  //                             />
-  //                           </Grid>
-  //                         </Grid>
-  //                         <Grid item xs={10}>
-  //                           <Grid container className={styles.btnWrapper}>
-  //                             <MemoClaimPopup
-  //                               userBxBalance={userBxBalance}
-  //                               onChange={undefined}
-  //                               onSubmit={undefined}
-  //                               ifStake={true}
-  //                               claimValue={claimValue}
-  //                               handleChangeClaim={handleChangeClaim}
-  //                               title="Stake BSX"
-  //                               updatePendingReward={updatePendingReward}
-  //                               pendingReward={pendingReward}
-  //                             />
-  //                           </Grid>
-  //                         </Grid>
-  //                       </>
-  //                     )}
-  //                   </Grid>
-  //                 </Grid>
-  //               </Grid>
-  //             </Grid>
-  //           </Grid>
-  //         </Grid>
-  //       )}
-  //     </Collapse>
-  //   );
 }

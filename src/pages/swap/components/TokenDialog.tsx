@@ -23,14 +23,15 @@ const useStyles = makeStyles(() => ({
   },
   scrollBar: {
     '&::-webkit-scrollbar': {
-      width: 10,
+      width: '3.37px',
       borderRadius: '8px',
     },
     '&::-webkit-scrollbar-track': {
-      backgroundColor: '#1B2341',
+      backgroundColor: 'rgb(13, 18, 38)',
       borderRadius: '8px',
     },
     '&::-webkit-scrollbar-thumb': {
+      height: '62.27px',
       backgroundColor: '#c4c4c4',
       borderRadius: '8px',
     },
@@ -87,7 +88,7 @@ const useStyles = makeStyles(() => ({
       'width': '100%',
       'color': '#fff',
       '&:hover': {
-        backgroundColor: 'rgb(189,193,198, 0.1)',
+        backgroundColor: '#1B2341',
       },
     },
   },
@@ -251,8 +252,8 @@ const useStyles = makeStyles(() => ({
     '&&': {
       display: 'flex',
       justifyContent: 'space-between',
-      borderBottom: '1px solid #0156FF',
       paddingBottom: '20px',
+      borderBottom: '1px solid #1B2341',
     },
   },
   commonBaseTitle: {

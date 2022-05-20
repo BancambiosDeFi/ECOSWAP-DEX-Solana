@@ -97,7 +97,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   switchButtonContainer: {
-    'marginLeft': '40px',
+    'marginLeft': '60px',
     'display': 'flex',
     'justifyContent': 'center',
     'alignItems': 'center',

@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import { useSwapContext } from '@serum/swap-ui';
 import { useWallet } from '../../../components/wallet/wallet';
@@ -10,8 +9,7 @@ import SearchForPairingsComponent from './SearchForPairings';
 import SwapCard from './SwapCard';
 import { ChartContainer } from './ChartContainer';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexDirection: 'row',

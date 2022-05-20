@@ -23,6 +23,7 @@ import { getWalletTokenAccounts } from '../../srm-utils/getWalletTokenAccounts';
 import { useWallet } from '../../components/wallet/wallet';
 // import { InfoLabel } from '../swap/components/Info';
 import { SwapFromForm, SwapToForm, SwitchButton } from '../swap/components/SwapCard';
+import { getExpiresInDescription } from '../../utils/descriptions';
 import { PoolInfo } from './PoolInfo';
 import { InfoLabel } from './InfoLabel';
 import { AddLiquidityButton } from './AddLiquidityButton';
@@ -81,7 +82,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   switchButtonContainer: {
-    'marginLeft': '40px',
+    'marginLeft': '60px',
     'display': 'flex',
     'justifyContent': 'center',
     'alignItems': 'center',
@@ -120,6 +121,8 @@ export default () => {
   const [poolKey, setPoolKey] = useState<LiquidityPoolKeysV4 | null>(null);
   const [poolInfo, setPoolInfo] = useState<LiquidityPoolInfo | null>(null);
   const [isPoolExist, setPoolExist] = useState(false);
+  const [seconds, setSeconds] = useState<number>(0);
+  const [infoText, setInfoText] = useState<string>(getExpiresInDescription(seconds));
   const [loading, setLoading] = useState(false);
   const { swappableTokens: tokenList } = useSwappableTokens();
   const { fromMint, fromAmount, toMint, toAmount } = useSwapContext();
@@ -231,10 +234,35 @@ export default () => {
     }
   }, [poolKey]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prevValue => (prevValue === 50 ? 0 : prevValue + 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    setInfoText(getExpiresInDescription(seconds));
+    if (seconds === 50) {
+      setSeconds(0);
+      fetchPoolInfo();
+      // here we need to add a dependency other than seconds, and a function that updates the required data
+    }
+  }, [seconds]);
+
+  const updateTimerAndPool = () => {
+    fetchPoolInfo();
+    setSeconds(0);
+    // here we need to add a a function that updates the required data
+  };
+
   return (
     <Box className={styles.root}>
       <Card sx={{ borderRadius: '8px' }} className={styles.card}>
-          <ExpiresInBlock fetchStats={fetchPoolInfo} />
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <ExpiresInBlock seconds={seconds} infoText={infoText} updateTimer={updateTimerAndPool} />
+        </div>
         <div className={styles.fromBlock}>
           <Typography variant="inherit" className={styles.title}>
             From

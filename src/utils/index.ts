@@ -1,7 +1,7 @@
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { ImpactPool } from 'impact-pool-api';
-import BN from 'bn.js';
 import { MintInfo } from '@solana/spl-token';
+import BN from 'bn.js';
+import { ImpactPool } from 'impact-pool-api';
 
 const network: string = process.env.REACT_APP_NETWORK as string;
 const pubKey: string = process.env.REACT_APP_IMPACT_PROGRAM_ID as string;
@@ -55,6 +55,16 @@ export const getFormattedAmount = (
 
 export const getBalance = (connection: Connection, userWallet: PublicKey): Promise<number> => {
   return connection.getBalance(userWallet);
+};
+
+export const getUserImpactValue = async (impactPool: ImpactPool): Promise<number> => {
+  const userImpactStatistics = await impactPool.getUserImpactStatistics();
+
+  console.log('userImpactStatistics.amount =', userImpactStatistics);
+  // console.log('userImpactStatistics.amount.toNumber() =', userImpactStatistics.amount?.toNumber());
+
+  // return userImpactStatistics.amount ? userImpactStatistics.amount.toNumber() : 0;
+  return 0;
 };
 
 export const converterLamportsToSol = (value: number): number => {

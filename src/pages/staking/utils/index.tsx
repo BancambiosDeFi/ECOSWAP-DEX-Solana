@@ -92,19 +92,16 @@ export const convertBnAmountToDisplayBalance = (amount: BN, decimals: number): n
 };
 
 export const calculateApr = (totalStaked: number, accumulatedReward: number): string => {
-  return (
-    new BigNumber(process.env.REACT_APP_STAKING_YEARLY_REWARD as string)
-      .dividedBy(new BigNumber(totalStaked))
-      .multipliedBy(new BigNumber(accumulatedReward))
-      .integerValue(BigNumber.ROUND_FLOOR)
-      // .toPrecision(3)
-      .toString()
-  );
+  return new BigNumber(process.env.REACT_APP_STAKING_YEARLY_REWARD as string)
+    .dividedBy(new BigNumber(totalStaked))
+    .multipliedBy(new BigNumber(accumulatedReward))
+    .decimalPlaces(9)
+    .toString();
 };
 
 export const getStakingTokenMintInfo = async (owner: PublicKey): Promise<MintInfo> => {
   return await new Token(
-    new Connection('https://api.devnet.solana.com'),
+    new Connection(getNetwork()),
     new PublicKey(process.env.REACT_APP_STAKING_TOKEN_MINT_PUBKEY as string),
     TOKEN_PROGRAM_ID,
     {

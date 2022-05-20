@@ -25,7 +25,6 @@ type ClaimPopup = {
   onSubmit: void;
   ifStake: boolean;
   title: string;
-  updatePendingReward: () => Promise<void>;
   accumulatedReward: number;
 };
 
@@ -105,8 +104,6 @@ const MemoClaimPopup = memo(function ClaimPopup({
   claimValue,
   handleChangeClaim,
   title,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updatePendingReward,
   accumulatedReward,
 }: ClaimPopup): JSX.Element {
   const styles = useStyles();
@@ -215,7 +212,6 @@ const MemoClaimPopup = memo(function ClaimPopup({
         claimValue,
         Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
       );
-      // await updatePendingReward();
       const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
       const staking = getStaking(wallet as Wallet);
       if (
@@ -287,7 +283,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
         footer={null}
         maskClosable={true}
       >
-        <div>
+        <section>
           <h5 className={styles.title}>{ifStake ? 'Stake BXS' : 'Un-Stake BXS'}</h5>
           <Grid className={styles.inner}>
             <Grid container justifyContent="space-between" alignItems="center">
@@ -329,7 +325,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
           >
             Cancel
           </Button>
-        </div>
+        </section>
       </Modal>
     </>
   );

@@ -9,7 +9,6 @@ import Wallet from '@project-serum/sol-wallet-adapter';
 import logo from '../../assets/icons/banc-logo.png';
 import BasicLayout from '../../srm-components/BasicLayout';
 import Row from '../../components/Row';
-import { useScreenSize } from '../../utils/screenSize';
 import { DEFAULT_PUBLIC_KEY } from '../../components/wallet/types';
 import { useWallet } from '../../components/wallet/wallet';
 import { notify } from '../../srm-utils/notifications';
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     'justifyContent': 'center',
-    'padding': '0 235px',
+    'padding': '0 235px 50px 235px',
     'minHeight': '100vh',
     'marginBottom': '24px',
     '@media (max-width: 768px)': {
@@ -95,7 +94,6 @@ const options = [
 
 export default function StakingPage() {
   const styles = useStyles();
-  const { isMobile } = useScreenSize();
   const [checkedOption, setCheckedOption] = useState({});
   const [claimValue, setClaimValue] = useState<number>(0);
   const [userBxBalance, setUserBxBalance] = useState<number>(0);
@@ -123,7 +121,7 @@ export default function StakingPage() {
     [setCheckedOption],
   );
 
-  const updatePendingReward = useCallback(async () => {
+  const updateStakingInfo = useCallback(async () => {
     if (wallet?.publicKey && wallet.publicKey.toBase58() !== DEFAULT_PUBLIC_KEY.toBase58()) {
       const stakingAddress = await getAssociatedStakingTokenAddress(wallet?.publicKey);
       const staking = getStaking(wallet as Wallet);
@@ -187,8 +185,8 @@ export default function StakingPage() {
   }, [wallet?.publicKey]);
 
   useEffect(() => {
-    updatePendingReward();
-  }, [updatePendingReward]);
+    updateStakingInfo();
+  }, [updateStakingInfo]);
 
   useEffect(() => {
     updateUserBxsBalance();
@@ -212,6 +210,7 @@ export default function StakingPage() {
 
   const updateTimerAndSomeData = () => {
     setSeconds(0);
+    updateStakingInfo();
     // here we need to add a a function that updates the required data
   };
 
@@ -248,7 +247,6 @@ export default function StakingPage() {
                   detailValue={accumulatedReward}
                   handleChangeClaim={handleChangeClaim}
                   claimValue={claimValue}
-                  updatePendingReward={updatePendingReward}
                   accumulatedReward={accumulatedReward}
                 />
               }

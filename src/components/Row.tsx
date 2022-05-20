@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     position: 'relative',
     width: '100%',
-    padding: '25px 15px 15px 15px',
+    padding: '18px 15px 15px 15px',
     background: '#0D1226',
     borderRadius: '18px',
   },
@@ -40,7 +40,6 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    // padding: '25px 15px',
     background: '#0D1226',
     borderRadius: '18px',
   },
@@ -130,7 +129,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   value: {
-    marginTop: '7px',
+    // marginTop: '7px',
   },
 }));
 
@@ -177,10 +176,10 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
   ) : (
     <Grid container alignItems="center" direction="row" className={styles.container}>
       <Grid container>
-        <Grid item xs={isLargeDesktop ? 3 : 1}>
+        <Grid item xs={isLargeDesktop ? 3 : 2}>
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
-        <Grid container direction="column" xs={isLargeDesktop ? 3 : 3} item>
+        <Grid container direction="column" xs={isLargeDesktop ? 4 : 3} item>
           <span className={styles.text}>ACCUMULATED REWARD</span>
           <span className={`${styles.text} ${styles.value}`}>{reward}</span>
         </Grid>
@@ -188,7 +187,7 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
         {/*  <span className={styles.text}>STAKED</span>*/}
         {/*  <span className={`${styles.text} ${styles.value}`}>{staked}</span>*/}
         {/*</Grid>*/}
-        <Grid container direction="column" xs={2} item>
+        <Grid container direction="column" xs={3} item>
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>

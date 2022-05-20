@@ -14,7 +14,6 @@ interface showDetailsProps {
   handleChangeClaim: (data: any) => void;
   claimValue: number;
   userBxBalance: number;
-  updatePendingReward: () => Promise<void>;
   accumulatedReward: number;
 }
 
@@ -135,7 +134,6 @@ export default function ManualDetail({
   handleChangeClaim,
   claimValue,
   userBxBalance,
-  updatePendingReward,
   accumulatedReward,
 }: showDetailsProps) {
   const styles = useStyles();
@@ -143,12 +141,7 @@ export default function ManualDetail({
   const { connected, connect } = useWallet();
 
   return (
-    <Collapse
-      style={{ width: '100%', marginTop: '28px' }}
-      in={showDetails}
-      timeout="auto"
-      unmountOnExit
-    >
+    <Collapse style={{ width: '100%' }} in={showDetails} timeout="auto" unmountOnExit>
       {isMobile ? (
         <Grid container direction="column">
           <Grid container>
@@ -207,7 +200,6 @@ export default function ManualDetail({
                             claimValue={claimValue}
                             handleChangeClaim={handleChangeClaim}
                             title="-"
-                            updatePendingReward={updatePendingReward}
                             accumulatedReward={accumulatedReward}
                           />
                         </Grid>
@@ -222,7 +214,6 @@ export default function ManualDetail({
                             claimValue={claimValue}
                             handleChangeClaim={handleChangeClaim}
                             title="Stake BSX"
-                            updatePendingReward={updatePendingReward}
                             accumulatedReward={accumulatedReward}
                           />
                         </Grid>
@@ -292,7 +283,6 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="-"
-                              updatePendingReward={updatePendingReward}
                               accumulatedReward={accumulatedReward}
                             />
                           </Grid>
@@ -307,7 +297,6 @@ export default function ManualDetail({
                               claimValue={claimValue}
                               handleChangeClaim={handleChangeClaim}
                               title="Stake BSX"
-                              updatePendingReward={updatePendingReward}
                               accumulatedReward={accumulatedReward}
                             />
                           </Grid>

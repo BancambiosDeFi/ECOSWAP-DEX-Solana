@@ -97,11 +97,9 @@ const DoneButton = styled(Button)(({ theme }) => ({
   'maxHeight': '51px',
   'maxWidth': '169px',
   'color': '#FFFFFF',
-  'background':
-    // eslint-disable-next-line max-len
-    'linear-gradient(black, black) padding-box, linear-gradient(266.19deg, #EC26F5 -9.56%, #9F5AE5 102.3%) border-box',
   'borderRadius': '17px',
-  'border': '2px solid transparent',
+  'background': '#092667',
+  'border': '1px solid #0156FF',
   'textTransform': 'none',
   'fontFamily': '"Saira", sans-serif',
   'fontSize': '16px',

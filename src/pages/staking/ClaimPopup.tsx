@@ -33,18 +33,13 @@ const useStyles = makeStyles(() => ({
   inner: {
     padding: '12px 22px',
     marginBottom: '25px',
-    background: '#202124',
+    background: '#0D1226',
     borderRadius: '8px',
+    border: '0.15px solid #0156FF',
   },
   title: {
-    fontWeight: 800,
+    fontWeight: 600,
     fontSize: '24px',
-  },
-  btnWrapper: {
-    marginBottom: '10px',
-    padding: '0.5px',
-    borderRadius: '8px',
-    background: 'linear-gradient(232deg, #0156FF 30%, #EC26F5 100%)',
   },
   content: {
     fontSize: '16px',
@@ -56,7 +51,7 @@ const useStyles = makeStyles(() => ({
   },
   contentValue: {
     fontSize: '24px',
-    fontWeight: 800,
+    fontWeight: 600,
     color: '#AEAEAF',
     background: 'transparent',
     border: 'none',
@@ -71,20 +66,21 @@ const useStyles = makeStyles(() => ({
       cursor: 'pointer',
     },
     'width': '100%',
-    'border': 'none',
+    'border': '1px solid #0156FF',
     'padding': '8px 0',
     'fontSize': '16px',
-    'background': '#202124',
+    'background': '#092667',
     'borderRadius': '8px',
   },
   controlBtn: {
     '&:hover': {
       cursor: 'pointer',
     },
+    'margin': '5px 0',
+    'border': '1px solid #0156FF',
     'width': '100%',
-    'background': '#1E2022',
+    'background': '#092667',
     'borderRadius': '8px',
-    'border': 'none',
     'cursor': 'pointer',
   },
   validation: {
@@ -279,10 +275,10 @@ const MemoClaimPopup = memo(function ClaimPopup({
         onCancel={showModal}
         closable={false}
         maskStyle={{
-          background: 'background: rgba(0, 0, 0, 0.9)',
+          background: 'background: #0D1226',
         }}
         bodyStyle={{
-          background: '#0A0C0E',
+          background: '#0D1226',
           padding: '12px 25px 25px',
           borderRadius: '8px',
           border: '1px solid #0156FF',
@@ -291,7 +287,7 @@ const MemoClaimPopup = memo(function ClaimPopup({
         footer={null}
         maskClosable={true}
       >
-        <section>
+        <div>
           <h5 className={styles.title}>{ifStake ? 'Stake BXS' : 'Un-Stake BXS'}</h5>
           <Grid className={styles.inner}>
             <Grid container justifyContent="space-between" alignItems="center">
@@ -317,27 +313,23 @@ const MemoClaimPopup = memo(function ClaimPopup({
             </Grid>
             {/*{claimValue > userBxBalance && <p className={styles.validation}>too much bro</p>}*/}
           </Grid>
-          <Grid className={styles.btnWrapper}>
-            <Button
-              disabled={isClaimValueError}
-              className={`${styles.controlBtn} ${styles.btnAllowed}`}
-              type="primary"
-              onClick={ifStake ? stakeBxs : unStakeBxs}
-            >
-              {ifStake ? 'Stake BXS' : 'Un-Stake BXS'}
-            </Button>
-          </Grid>
-          <Grid className={styles.btnWrapper}>
-            <Button
-              className={styles.controlBtn}
-              style={{ background: '#0A0C0E' }}
-              type="primary"
-              onClick={showModal}
-            >
-              Cancel
-            </Button>
-          </Grid>
-        </section>
+          <Button
+            disabled={isClaimValueError}
+            className={`${styles.controlBtn} ${styles.btnAllowed}`}
+            type="primary"
+            onClick={ifStake ? stakeBxs : unStakeBxs}
+          >
+            {ifStake ? 'Stake BXS' : 'Un-Stake BXS'}
+          </Button>
+          <Button
+            className={styles.controlBtn}
+            style={{ background: '#1B2341', border: 'none' }}
+            type="primary"
+            onClick={showModal}
+          >
+            Cancel
+          </Button>
+        </div>
       </Modal>
     </>
   );

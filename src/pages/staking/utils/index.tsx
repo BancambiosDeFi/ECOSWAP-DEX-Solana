@@ -22,6 +22,7 @@ export const getStaking = (wallet: Wallet): Staking => {
     preflightCommitment: 'recent',
     commitment: 'recent',
   };
+
   const provider = new Provider(new Connection(getNetwork()), wallet, opts);
 
   return new Staking(

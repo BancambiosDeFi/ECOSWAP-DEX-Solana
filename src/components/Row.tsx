@@ -140,16 +140,30 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
   const toggleShowDetails = () => setShowDetails(!showDetails);
 
   const rowContent = isMobile ? (
-    <Grid container alignItems="center" direction="row" className={styles.container}>
-      <Grid container>
-        <Grid item xs={4}>
+    <Grid
+      container
+      alignItems="center"
+      direction="row"
+      justifyContent="end"
+      className={styles.container}
+    >
+      <Grid container style={{ marginBottom: '10px' }}>
+        <Grid item xs={8}>
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
-        <Grid container direction="column" xs={4} item>
-          <span className={styles.text}>ACCUMULATED REWARD</span>
-          <span className={`${styles.text} ${styles.value}`}>{reward}</span>
-        </Grid>
-        <Grid container direction="column" xs={3} item>
+
+        {showDetails ? (
+          <Grid container direction="column" xs={2} item>
+            <span className={styles.text}>TOTAL STAKED</span>
+            <span className={`${styles.text} ${styles.value}`}>{totalStaked}</span>
+          </Grid>
+        ) : (
+          <Grid container direction="column" xs={2} item>
+            <span className={styles.text}>ACCUMULATED REWARD</span>
+            <span className={`${styles.text} ${styles.value}`}>{reward}</span>
+          </Grid>
+        )}
+        <Grid container direction="column" xs={1} item>
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>
@@ -159,31 +173,20 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
           </div>
         </Grid>
       </Grid>
-      {showDetails ? (
-        <Grid container sx={{ paddingTop: '30px' }}>
-          <Grid container direction="column" xs={4} item>
-            <span className={styles.text}>TOTAL STAKED</span>
-            <span className={`${styles.text} ${styles.value}`}>{totalStaked}</span>
-          </Grid>
-        </Grid>
-      ) : null}
       {cloneElement(detailMenu, { showDetails })}
     </Grid>
   ) : (
     <Grid container alignItems="center" direction="row" className={styles.container}>
       <Grid container>
-        <Grid item xs={isLargeDesktop ? 3 : 2}>
+        <Grid item xs={8}>
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
-        <Grid container direction="column" xs={isLargeDesktop ? 4 : 3} item>
-          <span className={styles.text}>ACCUMULATED REWARD</span>
-          <span className={`${styles.text} ${styles.value}`}>{reward}</span>
-        </Grid>
-        <Grid container direction="column" xs={3} item>
+     
+        <Grid container direction="column" xs={1} item>
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>
-        <Grid container direction="column" xs={isLargeDesktop ? 2 : 3} item>
+        <Grid container direction="column" xs={2} item>
           <span className={styles.text}>TOTAL STAKED</span>
           <span className={`${styles.text} ${styles.value}`}>{totalStaked}</span>
         </Grid>

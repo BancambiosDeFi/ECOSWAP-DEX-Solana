@@ -163,7 +163,7 @@ export default function ManualDetail({
                   </div>
                   <div className={styles.btnWrapper}>
                     {connected ? (
-                      <button className={`${styles.btn} ${styles.btnAllowed}`}>Claim</button>
+                      <button className={`${styles.btn} ${styles.btnAllowed}`}>Auto</button>
                     ) : (
                       <button className={`${styles.btn} ${styles.btnDisabled}`}>Auto</button>
                     )}
@@ -241,7 +241,7 @@ export default function ManualDetail({
                     </Typography>
                     <div className={styles.btnWrapper}>
                       {connected ? (
-                        <button className={`${styles.btn} ${styles.btnAllowed}`}>Claim</button>
+                        <button className={`${styles.btn} ${styles.btnAllowed}`}>Auto</button>
                       ) : (
                         <button className={`${styles.btn} ${styles.btnDisabled}`}>Auto</button>
                       )}

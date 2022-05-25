@@ -18,6 +18,7 @@ import ManualDetail from './ManualDetail';
 import {
   calculateApr,
   convertBnAmountToDisplayBalance,
+  convertBnAmountToDisplayValue,
   getAssociatedBxTokenAddress,
   getAssociatedStakingTokenAddress,
   getAssociatedTokenAccount,
@@ -127,7 +128,7 @@ export default function StakingPage() {
       const staking = getStaking(wallet as Wallet);
       const programState = await staking.programState();
       setTotalStaked(
-        convertBnAmountToDisplayBalance(
+        convertBnAmountToDisplayValue(
           programState.totalStakedTokens,
           Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
         ),
@@ -145,7 +146,7 @@ export default function StakingPage() {
         tokenMintInfo.supply,
       );
       setAccumulatedReward(
-        convertBnAmountToDisplayBalance(
+        convertBnAmountToDisplayValue(
           amountUnstaked,
           Number(process.env.REACT_APP_BX_TOKEN_DECIMALS as string),
         ),

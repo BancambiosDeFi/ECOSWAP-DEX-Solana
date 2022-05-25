@@ -91,11 +91,18 @@ export const convertBnAmountToDisplayBalance = (amount: BN, decimals: number): n
   return new BigNumber(amount.toString()).dividedBy(Math.pow(10, decimals)).toNumber();
 };
 
+export const convertBnAmountToDisplayValue = (amount: BN, decimals: number): number => {
+  return new BigNumber(amount.toString())
+    .dividedBy(Math.pow(10, decimals))
+    .integerValue()
+    .toNumber();
+};
+
 export const calculateApr = (totalStaked: number, accumulatedReward: number): string => {
   return new BigNumber(process.env.REACT_APP_STAKING_YEARLY_REWARD as string)
     .dividedBy(new BigNumber(totalStaked))
     .multipliedBy(new BigNumber(accumulatedReward))
-    .decimalPlaces(9)
+    .integerValue()
     .toString();
 };
 

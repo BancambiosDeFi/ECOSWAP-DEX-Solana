@@ -27,7 +27,7 @@ export const RaydiumProvider = ({ children }) => {
   useEffect(() => {
     (async function getRaydiumPools() {
       try {
-        const res = await axios.get('https://sdk.raydium.io/liquidity/mainnet.json');
+        const res = await axios.get(process.env.REACT_APP_RAYDIUM_POOLS_API as string);
         const radiumPools = res.data.official.concat(res.data.unOfficial);
 
         setRaydiumPoolKeys(radiumPools);

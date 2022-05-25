@@ -135,7 +135,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: RowProp) {
   const styles = useStyles();
-  const { isMobile, isLargeDesktop } = useScreenSize();
+  const { isMobile } = useScreenSize();
   const [showDetails, setShowDetails] = useState<boolean>(true);
   const toggleShowDetails = () => setShowDetails(!showDetails);
 
@@ -148,12 +148,11 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
       className={styles.container}
     >
       <Grid container style={{ marginBottom: '10px' }}>
-        <Grid item xs={8}>
+        <Grid item xs={5}>
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
-
         {showDetails ? (
-          <Grid container direction="column" xs={2} item>
+          <Grid container direction="column" xs={3} item>
             <span className={styles.text}>TOTAL STAKED</span>
             <span className={`${styles.text} ${styles.value}`}>{totalStaked}</span>
           </Grid>
@@ -163,7 +162,7 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
             <span className={`${styles.text} ${styles.value}`}>{reward}</span>
           </Grid>
         )}
-        <Grid container direction="column" xs={1} item>
+        <Grid container direction="column" xs={3} item>
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>
@@ -178,11 +177,10 @@ export default function Row({ imgSrc, reward, arp, totalStaked, detailMenu }: Ro
   ) : (
     <Grid container alignItems="center" direction="row" className={styles.container}>
       <Grid container>
-        <Grid item xs={8}>
+        <Grid item xs={7}>
           <img className={styles.img} src={imgSrc} alt="" />
         </Grid>
-     
-        <Grid container direction="column" xs={1} item>
+        <Grid container direction="column" xs={2} item>
           <span className={styles.text}>APR</span>
           <span className={`${styles.text} ${styles.value}`}>{arp}</span>
         </Grid>

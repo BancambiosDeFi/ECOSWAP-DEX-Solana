@@ -58,10 +58,8 @@ export const getBalance = (connection: Connection, userWallet: PublicKey): Promi
 };
 
 export const getUserImpactValue = async (impactPool: ImpactPool): Promise<number> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userImpactStatistics = await impactPool.getUserImpactStatistics();
-
-  console.log('userImpactStatistics.amount =', userImpactStatistics);
-  // console.log('userImpactStatistics.amount.toNumber() =', userImpactStatistics.amount?.toNumber());
 
   // return userImpactStatistics.amount ? userImpactStatistics.amount.toNumber() : 0;
   return 0;

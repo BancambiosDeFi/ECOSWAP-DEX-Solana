@@ -12,7 +12,7 @@ export function getImpactPoolSeed(
   programId: PublicKey,
   impactName: string
 ): string {
-  return getSeed(programId.toBase58(), "ImpactPool", impactName);
+  return getSeed(programId.toBase58(), "VestingType", impactName);
 }
 
 function getSeed(...params: string[]): string {

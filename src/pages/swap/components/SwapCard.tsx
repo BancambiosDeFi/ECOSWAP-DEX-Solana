@@ -31,9 +31,9 @@ import NotificationDescriptionForCompletedSwap from './NotificationDescriptionFo
 import SwapProgressModal from './SwapProgressModal';
 
 const tokenExistErrorMessage =
-  'Your account does not have enough USDT tokens for the specified eco-contribution.\n' +
+  'Your account does not have enough USDC tokens for the specified eco-contribution.\n' +
   'You can continue the token exchange process without eco-contribution or cancel the ' +
-  'exchange and replenish your USDT token balance.';
+  'exchange and replenish your USDC token balance.';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -287,7 +287,7 @@ export default function SwapCard({ location }) {
         ASSOCIATED_TOKEN_PROGRAM_ID,
         TOKEN_PROGRAM_ID,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        new PublicKey(process.env.REACT_APP_USDT_TOKEN_ADDRESS!),
+        new PublicKey(process.env.REACT_APP_USDC_TOKEN_ADDRESS!),
         // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         // @ts-ignore

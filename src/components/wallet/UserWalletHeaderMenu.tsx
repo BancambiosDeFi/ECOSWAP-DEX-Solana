@@ -81,7 +81,7 @@ export default function UserWalletHeaderMenu() {
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
-      getUserImpactValue(getImpactPool(wallet.publicKey, 'USDT')).then(impactValue => {
+      getUserImpactValue(getImpactPool(wallet.publicKey, 'USDС')).then(impactValue => {
         setUserImpactValue(impactValue);
       });
     }

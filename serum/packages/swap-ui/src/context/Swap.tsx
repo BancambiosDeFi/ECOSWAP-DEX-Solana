@@ -215,10 +215,13 @@ export function useCanSwap(): boolean {
     return false;
   }
 
+  // console.log('fromWallet !== undefined =', fromWallet !== undefined);
+  // console.log('fromWallet !== null =', fromWallet !== null);
+
   return (
     // From wallet exists.
     fromWallet !== undefined &&
-    fromWallet !== null &&
+    // fromWallet !== null &&
     // Fair price is defined.
     fair !== undefined &&
     fair > 0 &&
@@ -378,7 +381,7 @@ export function useOnSwap() {
       if (impact && !isSol) {
         const impactPool = getImpactPool(
           swapClient.program.provider.wallet.publicKey,
-          'USDT',
+          'USDC',
         );
 
         const impactTransaction = await impactPool.TransferTokens(

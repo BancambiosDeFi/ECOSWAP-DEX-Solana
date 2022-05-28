@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { Box, Card, CircularProgress, Grid, Typography } from '@mui/material';
-import { ImpactPool } from 'impact-pool-api';
-import { ImpactPoolStatistics } from 'impact-pool-api/dist/query';
 import { Connection } from '@solana/web3.js';
+``;
+import BN from 'bn.js';
+import { ImpactPool } from 'impact-pool-api';
 import { WithdrawFromPool } from 'impact-pool-api/dist/schema';
 import BasicLayout from '../../srm-components/BasicLayout';
 import { useWallet } from '../../components/wallet/wallet';
 import WalletConnectSwap from '../../components/wallet/WalletConnectSwap';
 import ButtonComponent from '../../srm-components/Button/Button';
-import { converterBNtoString, getImpactPool, getNetwork } from '../../utils';
+import { converterBNtoString, getImpactPool, getImpactTokenAccount, getNetwork } from '../../utils';
 import ClaimWithdrawModal from '../../components/ClaimWithdrawModal';
 import H3Text from '../../components/typography/H3Text';
 
@@ -67,7 +68,6 @@ export default function WithdrawPage() {
   const [withdrawValue, setWithdrawValue] = useState<string>('');
   const [connection, setConnection] = useState<Connection>();
   const [impactPool, setImpactPool] = useState<ImpactPool>();
-  const [impactPoolData, setImpactPoolData] = useState<ImpactPoolStatistics>();
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingStatistics, setIsLoadingStatistics] = useState<boolean>(false);
@@ -90,7 +90,7 @@ export default function WithdrawPage() {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
           // @ts-ignore
-          new WithdrawFromPool(impactPoolData?.tokensInTokenPool),
+          new WithdrawFromPool(new BN(withdrawValue)),
         )
         .then(transaction => {
           connection
@@ -145,24 +145,17 @@ export default function WithdrawPage() {
   };
 
   useEffect(() => {
-    if (
-      wallet &&
-      connected &&
-      connection &&
-      impactPool &&
-      impactPoolData &&
-      Number(withdrawValue) > 0
-    ) {
+    if (wallet && connected && connection && impactPool && Number(withdrawValue) > 0) {
       setIsClaimDisable(false);
     } else {
       setIsClaimDisable(true);
     }
-  }, [wallet, connected, connection, impactPool, impactPoolData, withdrawValue]);
+  }, [wallet, connected, connection, impactPool, withdrawValue]);
 
   useEffect(() => {
     if (wallet?.publicKey && connected) {
       setConnection(new Connection(getNetwork()));
-      setImpactPool(getImpactPool(wallet.publicKey, 'USDT'));
+      setImpactPool(getImpactPool(wallet.publicKey, 'USDC'));
     }
   }, [wallet, connected]);
 
@@ -173,22 +166,23 @@ export default function WithdrawPage() {
       wallet &&
         connected &&
         impactPool
-          .getImpactPoolStatistics()
+          .getTokenPoolAccountContext(null)
           .then(data => {
-            setImpactPoolData(data);
-            setWithdrawValue(converterBNtoString(data?.tokensInTokenPool));
-            setIsLoadingStatistics(false);
+            getImpactTokenAccount(data.pubkey).then(account => {
+              setWithdrawValue(converterBNtoString(account.amount));
+              setIsLoadingStatistics(false);
+            });
           })
           .catch((error: Error) => {
             setIsLoadingStatistics(false);
-            console.log('getImpactPoolStatistics error === ', error);
+            console.log('getTokenPoolAccountContext error === ', error);
           });
     }
   }, [wallet, connected, impactPool, isClaimed]);
 
   const valueComponent =
     withdrawValue && !isLoadingStatistics ? (
-      <Typography className={styles.withdrawValue}>{withdrawValue} USDT</Typography>
+      <Typography className={styles.withdrawValue}>{withdrawValue} USDC</Typography>
     ) : (
       <>
         <Box

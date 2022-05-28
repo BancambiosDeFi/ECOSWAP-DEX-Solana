@@ -1,5 +1,5 @@
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { MintInfo } from '@solana/spl-token';
+import { MintInfo, AccountInfo, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import BN from 'bn.js';
 import { ImpactPool } from 'impact-pool-api';
 
@@ -27,11 +27,18 @@ export const getImpactPool = (payer: PublicKey, impactName: string): ImpactPool 
   );
 };
 
+export const getImpactTokenAccount = async (address: PublicKey): Promise<AccountInfo> => {
+  return await new Token(new Connection(network), new PublicKey(mint), TOKEN_PROGRAM_ID, {
+    publicKey: new PublicKey(creator),
+    secretKey: new Uint8Array(),
+  }).getAccountInfo(address);
+};
+
 export const converterBNtoString = (value: BN): string => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   // @ts-ignore
-  return (value.toNumber() / +process.env.REACT_APP_USDT_DECIMALS_MULTIPLIER).toString();
+  return (value.toNumber() / +process.env.REACT_APP_USDC_DECIMALS_MULTIPLIER).toString();
 };
 
 export const getFormattedAmount = (

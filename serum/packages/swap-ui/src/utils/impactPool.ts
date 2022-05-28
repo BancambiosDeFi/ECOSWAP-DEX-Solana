@@ -38,7 +38,7 @@ export const converterNumberToBN = (value: number): BN => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   // @ts-ignore
-  return new BN(value * +process.env.REACT_APP_USDT_DECIMALS_MULTIPLIER);
+  return new BN(value * +process.env.REACT_APP_USDC_DECIMALS_MULTIPLIER);
 };
 
 export const createAssociatedTokenAccount = async (
